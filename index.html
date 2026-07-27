@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Purabh's World</title>
+  <meta name="description" content="Purabh Singh — a walkable 3D voxel portfolio." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sky-top: #ffe6ba; --sky-mid: #ffd183; --sky-bottom: #ffc06b;
+      --cta: #5fd06a; --cta-dark: #3fb14e; --ink: #2b2620; --panel: #fffaf0;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: var(--sky-mid);
+      font-family: 'Baloo 2', system-ui, -apple-system, sans-serif; color: var(--ink); }
+    #game { position: fixed; inset: 0; }
+    #game canvas { display: block; touch-action: none; }
+    /* UI overlay: click-through except for its own children */
+    #ui { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+    /* Cinematic vignette: darkens the screen edges. Click-through. */
+    #vignette { position: fixed; inset: 0; z-index: 5; pointer-events: none;
+      box-shadow: inset 0 0 200px 60px rgba(15, 8, 0, 0.5); }
+    /* Children manage their own pointer-events (landing/panel = auto, HUD = none).
+       A blanket "#ui > * { pointer-events:auto }" would override the HUD's
+       'none' and make it swallow world clicks (right-click, drag-to-look). */
+    #loading { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: 14px; font-weight: 700; font-size: 1.3rem;
+      background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom)); color: #7a5a2a; }
+    .spinner { width: 42px; height: 42px; border-radius: 50%; border: 5px solid #ffffff88;
+      border-top-color: var(--cta-dark); animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.162.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.162.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="game"></div>
+  <div id="vignette"></div>
+  <div id="ui"></div>
+  <div id="loading"><div class="spinner"></div>Loading Purabh's World…</div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
