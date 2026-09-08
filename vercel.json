@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "headers": [
+    { "source": "/Resume.pdf", "headers": [{ "key": "Content-Disposition", "value": "inline; filename=\"Purabh_Singh_Resume.pdf\"" }] }
+  ]
+}

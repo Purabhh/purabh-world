@@ -14,3 +14,6 @@ npm-debug.log*
 
 # Node (none needed today, but in case you add tooling later)
 node_modules/
+
+# Empty lockfile (no deps)
+package-lock.json
