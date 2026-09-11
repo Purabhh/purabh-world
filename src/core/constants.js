@@ -6,7 +6,7 @@
 // The Projects district reads PUBLIC repos from this GitHub account. Set the
 // username and the world auto-populates. Leave '' to show a friendly placeholder.
 export const config = {
-  GITHUB_USERNAME: '',        // TODO: your GitHub handle (powers the Projects district)
+  GITHUB_USERNAME: 'Purabhh', // GitHub handle (powers the Projects district)
   LINKEDIN_URL: 'https://www.linkedin.com/in/purabh/', // LinkedIn profile (landing pill + tour CTA)
   RESUME_FILE: 'Resume.pdf',  // lives in /public; powers the "Resume" button
 };
