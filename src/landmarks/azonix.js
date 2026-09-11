@@ -265,8 +265,6 @@ export function buildAzonix(ctx) {
   const spot = new THREE.SpotLight(0xfff0d8, 7, 30, Math.PI / 5, 0.5, 1.4);
   spot.position.set(0, 0, 0.4); spot.target.position.set(0, -3, 9);
   housing.add(spot); housing.add(spot.target);
-  const pl = new THREE.PointLight(0xfff2dd, 1.4, 10, 2);
-  pl.position.set(0, 0, 0.9); housing.add(pl);
   g.add(lamp);
 
   // Slow surveillance pan + pulsing red beacon.

@@ -17,3 +17,4 @@ node_modules/
 
 # Empty lockfile (no deps)
 package-lock.json
+.claude/

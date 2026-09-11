@@ -8,9 +8,9 @@
 //   • lampBox     — stacked-wood lantern. Flanks each DISTRICT ENTRANCE as a
 //     pair of gateposts where the path meets the plaza.
 //
-// Warm emissive cores glow through the bloom pass; a capped set of real
-// PointLights pool actual light on the ground (plaza corners + the first path
-// lamp on each spoke) so night reads cozy without flooding the renderer.
+// Warm emissive cores glow through the bloom pass. No real PointLights: each
+// one costs every lit pixel in the scene, and on integrated GPUs a dozen of
+// them was the single biggest shading cost (see perf pass, Sep 2026).
 import * as THREE from 'three';
 import { addCircle } from '../core/colliders.js';
 
@@ -142,7 +142,7 @@ export function buildLanterns(ctx) {
   // === 1) SPAWN PLAZA — four stone toro lanterns framing the corners ==========
   const PC = 9.5; // plaza corner offset (on the stone, between the diagonal paths)
   for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
-    place(lampToro(true), sx * PC, sz * PC, 0, 0.9);
+    place(lampToro(false), sx * PC, sz * PC, 0, 0.9);
   }
 
   // === 2) PATHS — drooping iron streetlights, staggered, arm over the walkway ==
@@ -166,7 +166,7 @@ export function buildLanterns(ctx) {
       // arm (local +X) should point inward, toward the path: dir = -side*perp
       const dirx = -side * px, dirz = -side * pz;
       const rotY = Math.atan2(-dirz, dirx);
-      place(lampHanging(idx === 0), x, z, rotY, 0.4);
+      place(lampHanging(false), x, z, rotY, 0.4);
       idx++;
     }
 

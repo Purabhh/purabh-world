@@ -1,11 +1,6 @@
 {
   "version": "0.0.1",
   "configurations": [
-    {
-      "name": "purabh-world",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["C:\\Users\\ronal\\OneDrive\\purabh-world\\server.mjs"],
-      "port": 5173
-    }
+    { "name": "purabh-world", "runtimeExecutable": "node", "runtimeArgs": ["server.mjs"], "port": 5174 }
   ]
 }

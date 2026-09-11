@@ -25,17 +25,21 @@ function makeSkyTexture() {
 }
 
 export function createEngine(mount) {
-  // Phones pack 2.5-3x DPR with weaker GPUs; capping lower there keeps the frame
-  // budget sane without a visible hit. Desktops stay crisp at 2x.
-  const coarse = (() => { try { return window.matchMedia('(pointer: coarse)').matches; } catch { return false; } })();
-  const DPR_CAP = coarse ? 1.5 : 2;
-  const SHADOW = coarse ? 1024 : 2048;
+  // Perf budget (Sep 2026 pass, measured on an Intel Iris Xe at 1280x720):
+  //   - DPR is capped at 1.5 everywhere. Retina at 2x renders ~1.8x the pixels
+  //     of 1.5x for no visible gain on flat-shaded voxels.
+  //   - Shadow map is 1024 with plain PCF; PCFSoft at 2048 was ~4x the shadow cost.
+  //   - `?quality=low` (or a slow first few seconds) turns shadows + bloom off.
+  const DPR_CAP = 1.5;
+  const SHADOW = 1024;
+  const params = new URLSearchParams(location.search);
+  const forcedQuality = params.get('quality'); // 'low' | 'high' | null (auto)
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, DPR_CAP));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; // cinematic highlight rolloff (applied by OutputPass)
   renderer.toneMappingExposure = 1.12;
@@ -87,15 +91,48 @@ export function createEngine(mount) {
   const updates = [];
   function onUpdate(fn) { updates.push(fn); return fn; }
 
+  // --- adaptive quality: shadows + bloom are the two big optional costs. -----
+  let lowQuality = false;
+  function setLowQuality() {
+    if (lowQuality) return;
+    lowQuality = true;
+    renderer.shadowMap.enabled = false;
+    bloom.enabled = false;
+    // Materials compiled with shadow code need a recompile to drop it.
+    scene.traverse((o) => { if (o.isMesh) [].concat(o.material).forEach((m) => { m.needsUpdate = true; }); });
+    console.info('[PW] low-quality mode: shadows + bloom off');
+  }
+  if (forcedQuality === 'low') setLowQuality();
+
+  // Auto mode: sample the first ~3s of real play. If the average frame is slower
+  // than ~28fps, drop to low quality for the rest of the session. Hidden tabs
+  // and the first (shader-compile) frames are skipped so we don't misjudge.
+  const AUTO = forcedQuality !== 'high' && forcedQuality !== 'low';
+  let sampleT = 0, sampleN = 0, warm = 0, decided = !AUTO;
+  function sampleFrame(dt) {
+    if (decided) return;
+    if (warm < 30) { warm++; return; }           // skip shader-compile hitching
+    if (dt >= 0.05) return;                        // clamped frame = tab was hidden/stalled
+    sampleT += dt; sampleN++;
+    if (sampleT >= 3) {
+      decided = true;
+      const fps = sampleN / sampleT;
+      if (fps < 28) setLowQuality();
+      else console.info(`[PW] auto quality: high (${fps.toFixed(0)} fps)`);
+    }
+  }
+
   const clock = new THREE.Clock();
   let running = false;
   function loop() {
     if (!running) return;
     requestAnimationFrame(loop);
-    const dt = Math.min(clock.getDelta(), 0.05);
+    const rawDt = clock.getDelta();
+    const dt = Math.min(rawDt, 0.05);
     const t = clock.elapsedTime;
     for (const fn of updates) fn(dt, t);
-    composer.render();
+    if (lowQuality) renderer.render(scene, camera); else composer.render();
+    sampleFrame(rawDt);
   }
   function start() { if (running) return; running = true; clock.start(); loop(); }
   function stop() { running = false; }
@@ -107,5 +144,5 @@ export function createEngine(mount) {
     composer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  return { THREE, scene, camera, renderer, composer, bloom, onUpdate, start, stop, clock, sun, hemi, envMap };
+  return { THREE, scene, camera, renderer, composer, bloom, onUpdate, start, stop, clock, sun, hemi, envMap, setLowQuality, get lowQuality() { return lowQuality; } };
 }

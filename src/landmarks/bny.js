@@ -147,8 +147,6 @@ export function buildBny(ctx) {
   add(boxGeo(0.18, 5, 0.18), mat(0x3a2c0c), 0, roofY + 8 + 2.5, 0);
   const beaconMat = new THREE.MeshStandardMaterial({ color: 0xff3322, emissive: 0xff2a1a, emissiveIntensity: 2 });
   const beacon = add(new THREE.SphereGeometry(0.45, 12, 12), beaconMat, 0, roofY + 8, 0, false);
-  const beaconLight = new THREE.PointLight(0xff3322, 0, 18, 2);
-  beacon.add(beaconLight);
 
   // entrance canopy + lobby glow (front face = +Z local)
   add(boxGeo(9, 0.5, 3), trimMat, 0, 3.4, baseD / 2 + 1.2);
@@ -156,8 +154,6 @@ export function buildBny(ctx) {
   add(boxGeo(0.4, 3.4, 0.4), trimMat, -3.8, 1.7, baseD / 2 + 2.4);
   const lobbyMat = new THREE.MeshStandardMaterial({ color: 0xfff0c8, emissive: 0xffe6a0, emissiveIntensity: 1.6 });
   add(boxGeo(7.5, 2.6, 0.2), lobbyMat, 0, 2.0, baseD / 2 + 0.02, false);
-  const lobbyLight = new THREE.PointLight(0xffe2a0, 3, 16, 2);
-  lobbyLight.position.set(0, 3, baseD / 2 + 2); tower.add(lobbyLight);
 
   // ---- BNY logo plate on the front face ----
   // Oversized wordmark: the visible mark spans wider than the tower itself
@@ -215,7 +211,6 @@ export function buildBny(ctx) {
     }
     const b = Math.max(0, Math.sin(elapsed * 2.4)); const pulse = b * b;
     beaconMat.emissiveIntensity = 0.4 + pulse * 3.2;
-    beaconLight.intensity = pulse * 6;
   });
 
   // Floating BNY logo above the tower (no background panel, just the mark),

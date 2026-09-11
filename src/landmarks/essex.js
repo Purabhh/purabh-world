@@ -210,7 +210,6 @@ export function buildEssex(ctx) {
     gl.position.set(dx, 8.82, 0); gl.scale.set(2.2, 2.2, 1); lampG.add(gl);
   }
   lampG.position.set(11, 0.5, 7); essex.add(lampG);
-  const lampLight = new THREE.PointLight(0xfff0d8, 1.1, 22, 2); lampLight.position.set(11, 8.4, 7); essex.add(lampLight);
 
   // ---- two role interactable zones flanking the entrance (front, -X world) ----
   // The blue plaque signs were removed per request; the zones stay so walking up to
