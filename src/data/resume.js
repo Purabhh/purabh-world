@@ -62,32 +62,50 @@ export const achievements = [
 ];
 
 // Featured projects shown in the Projects district. Curated from github.com/Purabhh
-// (descriptions distilled from each repo's README).
+// (descriptions distilled from each repo's README; stars/dates from the GitHub API,
+// last synced 2026-09-11). Order = kiosk order; the tour card lists the first 5.
+// LeaseLink + FastRust are the projects on the main resume; VaultDB + Anomalyy are
+// the two on the alternate (data-science) variant.
 export const projectsFallback = [
   {
     name: 'LeaseLink',
-    description: 'Won the MusaLabs Hackathon (50+ teams, 150+ participants): a Tinder-style housing marketplace connecting renters and landlords through mutual interest. React + Tailwind, Express.js, PostgreSQL, Google OAuth, and a gated real-time WebSocket chat.',
+    description: 'Won the MusaLabs Hackathon (50+ teams, 150+ participants): a Tinder-style housing marketplace connecting renters and landlords through mutual interest. React + Tailwind, Express.js, PostgreSQL, Google OAuth, and a gated real-time WebSocket chat with landlord approval workflows.',
     language: 'TypeScript', stars: 1, url: 'https://github.com/Purabhh/LeaseLink', homepage: 'https://www.leaselink.pro/', color: '#ffd34e', metallic: true, updated: '2025-08-21',
   },
   {
     name: 'FastRust',
     description: 'An open-source, from-scratch Rust web framework on Hyper and Tokio with FastAPI-style ergonomics: a custom trie router with static-over-parameter precedence, typed extractors (Path, Query, JSON, State), macro routing across 7 HTTP methods, an onion-style middleware stack (CORS, bearer auth, logging), and OpenAPI 3.1 with live Swagger UI. Criterion benchmarks: 172 ns static and 849 ns parameterized router lookups, 1.4 to 2.3 µs request dispatch.',
-    language: 'Rust', stars: 4, url: 'https://github.com/Purabhh/FastRust', homepage: '', updated: '2026-03-17',
+    language: 'Rust', stars: 3, url: 'https://github.com/Purabhh/FastRust', homepage: '', updated: '2026-06-29',
   },
   {
     name: 'VaultDB',
-    description: 'A native desktop knowledge base that turns an Obsidian vault into a local vector database. Tauri (React + Rust) with Ollama embeddings, Qdrant similarity search, natural-language search, and a force-directed semantic graph. Runs entirely on local AI.',
+    description: 'A native desktop knowledge base (Tauri: Rust + React/TypeScript) that turns an Obsidian markdown vault into a locally searchable vector database, generating embeddings with Ollama and indexing them in Qdrant entirely on-device. Includes a dual-layer semantic graph (react-force-graph-2d, d3-force) that blends explicit wiki-links with vector-similarity edges to surface note connections Obsidian itself cannot show.',
     language: 'TypeScript', stars: 0, url: 'https://github.com/Purabhh/vaultdb', homepage: '', updated: '2026-04-16',
   },
   {
-    name: 'StormLink',
-    description: 'A multi-agent AI disaster-response system built at HackUSF 2026. Search any US location for live NOAA weather alerts on a map, find nearby emergency resources, and chat with a three-agent pipeline (Orchestrator, Data Monitor, Resource Matcher) that returns voice-accessible answers from live data.',
-    language: 'TypeScript', stars: 2, url: 'https://github.com/Purabhh/stormlink', homepage: '', updated: '2026-04-06',
+    name: 'Anomalyy',
+    description: 'An unsupervised anomaly-detection pipeline that flags unusual trading days across major stocks (AAPL, MSFT, TSLA, AMZN, S&P 500) using Z-Score, Isolation Forest, and Local Outlier Factor in consensus, engineered from 40+ technical indicators over 10 years of price data. Each anomaly is classified by likely cause (macro events, sector contagion, sentiment spikes) by cross-referencing FOMC dates and GDELT news sentiment pulled via Google BigQuery, with Plotly charts per ticker.',
+    language: 'Python', stars: 0, url: 'https://github.com/Purabhh/Anomalyy', homepage: '', updated: '2026-05-08',
+  },
+  {
+    name: 'CoolFinder',
+    description: 'Find air-conditioned places across Europe during heat waves: an interactive Leaflet map of cafes, restaurants, hotels, and shops with confirmed / possible / unconfirmed AC status, live search and type filters, a heat-warning banner, geolocation, and user ratings. React 19 + Vite, Tailwind v4, Node/Express API.',
+    language: 'JavaScript', stars: 0, url: 'https://github.com/Purabhh/coolfinder', homepage: 'https://coolfinder.vercel.app', updated: '2026-07-02',
   },
   {
     name: 'PassportBros',
     description: 'A shared travel scrapbook for you and your friends: anyone with the invite link joins, posts photos and videos to each country, and sees what everyone shared. No passwords or signups. Postgres, Cloudflare R2 for media, with a boarding-pass landing.',
-    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/PassportBros', homepage: 'http://137.184.65.14/', updated: '2026-05-27',
+    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/PassportBros', homepage: 'https://passport-bros.vercel.app', updated: '2026-06-28',
+  },
+  {
+    name: 'GestureBoard',
+    description: 'A collaborative whiteboard you draw on with your fingers and a webcam: MediaPipe hand tracking with a Kalman-smoothed fingertip, gestures for draw / erase / pan / undo / color, an infinite canvas, multiple boards per room, and peer-to-peer WebRTC video and audio. Rooms are ephemeral and wiped when everyone leaves.',
+    language: 'JavaScript', stars: 0, url: 'https://github.com/Purabhh/gesture-whiteboard', homepage: '', updated: '2026-04-08',
+  },
+  {
+    name: 'StockVizzy',
+    description: 'A stock chart visualizer built for AI agents and automation tools: pulls live Yahoo Finance data for any ticker (stocks, ETFs, crypto, forex, indices) and renders dark-themed price + volume charts via CLI, interactive prompts, or a Python import. Headless PNG export and structured JSON to stdout for agent parsing.',
+    language: 'Python', stars: 0, url: 'https://github.com/Purabhh/stockvizzy', homepage: '', updated: '2026-04-04',
   },
   {
     name: 'Repo Archaeologist',
@@ -108,10 +126,10 @@ export const projectsFallback = [
 ];
 
 export const skills = {
-  Languages: ['Python', 'Java', 'TypeScript', 'JavaScript', 'SQL', 'C++', 'C#', 'Go', 'Rust'],
+  Languages: ['Python', 'Java', 'TypeScript', 'JavaScript', 'SQL', 'C++', 'C', 'C#', 'Go', 'Ruby', 'Rust'],
   Frontend: ['React', 'Angular', 'Next.js', 'Swift'],
-  Backend: ['Node.js', 'Express', 'NestJS', 'Spring Boot', 'FastAPI', 'LangChain', 'Kafka', 'RabbitMQ', 'ActiveMQ Artemis'],
+  Backend: ['Node.js', 'Express', 'NestJS', 'Spring Boot', 'FastAPI', 'LangChain', 'Pandas', 'Kafka', 'RabbitMQ', 'ActiveMQ Artemis'],
   'DevOps / Cloud': ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Splunk', 'Datadog'],
   Blockchain: ['Solidity', 'Hyperledger Besu', 'Web3j', 'ethers.js', 'Web3.js'],
-  Database: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'DynamoDB', 'Elasticsearch', 'Qdrant', 'TimescaleDB'],
+  Database: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'DynamoDB', 'Elasticsearch', 'Oracle', 'Qdrant', 'TimescaleDB'],
 };

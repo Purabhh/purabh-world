@@ -601,7 +601,7 @@
       "label": "githubUrlFor()",
       "file_type": "code",
       "source_file": "src\\projects\\projectsDistrict.js",
-      "source_location": "L220",
+      "source_location": "L222",
       "id": "projectsdistrict_githuburlfor",
       "community": 10,
       "norm_label": "githuburlfor()"
@@ -2388,7 +2388,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\projects\\projectsDistrict.js",
-      "source_location": "L220",
+      "source_location": "L222",
       "weight": 1.0,
       "_src": "src_projects_projectsdistrict_js",
       "_tgt": "projectsdistrict_githuburlfor",

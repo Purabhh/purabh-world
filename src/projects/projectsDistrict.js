@@ -207,7 +207,9 @@ export async function buildProjectsDistrict(ctx) {
         accent: cssColor,
         lines: [repo.description || 'No description.'],
         links,
-        meta: repo.updated ? `Updated ${new Date(repo.updated).toLocaleDateString()}` : '',
+        // Date-only strings parse as UTC midnight, which shows the previous day in US
+        // timezones; pin them to local noon so the card shows the real date.
+        meta: repo.updated ? `Updated ${new Date(/^\d{4}-\d{2}-\d{2}$/.test(repo.updated) ? repo.updated + 'T12:00:00' : repo.updated).toLocaleDateString()}` : '',
       },
     });
   });
