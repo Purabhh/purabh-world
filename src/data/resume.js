@@ -18,48 +18,41 @@ export const education = {
   degree: 'B.S. Computer Science, Minor in Data Science',
   dates: 'Aug 2023 – May 2027',
   location: 'New Brunswick, NJ',
-  honors: ["Dean's List"],
+  honors: ["Dean's List", 'Coursework: Data Structures, Algorithms, Computer Architecture, Discrete Structures I & II, AI, Databases'],
 };
 
-// Each entry maps to one landmark in the world.
+// Each entry maps to one landmark in the world. Bullets mirror the Sep 2026
+// resume (Resume.pdf in the project root) one-to-one; edit both together.
 export const experience = [
   {
     id: 'bny', org: 'BNY', role: 'Software Engineering Intern',
-    dates: 'Summer 2026', location: 'Pittsburgh, PA', accent: 'bny',
+    dates: 'Jun 2026 – Aug 2026', location: 'Pittsburgh, PA', accent: 'bny',
     bullets: [
-      "Member of BNY's mission-critical funds-control engine team, a Java 21 / Spring Boot 3.5 platform processing billions in daily payment volume across 5 concurrent JVM lanes; a single minute of downtime carries an estimated $3.2B exposure.",
-      "Built an immutable audit trail using Hyperledger Besu, Solidity smart contracts, and Web3j, writing every cleared debit and credit to a private, permissioned blockchain, enabling real-time reconciliation across 3 fragmented systems with zero impact to payment latency.",
-      "Developed an Angular front-end powered by ethers.js that reads directly from the Besu network, cutting network hops from 2 to 1 and delivering live balance and ledger visibility even during backend downtime.",
+      "Built an immutable payments audit trail on a private Hyperledger Besu blockchain (Solidity, Web3j), validating and recording 2B+ cleared debits and credits for real-time reconciliation across 3 fragmented systems with zero payment-latency impact. Tested end-to-end with Apache ActiveMQ Artemis simulating live message-queue traffic, fronted by an Angular/ethers.js UI that reads directly from Besu for live ledger visibility during backend downtime.",
+      "Developed a real-time SWIFT MT/MX \"blotter\" dashboard for an Agile payments team, tracing every message through the platform's Java/Spring Boot systems and delivering first-ever end-to-end visibility across 15B+ daily messages.",
+      "Built an Angular observability and troubleshooting dashboard for cross-functional ops teams, pulling from Splunk logs to monitor the health and security posture of all 11 payment-platform systems, surfacing per-system vulnerability counts and month-over-month trends, and auto-generating Jira tickets from flagged issues to cut manual triage time by 60%.",
     ],
-    tags: ['Java 21', 'Spring Boot', 'Hyperledger Besu', 'Solidity', 'Web3j', 'Angular', 'ethers.js'],
+    tags: ['Java', 'Spring Boot', 'Hyperledger Besu', 'Solidity', 'Web3j', 'ActiveMQ Artemis', 'Angular', 'ethers.js', 'Splunk', 'SWIFT'],
   },
   {
-    id: 'essex2', org: 'Essex Securities', role: 'Software Engineering Intern',
+    id: 'essex', org: 'Essex Securities', role: 'Software Engineering Intern',
     dates: 'May 2025 – Aug 2025', location: 'Jersey City, NJ', accent: 'essex',
     bullets: [
-      "Designed a LangChain-powered AI tool that automates extraction and comparison of actual vs estimated EPS from quarterly earnings reports, cutting manual review time by over 70%. Built a retrieval-augmented generation pipeline with LLMs, pgvector semantic search, and FastAPI endpoints.",
-      "Built an MVP crypto exchange entirely in Python (FastAPI, PostgreSQL, asyncio): an in-memory matching engine, REST/WebSocket APIs, and a double-entry ledger with risk controls, basic KYC, and automated trade settlement in a unified backend service.",
+      "Built an AI agent using LangChain and RAG (pgvector semantic search, FastAPI endpoints) to automate extraction and comparison of actual vs estimated EPS from quarterly earnings reports, cutting manual review time by over 70%.",
+      "Built an MVP crypto spot exchange in Python (FastAPI, PostgreSQL, asyncio) with an in-memory matching engine, REST/WebSocket APIs, and a double-entry ledger for accurate order execution and balance reconciliation; added risk controls, basic KYC, and automated trade settlement.",
+      "Automated limit order execution via Bloomberg EMSX API integration, reducing manual entry time by 20%.",
     ],
-    tags: ['LangChain', 'RAG', 'pgvector', 'FastAPI', 'PostgreSQL', 'asyncio', 'WebSockets'],
-  },
-  {
-    id: 'essex1', org: 'Essex Securities', role: 'Software Engineering Intern',
-    dates: 'Jul 2024 – Oct 2024', location: 'Jersey City, NJ', accent: 'essex',
-    bullets: [
-      "Automated limit-order execution through Bloomberg EMSX API integration, streamlining workflows and reducing manual entry time by 20%.",
-      "Revamped the brokerage portal with a modern UI and faster navigation; built a job board (Dropbox + Google Forms) with a dynamic, filterable front-end and embedded JD previews.",
-    ],
-    tags: ['Bloomberg EMSX', 'UI', 'Job board'],
+    tags: ['LangChain', 'RAG', 'pgvector', 'FastAPI', 'PostgreSQL', 'asyncio', 'WebSockets', 'Bloomberg EMSX'],
   },
   {
     id: 'azonix', org: 'Azonix Tech', role: 'Software Engineering Intern',
-    dates: 'Jun 2024 – Jul 2024', location: 'Chennai, India', accent: 'azonix',
+    dates: 'May 2024 – Aug 2024', location: 'Remote', accent: 'azonix',
     bullets: [
-      "Resolved user-experience issues by identifying key flaws and deploying UI improvements to production.",
-      "Streamlined EV-charger data analysis by designing a dashboard to visualize performance metrics.",
-      "Implemented facial recognition on CCTV feeds, enabling 90%+ accuracy in varied conditions.",
+      "Built a real-time facial-recognition pipeline processing a live 30 FPS video feed at the edge, using OpenCV and an ONNX-optimized InsightFace embedding model to detect and identify enrolled individuals in under 45 ms per frame at 96%+ accuracy.",
+      "Engineered an IoT telemetry platform ingesting 5,000+ MQTT messages/sec from 500 concurrent sensor devices, persisting time-series data to TimescaleDB for sub-second querying and streaming anomaly detection.",
+      "Trained an XGBoost predictive-maintenance model on 100K+ rows of device telemetry to forecast equipment failures roughly 6 hours in advance, reaching 0.92 AUC and cutting projected unplanned downtime by 40%.",
     ],
-    tags: ['UI/UX', 'Dashboards', 'Facial recognition', 'CCTV'],
+    tags: ['OpenCV', 'ONNX', 'InsightFace', 'MQTT', 'TimescaleDB', 'XGBoost'],
   },
 ];
 
@@ -78,7 +71,7 @@ export const projectsFallback = [
   },
   {
     name: 'FastRust',
-    description: 'A Rust web framework built directly on Hyper that brings a FastAPI-style developer experience to Rust-native performance. Clean endpoint code, typed request handling, and automatic docs, while staying close to the metal.',
+    description: 'An open-source, from-scratch Rust web framework on Hyper and Tokio with FastAPI-style ergonomics: a custom trie router with static-over-parameter precedence, typed extractors (Path, Query, JSON, State), macro routing across 7 HTTP methods, an onion-style middleware stack (CORS, bearer auth, logging), and OpenAPI 3.1 with live Swagger UI. Criterion benchmarks: 172 ns static and 849 ns parameterized router lookups, 1.4 to 2.3 µs request dispatch.',
     language: 'Rust', stars: 4, url: 'https://github.com/Purabhh/FastRust', homepage: '', updated: '2026-03-17',
   },
   {
@@ -115,9 +108,10 @@ export const projectsFallback = [
 ];
 
 export const skills = {
-  Languages: ['Python', 'Java', 'TypeScript', 'SQL', 'C++', 'JavaScript', 'HTML'],
-  Frontend: ['React', 'Angular', 'Swift', 'Next.js', 'AJAX'],
-  Backend: ['Node.js', 'NestJS', 'LangChain', 'Express', 'Spring Boot', 'Pandas', 'Docker'],
+  Languages: ['Python', 'Java', 'TypeScript', 'JavaScript', 'SQL', 'C++', 'C#', 'Go', 'Rust'],
+  Frontend: ['React', 'Angular', 'Next.js', 'Swift'],
+  Backend: ['Node.js', 'Express', 'NestJS', 'Spring Boot', 'FastAPI', 'LangChain', 'Kafka', 'RabbitMQ', 'ActiveMQ Artemis'],
+  'DevOps / Cloud': ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Splunk', 'Datadog'],
   Blockchain: ['Solidity', 'Hyperledger Besu', 'Web3j', 'ethers.js', 'Web3.js'],
-  Database: ['PostgreSQL', 'MySQL', 'SQLite'],
+  Database: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'DynamoDB', 'Elasticsearch', 'Qdrant', 'TimescaleDB'],
 };

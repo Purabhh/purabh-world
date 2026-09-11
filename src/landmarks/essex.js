@@ -2,7 +2,7 @@
 // with a dark mirror curtain-wall arc, a red lobby base, a rotating stock-ticker
 // crown, and a street lamp out front. Ported from the CASCADE 3D component.
 //
-// The two Essex roles (essex2: AI tool + crypto exchange; essex1: Bloomberg EMSX)
+// The single Essex role (AI EPS agent, crypto exchange MVP, Bloomberg EMSX)
 // stay as two plaque kiosks flanking the entrance, each its own interactable zone.
 import * as THREE from 'three';
 import { makeWordmarkTexture, addFloatingLogo } from './floatingLogo.js';
@@ -216,8 +216,8 @@ export function buildEssex(ctx) {
   // either side of the entrance still opens that role. local (lx, lz) maps to world
   // (cx - lz, cz + lx) under the -90deg group yaw.
   const kLz = 7.8;
-  const worldA = new THREE.Vector3(cx - kLz, 1.5, cz + (-3.5)); // essex2
-  const worldB = new THREE.Vector3(cx - kLz, 1.5, cz + 3.5);    // essex1
+  const worldA = new THREE.Vector3(cx - kLz, 1.5, cz + (-3.5)); // left of entrance
+  const worldB = new THREE.Vector3(cx - kLz, 1.5, cz + 3.5);    // right of entrance
 
   // Floating "ESSEX SECURITIES" banner so the tower is identifiable from afar.
   addFloatingLogo(ctx, {
@@ -232,33 +232,20 @@ export function buildEssex(ctx) {
     crownHalo.rotation.y = crown.rotation.y;
   });
 
-  // ---- interactables (one per Essex role) ----
-  const essex2 = resume.experience.find((e) => e.id === 'essex2');
-  const essex1 = resume.experience.find((e) => e.id === 'essex1');
+  // ---- interactable (one Essex role, zone centered on the entrance) ----
+  const role = resume.experience.find((e) => e.id === 'essex');
+  const worldE = new THREE.Vector3((worldA.x + worldB.x) / 2, 1.5, (worldA.z + worldB.z) / 2);
 
   registerInteractable({
-    id: 'essex2',
-    position: worldA,
-    radius: 3.4,
+    id: 'essex',
+    position: worldE,
+    radius: 4.5,
     data: {
-      title: 'Essex Securities: ' + essex2.role,
-      subtitle: essex2.dates + ' · ' + essex2.location,
+      title: 'Essex Securities: ' + role.role,
+      subtitle: role.dates + ' · ' + role.location,
       accent: css.essex,
-      lines: essex2.bullets,
-      tags: essex2.tags,
-    },
-  });
-
-  registerInteractable({
-    id: 'essex1',
-    position: worldB,
-    radius: 3.4,
-    data: {
-      title: 'Essex Securities: ' + essex1.role,
-      subtitle: essex1.dates + ' · ' + essex1.location,
-      accent: css.essex,
-      lines: essex1.bullets,
-      tags: essex1.tags,
+      lines: role.bullets,
+      tags: role.tags,
     },
   });
 }

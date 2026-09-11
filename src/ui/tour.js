@@ -41,8 +41,8 @@ export function createTour(ctx, { panel, onComplete } = {}) {
       } },
     { id: 'achievements', eyebrow: 'Hackathon', name: 'MusaLabs Hackathon', sub: 'Winner — 1st of 50+ teams', pos: V(0, 9, 15), look: V(0, 4.5, 0), hold: 7 },
     { id: 'education', eyebrow: 'Education', name: 'Rutgers University', sub: 'B.S. Computer Science', pos: V(0, 13, -30), look: V(0, 9, -52), hold: 7 },
-    { id: 'azonix', eyebrow: 'Internship', name: 'Azonix Technologies', sub: 'Computer vision + dashboards', pos: V(33, 12, -22), look: V(54, 9, -28), hold: 8 },
-    { id: 'essex2', eyebrow: 'Internship', name: 'Essex Securities', sub: 'AI + crypto tooling', pos: V(33, 12, 31), look: V(54, 9, 28), hold: 9 },
+    { id: 'azonix', eyebrow: 'Internship', name: 'Azonix Tech', sub: 'Edge CV · IoT telemetry · predictive ML', pos: V(33, 12, -22), look: V(54, 9, -28), hold: 8 },
+    { id: 'essex', eyebrow: 'Internship', name: 'Essex Securities', sub: 'AI EPS agent · crypto exchange · Bloomberg', pos: V(33, 12, 31), look: V(54, 9, 28), hold: 9 },
     { name: 'Projects', sub: 'Live from GitHub', pos: V(0, 16, 42), look: V(0, 6, 66), hold: 7, anchor: V(0, 8, 60),
       card: {
         eyebrow: 'Projects', title: 'Projects District', subtitle: 'Hackathon wins + side projects', accent: '#3fb14e',
@@ -50,8 +50,8 @@ export function createTour(ctx, { panel, onComplete } = {}) {
         meta: 'Walk in on foot to open each one',
         links: [{ label: 'GitHub', url: profile.github }],
       } },
-    { id: 'bny', eyebrow: 'Internship', name: 'BNY', sub: 'SWE Intern · on-chain audit trail', pos: V(-28, 17, 22), look: V(-54, 14, 28), hold: 9 },
-    { id: 'skills', eyebrow: 'Tech Stack', name: 'My Stack', sub: 'React · Node · Python · Solidity', pos: V(-40, 11, -20), look: V(-54, 8, -28), hold: 7 },
+    { id: 'bny', eyebrow: 'Internship', name: 'BNY', sub: 'On-chain audit trail · SWIFT blotter · observability', pos: V(-28, 17, 22), look: V(-54, 14, 28), hold: 9 },
+    { id: 'skills', eyebrow: 'Tech Stack', name: 'My Stack', sub: 'Java · Python · TypeScript · Rust · Solidity', pos: V(-40, 11, -20), look: V(-54, 8, -28), hold: 7 },
     { name: "Let's connect", sub: 'Open to SWE roles', pos: V(0, 15, 40), look: V(0, 5, 0), final: true, anchor: V(0, 7, 0),
       card: {
         eyebrow: 'Get in touch', title: "Let's connect", subtitle: 'Open to SWE internships & new-grad roles', accent: '#5fd06a',

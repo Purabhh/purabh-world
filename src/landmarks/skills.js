@@ -168,14 +168,8 @@ export function buildSkills(ctx) {
       title: 'My Stack',
       subtitle: 'The tools I build with',
       accent: css.skills,
-      lines: [
-        'Languages: ' + s.Languages.join(', '),
-        'Frontend: ' + s.Frontend.join(', '),
-        'Backend: ' + s.Backend.join(', '),
-        'Blockchain: ' + s.Blockchain.join(', '),
-        'Database: ' + s.Database.join(', '),
-      ],
-      tags: ['React', 'Node.js', 'Python', 'Solidity', 'TypeScript', 'JavaScript'],
+      lines: Object.entries(s).map(([cat, items]) => cat + ': ' + items.join(', ')),
+      tags: ['Java', 'Python', 'TypeScript', 'Rust', 'Spring Boot', 'React', 'Solidity', 'AWS'],
     },
   });
 }
