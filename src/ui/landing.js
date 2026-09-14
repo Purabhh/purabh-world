@@ -24,6 +24,7 @@ export function createLanding({ onEnter, onTour } = {}) {
   root.innerHTML = `
     <div class="pw-landing__inner">
       <h1 class="pw-landing__title"><span class="pw-apos">3D</span> PORTFOLIO</h1>
+      <p class="pw-landing__name">${escapeHtml(profile.name)}</p>
       <p class="pw-landing__subtitle">${escapeHtml(profile.tagline)}<br>${escapeHtml(profile.school)}</p>
 
       <div class="pw-landing__cta">

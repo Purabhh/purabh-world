@@ -120,6 +120,14 @@ export const UI_CSS = `
   color: var(--pw-cta-dark);
 }
 
+.pw-landing__name {
+  margin: -8px 0 0;
+  font-size: clamp(1rem, 2.8vw, 1.3rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #8a6c3c;
+}
+
 .pw-landing__subtitle {
   margin: 0;
   font-size: clamp(1rem, 3.4vw, 1.42rem);
