@@ -35,7 +35,12 @@ export function createEngine(mount) {
   const params = new URLSearchParams(location.search);
   const forcedQuality = params.get('quality'); // 'low' | 'high' | null (auto)
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  // powerPreference matters: without it, some browsers (Opera, Firefox, and
+  // Chrome under battery saver) default a multi-GPU laptop to its weak
+  // integrated chip instead of the discrete one, even on the same hardware
+  // where another browser picks the fast GPU automatically. Asking explicitly
+  // fixes the "runs fine in Chrome, chugs in Opera" gap.
+  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, DPR_CAP));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
@@ -102,12 +107,24 @@ export function createEngine(mount) {
     scene.traverse((o) => { if (o.isMesh) [].concat(o.material).forEach((m) => { m.needsUpdate = true; }); });
     console.info('[PW] low-quality mode: shadows + bloom off');
   }
-  if (forcedQuality === 'low') setLowQuality();
+  // Some browser configs (locked-down corporate installs, certain sandboxed
+  // or remote setups) can't reach a real GPU at all and fall back to a
+  // software rasterizer (SwiftShader / llvmpipe). That's 10-50x slower than
+  // any dedicated or integrated GPU, so don't make it sit through 3 seconds
+  // of a slideshow before we notice — drop straight to low quality.
+  let softwareRenderer = false;
+  try {
+    const dbg = renderer.getContext().getExtension('WEBGL_debug_renderer_info');
+    const info = dbg ? renderer.getContext().getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+    softwareRenderer = /swiftshader|llvmpipe|software|microsoft basic render/i.test(info || '');
+  } catch {}
+
+  if (forcedQuality === 'low' || softwareRenderer) setLowQuality();
 
   // Auto mode: sample the first ~3s of real play. If the average frame is slower
   // than ~28fps, drop to low quality for the rest of the session. Hidden tabs
   // and the first (shader-compile) frames are skipped so we don't misjudge.
-  const AUTO = forcedQuality !== 'high' && forcedQuality !== 'low';
+  const AUTO = forcedQuality !== 'high' && forcedQuality !== 'low' && !softwareRenderer;
   let sampleT = 0, sampleN = 0, warm = 0, decided = !AUTO;
   function sampleFrame(dt) {
     if (decided) return;

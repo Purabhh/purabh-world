@@ -19,7 +19,7 @@ export function createLanding({ onEnter, onTour } = {}) {
   const root = document.createElement('section');
   root.className = 'pw-root pw-landing';
   root.setAttribute('role', 'dialog');
-  root.setAttribute('aria-label', "Purabh's World — start screen");
+  root.setAttribute('aria-label', "Purabh's World: start screen");
 
   root.innerHTML = `
     <div class="pw-landing__inner">

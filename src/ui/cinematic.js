@@ -22,7 +22,7 @@ export function createCinematic(ctx, { onComplete } = {}) {
   // how long to dwell, and the caption to show. Ordered as a loop around the map.
   const W = [
     { name: "PURABH'S WORLD", sub: 'A walkable portfolio', pos: V(0, 28, 52), look: V(0, 5, 0), travel: 0, hold: 2.2 },
-    { name: 'MusaLabs Hackathon', sub: 'Winner — 1st of 50+ teams', pos: V(0, 9, 15), look: V(0, 4.5, 0), travel: 1.8, hold: 1.8 },
+    { name: 'MusaLabs Hackathon', sub: 'Winner, 1st of 50+ teams', pos: V(0, 9, 15), look: V(0, 4.5, 0), travel: 1.8, hold: 1.8 },
     { name: 'Rutgers University', sub: 'B.S. Computer Science', pos: V(0, 13, -30), look: V(0, 9, -52), travel: 2.0, hold: 1.6 },
     { name: 'Azonix Technologies', sub: 'Computer vision + dashboards', pos: V(33, 12, -22), look: V(54, 9, -28), travel: 2.2, hold: 1.6 },
     { name: 'Essex Securities', sub: 'AI + Crypto tooling', pos: V(33, 12, 31), look: V(54, 9, 28), travel: 2.4, hold: 1.6 },

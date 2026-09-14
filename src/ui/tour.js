@@ -33,13 +33,13 @@ export function createTour(ctx, { panel, onComplete } = {}) {
   const STOPS = [
     { name: "PURABH'S WORLD", sub: 'A 60-second tour', pos: V(0, 28, 52), look: V(0, 5, 0), hold: 6.5, anchor: V(0, 7, 0),
       card: {
-        eyebrow: 'Welcome', title: "Hi — I'm Purabh", subtitle: profile.tagline + ' · ' + profile.school, accent: '#5fd06a',
+        eyebrow: 'Welcome', title: "Hi, I'm Purabh", subtitle: profile.tagline + ' · ' + profile.school, accent: '#5fd06a',
         lines: [
-          "This walkable world is my portfolio. I'll fly you past each stop — school, internships, projects, and my stack.",
+          "This walkable world is my portfolio. I'll fly you past each stop: school, internships, projects, and my stack.",
           'Use the bar below to step through, pause to read, or exit any time to explore on foot.',
         ],
       } },
-    { id: 'achievements', eyebrow: 'Hackathon', name: 'MusaLabs Hackathon', sub: 'Winner — 1st of 50+ teams', pos: V(0, 9, 15), look: V(0, 4.5, 0), hold: 7 },
+    { id: 'achievements', eyebrow: 'Hackathon', name: 'MusaLabs Hackathon', sub: 'Winner, 1st of 50+ teams', pos: V(0, 9, 15), look: V(0, 4.5, 0), hold: 7 },
     { id: 'education', eyebrow: 'Education', name: 'Rutgers University', sub: 'B.S. Computer Science', pos: V(0, 13, -30), look: V(0, 9, -52), hold: 7 },
     { id: 'azonix', eyebrow: 'Internship', name: 'Azonix Tech', sub: 'Edge CV · IoT telemetry · predictive ML', pos: V(33, 12, -22), look: V(54, 9, -28), hold: 8 },
     { id: 'essex', eyebrow: 'Internship', name: 'Essex Securities', sub: 'AI EPS agent · crypto exchange · Bloomberg', pos: V(33, 12, 31), look: V(54, 9, 28), hold: 9 },
@@ -55,7 +55,7 @@ export function createTour(ctx, { panel, onComplete } = {}) {
     { name: "Let's connect", sub: 'Open to SWE roles', pos: V(0, 15, 40), look: V(0, 5, 0), final: true, anchor: V(0, 7, 0),
       card: {
         eyebrow: 'Get in touch', title: "Let's connect", subtitle: 'Open to SWE internships & new-grad roles', accent: '#5fd06a',
-        lines: ['Thanks for taking the tour — the fastest ways to reach me are right here.'],
+        lines: ['Thanks for taking the tour. The fastest ways to reach me are right here.'],
         links: [
           { label: 'Resume', url: profile.resume },
           { label: 'GitHub', url: profile.github },

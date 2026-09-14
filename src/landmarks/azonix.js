@@ -280,7 +280,7 @@ export function buildAzonix(ctx) {
     position: new THREE.Vector3(cx - 9, 1.5, cz),
     radius: 9,
     data: {
-      title: 'Azonix Tech — ' + az.role,
+      title: 'Azonix Tech, ' + az.role,
       subtitle: az.dates + ' · ' + az.location,
       accent: css.azonix,
       lines: az.bullets,

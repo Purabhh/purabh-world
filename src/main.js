@@ -152,7 +152,7 @@ engine.onUpdate(() => {
     near = null; touch.setInteract(true, 'Hop off'); return;
   }
   near = interaction.getNearest(player.position);
-  hud.setPrompt(near && !panel.isOpen() ? `Press E — ${near.data.title}` : null);
+  hud.setPrompt(near && !panel.isOpen() ? `Press E - ${near.data.title}` : null);
   touch.setInteract(!!near || panel.isOpen(), touchActionLabel());
   // Keep the open card pinned beside its landmark (project its 3D point to screen).
   if (panel.isOpen() && openAnchor) {

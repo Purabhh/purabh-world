@@ -57,7 +57,7 @@ export const experience = [
 ];
 
 export const achievements = [
-  { title: 'MusaLabs Hackathon — Winner', detail: '1st of 50+ teams, sponsored by Microsoft Azure.' },
+  { title: 'MusaLabs Hackathon, Winner', detail: '1st of 50+ teams, sponsored by Microsoft Azure.' },
   { title: "Dean's List", detail: 'Spring 2025.' },
 ];
 
