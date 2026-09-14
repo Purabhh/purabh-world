@@ -1,4 +1,4 @@
-// Landing overlay — the full-screen "PURABH'S WORLD" title screen.
+// Landing overlay — the full-screen "3D PORTFOLIO" title screen.
 //
 // Mounts into #ui. Shows a huge wordmark, a tagline, a glowing green
 // "▶ Enter World" CTA, and a rounded pill nav (Projects / Resume / GitHub /
@@ -19,11 +19,11 @@ export function createLanding({ onEnter, onTour } = {}) {
   const root = document.createElement('section');
   root.className = 'pw-root pw-landing';
   root.setAttribute('role', 'dialog');
-  root.setAttribute('aria-label', "Purabh's World: start screen");
+  root.setAttribute('aria-label', "3D Portfolio: start screen");
 
   root.innerHTML = `
     <div class="pw-landing__inner">
-      <h1 class="pw-landing__title">PURABH<span class="pw-apos">'</span>S WORLD</h1>
+      <h1 class="pw-landing__title"><span class="pw-apos">3D</span> PORTFOLIO</h1>
       <p class="pw-landing__subtitle">${escapeHtml(profile.tagline)}<br>${escapeHtml(profile.school)}</p>
 
       <div class="pw-landing__cta">

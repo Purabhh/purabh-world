@@ -12,7 +12,7 @@ const STYLE_ID = 'purabh-ui-styles';
 
 export const UI_CSS = `
 /* ============================================================================
-   PURABH'S WORLD — UI overlay styles
+   3D PORTFOLIO — UI overlay styles
    Warm "Friendly Game Title" look: sunny gradient, rounded Baloo 2 type,
    glowing green CTA, cream cards, soft shadows.
    Palette (from index.html / constants.js):
@@ -597,14 +597,19 @@ export const UI_CSS = `
 .pw-tour__btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .pw-tour__btn--play { background: var(--pw-cta-dark); color: #073b12; }
 .pw-tour__btn--play:hover { background: var(--pw-cta); }
-.pw-tour__dots { display: flex; align-items: center; gap: 6px; }
+.pw-tour__dots { display: flex; align-items: center; gap: 7px; }
 .pw-tour__dot {
   width: 9px; height: 9px; padding: 0;
-  border: 0; border-radius: 50%; background: rgba(255, 240, 214, 0.28); cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
+  /* Upcoming stops: a visible ring, not a near-invisible tinted fill — the old
+     0.28-alpha cream on a near-black bar read as "missing dots" on a lot of
+     displays. */
+  border: 1.5px solid rgba(255, 240, 214, 0.55);
+  border-radius: 50%; background: transparent; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
-.pw-tour__dot:hover { background: rgba(255, 240, 214, 0.55); }
-.pw-tour__dot.pw-on { background: var(--pw-cta); transform: scale(1.3); }
+.pw-tour__dot:hover { border-color: #fff; background: rgba(255, 255, 255, 0.25); }
+.pw-tour__dot.pw-done { border-color: rgba(255, 240, 214, 0.7); background: rgba(255, 240, 214, 0.7); }
+.pw-tour__dot.pw-on { border-color: var(--pw-cta); background: var(--pw-cta); transform: scale(1.35); }
 .pw-tour__dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .pw-tour__exit {
   font-family: inherit; font-size: 0.82rem; font-weight: 700; color: #fbf3e6;

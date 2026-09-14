@@ -1,4 +1,4 @@
-# PURABH'S WORLD
+# 3D PORTFOLIO
 
 A walkable 3D voxel world that's also my portfolio. Built with **three.js** — no build step, nothing to `npm install`.
 

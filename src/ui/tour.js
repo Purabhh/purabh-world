@@ -31,7 +31,7 @@ export function createTour(ctx, { panel, onComplete } = {}) {
   // from the interaction registry; `card` is inline data (welcome / projects /
   // CTA); `anchor` overrides the world point the card pins to.
   const STOPS = [
-    { name: "PURABH'S WORLD", sub: 'A 60-second tour', pos: V(0, 28, 52), look: V(0, 5, 0), hold: 6.5, anchor: V(0, 7, 0),
+    { name: '3D PORTFOLIO', sub: 'A 60-second tour', pos: V(0, 28, 52), look: V(0, 5, 0), hold: 6.5, anchor: V(0, 7, 0),
       card: {
         eyebrow: 'Welcome', title: "Hi, I'm Purabh", subtitle: profile.tagline + ' · ' + profile.school, accent: '#5fd06a',
         lines: [
@@ -133,7 +133,10 @@ export function createTour(ctx, { panel, onComplete } = {}) {
     const s = STOPS[idx];
     elCount.textContent = `${idx + 1} / ${STOPS.length}`;
     elName.textContent = s.name || '';
-    dots.forEach((d, i) => d.classList.toggle('pw-on', i === idx));
+    dots.forEach((d, i) => {
+      d.classList.toggle('pw-on', i === idx);
+      d.classList.toggle('pw-done', i < idx);
+    });
     root.classList.toggle('pw-tour--final', !!s.final);
     elExit.textContent = s.final ? 'Explore freely ▶' : 'Exit ✕';
     elPlay.style.display = s.final ? 'none' : '';
