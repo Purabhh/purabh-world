@@ -1,12 +1,12 @@
 # Graph Report - .  (2026-09-14)
 
 ## Corpus Check
-- 30 files · ~38,839 words
+- 31 files · ~39,323 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 119 nodes · 195 edges · 16 communities detected
-- Extraction: 66% EXTRACTED · 34% INFERRED · 0% AMBIGUOUS · INFERRED: 67 edges (avg confidence: 0.8)
+- 121 nodes · 198 edges · 15 communities detected
+- Extraction: 65% EXTRACTED · 35% INFERRED · 0% AMBIGUOUS · INFERRED: 69 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -25,7 +25,6 @@
 - [[_COMMUNITY_Community 12|Community 12]]
 - [[_COMMUNITY_Community 13|Community 13]]
 - [[_COMMUNITY_Community 14|Community 14]]
-- [[_COMMUNITY_Community 15|Community 15]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `box()` - 12 edges
@@ -34,10 +33,10 @@
 4. `buildProjectsDistrict()` - 10 edges
 5. `registerInteractable()` - 9 edges
 6. `buildAtmosphere()` - 9 edges
-7. `patch()` - 8 edges
-8. `tree()` - 8 edges
-9. `buildAchievements()` - 7 edges
-10. `buildAzonix()` - 7 edges
+7. `injectStyles()` - 8 edges
+8. `uiRoot()` - 8 edges
+9. `patch()` - 8 edges
+10. `tree()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `makeTextTexture()` --calls--> `buildProjectsDistrict()`  [INFERRED]
@@ -54,12 +53,12 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.16
-Nodes (10): createCinematic(), createHUD(), createLanding(), escapeHtml(), createPanel(), injectStyles(), uiRoot(), createTouchControls() (+2 more)
+Cohesion: 0.13
+Nodes (15): buildAchievements(), addCircle(), buildEssex(), makeCylinderTex(), makeLogoTex(), makeRadial(), makeTickerTex(), addBuildingSign() (+7 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.19
-Nodes (13): buildAchievements(), addCircle(), buildEssex(), makeCylinderTex(), makeLogoTex(), makeRadial(), makeTickerTex(), addBuildingSign() (+5 more)
+Cohesion: 0.15
+Nodes (11): createCinematic(), createHUD(), createLanding(), escapeHtml(), createNudge(), createPanel(), injectStyles(), uiRoot() (+3 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.3
@@ -82,24 +81,24 @@ Cohesion: 0.4
 Nodes (2): eyebrowFor(), triggerInteract()
 
 ### Community 7 - "Community 7"
-Cohesion: 0.4
-Nodes (2): hexA(), makeIcon()
-
-### Community 8 - "Community 8"
 Cohesion: 0.67
 Nodes (5): cacheKey(), fetchRepos(), normalize(), readCache(), writeCache()
 
-### Community 9 - "Community 9"
+### Community 8 - "Community 8"
 Cohesion: 1.0
 Nodes (2): createEngine(), makeSkyTexture()
 
-### Community 10 - "Community 10"
+### Community 9 - "Community 9"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 11 - "Community 11"
+### Community 10 - "Community 10"
 Cohesion: 1.0
 Nodes (2): buildTerrain(), mix()
+
+### Community 11 - "Community 11"
+Cohesion: 1.0
+Nodes (0): 
 
 ### Community 12 - "Community 12"
 Cohesion: 1.0
@@ -113,29 +112,25 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 15 - "Community 15"
-Cohesion: 1.0
-Nodes (0): 
-
 ## Knowledge Gaps
-- **Thin community `Community 12`** (2 nodes): `createPlayer()`, `player.js`
+- **Thin community `Community 11`** (2 nodes): `createPlayer()`, `player.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 13`** (2 nodes): `buildLanterns()`, `lanterns.js`
+- **Thin community `Community 12`** (2 nodes): `buildLanterns()`, `lanterns.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 14`** (1 nodes): `constants.js`
+- **Thin community `Community 13`** (1 nodes): `constants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 15`** (1 nodes): `resume.js`
+- **Thin community `Community 14`** (1 nodes): `resume.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `registerInteractable()` connect `Community 4` to `Community 1`, `Community 2`, `Community 3`?**
-  _High betweenness centrality (0.138) - this node is a cross-community bridge._
-- **Why does `buildProjectsDistrict()` connect `Community 2` to `Community 8`, `Community 1`, `Community 10`, `Community 4`?**
-  _High betweenness centrality (0.119) - this node is a cross-community bridge._
+- **Why does `registerInteractable()` connect `Community 4` to `Community 0`, `Community 2`, `Community 3`?**
+  _High betweenness centrality (0.134) - this node is a cross-community bridge._
+- **Why does `buildProjectsDistrict()` connect `Community 2` to `Community 0`, `Community 9`, `Community 4`, `Community 7`?**
+  _High betweenness centrality (0.116) - this node is a cross-community bridge._
 - **Why does `box()` connect `Community 2` to `Community 3`, `Community 5`?**
-  _High betweenness centrality (0.114) - this node is a cross-community bridge._
+  _High betweenness centrality (0.110) - this node is a cross-community bridge._
 - **Are the 5 inferred relationships involving `box()` (e.g. with `buildEducation()` and `buildProjectsDistrict()`) actually correct?**
   _`box()` has 5 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 8 inferred relationships involving `buildEducation()` (e.g. with `addBox()` and `patch()`) actually correct?**

@@ -21,6 +21,7 @@ import { createLanding } from './ui/landing.js';
 import { createCinematic } from './ui/cinematic.js';
 import { createTour } from './ui/tour.js';
 import { createTouchControls } from './ui/touchControls.js';
+import { createNudge } from './ui/nudge.js';
 
 const mount = document.getElementById('game');
 const engine = createEngine(mount);
@@ -75,6 +76,7 @@ const panel = createPanel();
 // On-screen joystick + action buttons (touch devices only). Free-roam is
 // unplayable on a phone without these — touch alone only orbits the camera.
 const touch = createTouchControls();
+const nudge = createNudge(); // one-time "how to move" hint; desktop only, touch controls are self-explanatory
 player.setTouch(touch);
 if (touch.active) {
   hud.setControlsHint(
@@ -97,6 +99,7 @@ function handoffToPlayer() {
   player.root.visible = true;
   hud.setControlsVisible(true);
   touch.setVisible(true);
+  if (!touch.active) nudge.show();
 }
 
 // Cinematic intro: a labeled fly-through past every landmark (captions only).
@@ -119,6 +122,7 @@ hud.onHome(() => {
   suspendPlayer();
   cinematic.reset();
   tour.reset();
+  nudge.hide();
   landing.show();
 });
 
@@ -179,7 +183,7 @@ window.addEventListener('keydown', (e) => {
 touch.onInteract(triggerInteract);
 
 // --- debug handle (harmless; handy for tuning) ------------------------------
-window.PW = { engine, player, ctx, THREE, interaction, panel, hud, pet, cinematic, tour, touch, landing };
+window.PW = { engine, player, ctx, THREE, interaction, panel, hud, pet, cinematic, tour, touch, landing, nudge };
 
 // --- go ---------------------------------------------------------------------
 engine.start();

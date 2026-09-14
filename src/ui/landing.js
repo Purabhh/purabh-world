@@ -46,7 +46,7 @@ export function createLanding({ onEnter, onTour } = {}) {
         </a>
       </nav>
 
-      <p class="pw-landing__hint"><b>WASD</b> to move · drag to look · <b>E</b> to interact</p>
+      <p class="pw-landing__hint">New here? <b>Take the Tour</b> needs no controls at all.<br class="pw-landing__hint-br">Exploring on foot: <b>WASD</b> to walk · click + hold to look around · <b>E</b> to read a sign</p>
     </div>
     <p class="pw-landing__footer">made with three.js</p>
   `;

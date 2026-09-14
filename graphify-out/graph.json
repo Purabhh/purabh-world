@@ -16,7 +16,7 @@
       "label": "suspendPlayer()",
       "file_type": "code",
       "source_file": "src\\main.js",
-      "source_location": "L88",
+      "source_location": "L90",
       "id": "main_suspendplayer",
       "community": 6,
       "norm_label": "suspendplayer()"
@@ -25,7 +25,7 @@
       "label": "handoffToPlayer()",
       "file_type": "code",
       "source_file": "src\\main.js",
-      "source_location": "L94",
+      "source_location": "L96",
       "id": "main_handofftoplayer",
       "community": 6,
       "norm_label": "handofftoplayer()"
@@ -34,7 +34,7 @@
       "label": "eyebrowFor()",
       "file_type": "code",
       "source_file": "src\\main.js",
-      "source_location": "L127",
+      "source_location": "L131",
       "id": "main_eyebrowfor",
       "community": 6,
       "norm_label": "eyebrowfor()"
@@ -43,7 +43,7 @@
       "label": "touchActionLabel()",
       "file_type": "code",
       "source_file": "src\\main.js",
-      "source_location": "L141",
+      "source_location": "L145",
       "id": "main_touchactionlabel",
       "community": 6,
       "norm_label": "touchactionlabel()"
@@ -52,7 +52,7 @@
       "label": "triggerInteract()",
       "file_type": "code",
       "source_file": "src\\main.js",
-      "source_location": "L169",
+      "source_location": "L173",
       "id": "main_triggerinteract",
       "community": 6,
       "norm_label": "triggerinteract()"
@@ -81,7 +81,7 @@
       "source_file": "src\\core\\colliders.js",
       "source_location": "L24",
       "id": "colliders_addcircle",
-      "community": 1,
+      "community": 0,
       "norm_label": "addcircle()"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "src\\core\\constants.js",
       "source_location": "L1",
       "id": "src_core_constants_js",
-      "community": 14,
+      "community": 13,
       "norm_label": "constants.js"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "src\\core\\engine.js",
       "source_location": "L1",
       "id": "src_core_engine_js",
-      "community": 9,
+      "community": 8,
       "norm_label": "engine.js"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "src\\core\\engine.js",
       "source_location": "L12",
       "id": "engine_makeskytexture",
-      "community": 9,
+      "community": 8,
       "norm_label": "makeskytexture()"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "src\\core\\engine.js",
       "source_location": "L27",
       "id": "engine_createengine",
-      "community": 9,
+      "community": 8,
       "norm_label": "createengine()"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "src\\data\\resume.js",
       "source_location": "L1",
       "id": "src_data_resume_js",
-      "community": 15,
+      "community": 14,
       "norm_label": "resume.js"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "src\\landmarks\\achievements.js",
       "source_location": "L1",
       "id": "src_landmarks_achievements_js",
-      "community": 1,
+      "community": 0,
       "norm_label": "achievements.js"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "src\\landmarks\\achievements.js",
       "source_location": "L13",
       "id": "achievements_buildachievements",
-      "community": 1,
+      "community": 0,
       "norm_label": "buildachievements()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "src\\landmarks\\essex.js",
       "source_location": "L1",
       "id": "src_landmarks_essex_js",
-      "community": 1,
+      "community": 0,
       "norm_label": "essex.js"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "src\\landmarks\\essex.js",
       "source_location": "L12",
       "id": "essex_makeradial",
-      "community": 1,
+      "community": 0,
       "norm_label": "makeradial()"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "src\\landmarks\\essex.js",
       "source_location": "L25",
       "id": "essex_makecylindertex",
-      "community": 1,
+      "community": 0,
       "norm_label": "makecylindertex()"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "src\\landmarks\\essex.js",
       "source_location": "L86",
       "id": "essex_makelogotex",
-      "community": 1,
+      "community": 0,
       "norm_label": "makelogotex()"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "src\\landmarks\\essex.js",
       "source_location": "L109",
       "id": "essex_maketickertex",
-      "community": 1,
+      "community": 0,
       "norm_label": "maketickertex()"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "src\\landmarks\\essex.js",
       "source_location": "L143",
       "id": "essex_buildessex",
-      "community": 1,
+      "community": 0,
       "norm_label": "buildessex()"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "src\\landmarks\\floatingLogo.js",
       "source_location": "L1",
       "id": "src_landmarks_floatinglogo_js",
-      "community": 1,
+      "community": 0,
       "norm_label": "floatinglogo.js"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "src\\landmarks\\floatingLogo.js",
       "source_location": "L6",
       "id": "floatinglogo_makewordmarktexture",
-      "community": 1,
+      "community": 0,
       "norm_label": "makewordmarktexture()"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "src\\landmarks\\floatingLogo.js",
       "source_location": "L49",
       "id": "floatinglogo_addfloatinglogo",
-      "community": 1,
+      "community": 0,
       "norm_label": "addfloatinglogo()"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "src\\landmarks\\floatingLogo.js",
       "source_location": "L69",
       "id": "floatinglogo_maketexttexture",
-      "community": 1,
+      "community": 0,
       "norm_label": "maketexttexture()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "src\\landmarks\\floatingLogo.js",
       "source_location": "L94",
       "id": "floatinglogo_addbuildingsign",
-      "community": 1,
+      "community": 0,
       "norm_label": "addbuildingsign()"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "src\\landmarks\\index.js",
       "source_location": "L1",
       "id": "src_landmarks_index_js",
-      "community": 1,
+      "community": 0,
       "norm_label": "index.js"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "src\\landmarks\\index.js",
       "source_location": "L16",
       "id": "index_buildlandmarks",
-      "community": 1,
+      "community": 0,
       "norm_label": "buildlandmarks()"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L1",
       "id": "src_landmarks_skills_js",
-      "community": 7,
+      "community": 0,
       "norm_label": "skills.js"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L10",
       "id": "skills_rr",
-      "community": 7,
+      "community": 0,
       "norm_label": "rr()"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L21",
       "id": "skills_dot",
-      "community": 7,
+      "community": 0,
       "norm_label": "dot()"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L22",
       "id": "skills_tri",
-      "community": 7,
+      "community": 0,
       "norm_label": "tri()"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L29",
       "id": "skills_hexa",
-      "community": 7,
+      "community": 0,
       "norm_label": "hexa()"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L32",
       "id": "skills_makeicon",
-      "community": 7,
+      "community": 0,
       "norm_label": "makeicon()"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "src\\landmarks\\skills.js",
       "source_location": "L92",
       "id": "skills_buildskills",
-      "community": 1,
+      "community": 0,
       "norm_label": "buildskills()"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "src\\player\\player.js",
       "source_location": "L1",
       "id": "src_player_player_js",
-      "community": 12,
+      "community": 11,
       "norm_label": "player.js"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "src\\player\\player.js",
       "source_location": "L11",
       "id": "player_createplayer",
-      "community": 12,
+      "community": 11,
       "norm_label": "createplayer()"
     },
     {
@@ -522,7 +522,7 @@
       "source_file": "src\\projects\\github.js",
       "source_location": "L1",
       "id": "src_projects_github_js",
-      "community": 8,
+      "community": 7,
       "norm_label": "github.js"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "src\\projects\\github.js",
       "source_location": "L15",
       "id": "github_cachekey",
-      "community": 8,
+      "community": 7,
       "norm_label": "cachekey()"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "src\\projects\\github.js",
       "source_location": "L18",
       "id": "github_readcache",
-      "community": 8,
+      "community": 7,
       "norm_label": "readcache()"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "src\\projects\\github.js",
       "source_location": "L32",
       "id": "github_writecache",
-      "community": 8,
+      "community": 7,
       "norm_label": "writecache()"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "src\\projects\\github.js",
       "source_location": "L42",
       "id": "github_normalize",
-      "community": 8,
+      "community": 7,
       "norm_label": "normalize()"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "src\\projects\\github.js",
       "source_location": "L61",
       "id": "github_fetchrepos",
-      "community": 8,
+      "community": 7,
       "norm_label": "fetchrepos()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "src\\projects\\projectsDistrict.js",
       "source_location": "L1",
       "id": "src_projects_projectsdistrict_js",
-      "community": 10,
+      "community": 9,
       "norm_label": "projectsdistrict.js"
     },
     {
@@ -585,7 +585,7 @@
       "source_file": "src\\projects\\projectsDistrict.js",
       "source_location": "L36",
       "id": "projectsdistrict_hextonum",
-      "community": 10,
+      "community": 9,
       "norm_label": "hextonum()"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "src\\projects\\projectsDistrict.js",
       "source_location": "L222",
       "id": "projectsdistrict_githuburlfor",
-      "community": 10,
+      "community": 9,
       "norm_label": "githuburlfor()"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "src\\ui\\cinematic.js",
       "source_location": "L1",
       "id": "src_ui_cinematic_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "cinematic.js"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "src\\ui\\cinematic.js",
       "source_location": "L16",
       "id": "cinematic_createcinematic",
-      "community": 0,
+      "community": 1,
       "norm_label": "createcinematic()"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "src\\ui\\hud.js",
       "source_location": "L1",
       "id": "src_ui_hud_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "hud.js"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "src\\ui\\hud.js",
       "source_location": "L18",
       "id": "hud_createhud",
-      "community": 0,
+      "community": 1,
       "norm_label": "createhud()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "src\\ui\\hud.js",
       "source_location": "L101",
       "id": "hud_formatprompt",
-      "community": 0,
+      "community": 1,
       "norm_label": "formatprompt()"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "src\\ui\\landing.js",
       "source_location": "L1",
       "id": "src_ui_landing_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "landing.js"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "src\\ui\\landing.js",
       "source_location": "L16",
       "id": "landing_createlanding",
-      "community": 0,
+      "community": 1,
       "norm_label": "createlanding()"
     },
     {
@@ -675,8 +675,26 @@
       "source_file": "src\\ui\\landing.js",
       "source_location": "L103",
       "id": "landing_escapehtml",
-      "community": 0,
+      "community": 1,
       "norm_label": "escapehtml()"
+    },
+    {
+      "label": "nudge.js",
+      "file_type": "code",
+      "source_file": "src\\ui\\nudge.js",
+      "source_location": "L1",
+      "id": "src_ui_nudge_js",
+      "community": 1,
+      "norm_label": "nudge.js"
+    },
+    {
+      "label": "createNudge()",
+      "file_type": "code",
+      "source_file": "src\\ui\\nudge.js",
+      "source_location": "L16",
+      "id": "nudge_createnudge",
+      "community": 1,
+      "norm_label": "createnudge()"
     },
     {
       "label": "panel.js",
@@ -684,7 +702,7 @@
       "source_file": "src\\ui\\panel.js",
       "source_location": "L1",
       "id": "src_ui_panel_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "panel.js"
     },
     {
@@ -693,7 +711,7 @@
       "source_file": "src\\ui\\panel.js",
       "source_location": "L19",
       "id": "panel_createpanel",
-      "community": 0,
+      "community": 1,
       "norm_label": "createpanel()"
     },
     {
@@ -702,25 +720,25 @@
       "source_file": "src\\ui\\styles.js",
       "source_location": "L1",
       "id": "src_ui_styles_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "styles.js"
     },
     {
       "label": "injectStyles()",
       "file_type": "code",
       "source_file": "src\\ui\\styles.js",
-      "source_location": "L713",
+      "source_location": "L749",
       "id": "styles_injectstyles",
-      "community": 0,
+      "community": 1,
       "norm_label": "injectstyles()"
     },
     {
       "label": "uiRoot()",
       "file_type": "code",
       "source_file": "src\\ui\\styles.js",
-      "source_location": "L723",
+      "source_location": "L759",
       "id": "styles_uiroot",
-      "community": 0,
+      "community": 1,
       "norm_label": "uiroot()"
     },
     {
@@ -729,7 +747,7 @@
       "source_file": "src\\ui\\touchControls.js",
       "source_location": "L1",
       "id": "src_ui_touchcontrols_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "touchcontrols.js"
     },
     {
@@ -738,7 +756,7 @@
       "source_file": "src\\ui\\touchControls.js",
       "source_location": "L21",
       "id": "touchcontrols_detecttouch",
-      "community": 0,
+      "community": 1,
       "norm_label": "detecttouch()"
     },
     {
@@ -747,7 +765,7 @@
       "source_file": "src\\ui\\touchControls.js",
       "source_location": "L30",
       "id": "touchcontrols_createtouchcontrols",
-      "community": 0,
+      "community": 1,
       "norm_label": "createtouchcontrols()"
     },
     {
@@ -756,7 +774,7 @@
       "source_file": "src\\ui\\tour.js",
       "source_location": "L1",
       "id": "src_ui_tour_js",
-      "community": 0,
+      "community": 1,
       "norm_label": "tour.js"
     },
     {
@@ -765,7 +783,7 @@
       "source_file": "src\\ui\\tour.js",
       "source_location": "L22",
       "id": "tour_createtour",
-      "community": 0,
+      "community": 1,
       "norm_label": "createtour()"
     },
     {
@@ -945,7 +963,7 @@
       "source_file": "src\\world\\lanterns.js",
       "source_location": "L1",
       "id": "src_world_lanterns_js",
-      "community": 13,
+      "community": 12,
       "norm_label": "lanterns.js"
     },
     {
@@ -954,7 +972,7 @@
       "source_file": "src\\world\\lanterns.js",
       "source_location": "L17",
       "id": "lanterns_buildlanterns",
-      "community": 13,
+      "community": 12,
       "norm_label": "buildlanterns()"
     },
     {
@@ -1053,7 +1071,7 @@
       "source_file": "src\\world\\terrain.js",
       "source_location": "L1",
       "id": "src_world_terrain_js",
-      "community": 11,
+      "community": 10,
       "norm_label": "terrain.js"
     },
     {
@@ -1062,7 +1080,7 @@
       "source_file": "src\\world\\terrain.js",
       "source_location": "L12",
       "id": "terrain_mix",
-      "community": 11,
+      "community": 10,
       "norm_label": "mix()"
     },
     {
@@ -1071,7 +1089,7 @@
       "source_file": "src\\world\\terrain.js",
       "source_location": "L21",
       "id": "terrain_buildterrain",
-      "community": 11,
+      "community": 10,
       "norm_label": "buildterrain()"
     }
   ],
@@ -1080,7 +1098,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\main.js",
-      "source_location": "L88",
+      "source_location": "L90",
       "weight": 1.0,
       "_src": "src_main_js",
       "_tgt": "main_suspendplayer",
@@ -1092,7 +1110,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\main.js",
-      "source_location": "L94",
+      "source_location": "L96",
       "weight": 1.0,
       "_src": "src_main_js",
       "_tgt": "main_handofftoplayer",
@@ -1104,7 +1122,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\main.js",
-      "source_location": "L127",
+      "source_location": "L131",
       "weight": 1.0,
       "_src": "src_main_js",
       "_tgt": "main_eyebrowfor",
@@ -1116,7 +1134,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\main.js",
-      "source_location": "L141",
+      "source_location": "L145",
       "weight": 1.0,
       "_src": "src_main_js",
       "_tgt": "main_touchactionlabel",
@@ -1128,7 +1146,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\main.js",
-      "source_location": "L169",
+      "source_location": "L173",
       "weight": 1.0,
       "_src": "src_main_js",
       "_tgt": "main_triggerinteract",
@@ -1140,7 +1158,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\main.js",
-      "source_location": "L174",
+      "source_location": "L178",
       "weight": 1.0,
       "_src": "main_triggerinteract",
       "_tgt": "main_eyebrowfor",
@@ -2603,6 +2621,42 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src\\ui\\nudge.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_src": "src_ui_nudge_js",
+      "_tgt": "nudge_createnudge",
+      "source": "src_ui_nudge_js",
+      "target": "nudge_createnudge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\ui\\nudge.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "nudge_createnudge",
+      "_tgt": "styles_injectstyles",
+      "source": "nudge_createnudge",
+      "target": "styles_injectstyles"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\ui\\nudge.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "nudge_createnudge",
+      "_tgt": "styles_uiroot",
+      "source": "nudge_createnudge",
+      "target": "styles_uiroot"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src\\ui\\panel.js",
       "source_location": "L19",
       "weight": 1.0,
@@ -2640,7 +2694,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\ui\\styles.js",
-      "source_location": "L713",
+      "source_location": "L749",
       "weight": 1.0,
       "_src": "src_ui_styles_js",
       "_tgt": "styles_injectstyles",
@@ -2652,7 +2706,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\ui\\styles.js",
-      "source_location": "L723",
+      "source_location": "L759",
       "weight": 1.0,
       "_src": "src_ui_styles_js",
       "_tgt": "styles_uiroot",

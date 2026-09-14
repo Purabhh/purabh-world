@@ -373,7 +373,7 @@ export const UI_CSS = `
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 .pw-hud__controls.pw-show { opacity: 1; transform: translateY(0); }
-.pw-hud__controls .pw-kbd {
+.pw-hud__controls .pw-kbd, .pw-nudge .pw-kbd {
   display: inline-block;
   padding: 1px 7px;
   font-size: 0.78rem;
@@ -382,6 +382,42 @@ export const UI_CSS = `
   background: #fff;
   border-radius: 7px;
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* First-move nudge (center-top): hard to miss, gone the moment it's used.
+   See ui/nudge.js. */
+.pw-nudge {
+  position: absolute;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translate(-50%, -10px);
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.pw-nudge.pw-show { opacity: 1; transform: translate(-50%, 0); animation: pw-nudge-bob 2.2s ease-in-out infinite; }
+.pw-nudge__card {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 11px 20px;
+  font-size: clamp(0.84rem, 2vw, 0.96rem);
+  font-weight: 700;
+  color: #5f4a2c;
+  background: rgba(255, 250, 240, 0.94);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(74, 48, 14, 0.3);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+@keyframes pw-nudge-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -4px); }
+}
+@media (max-width: 640px) {
+  .pw-nudge__card { white-space: normal; text-align: center; max-width: 88vw; }
 }
 
 /* Day/dusk toggle chip (bottom-right). Clickable, so it opts back into pointer
