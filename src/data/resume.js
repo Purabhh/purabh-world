@@ -21,16 +21,16 @@ export const education = {
   honors: ["Dean's List", 'Coursework: Data Structures, Algorithms, Computer Architecture, Discrete Structures I & II, AI, Databases'],
 };
 
-// Each entry maps to one landmark in the world. Bullets mirror the Sep 2026
+// Each entry maps to one landmark in the world. Bullets mirror the Oct 2026
 // resume (Resume.pdf in the project root) one-to-one; edit both together.
 export const experience = [
   {
     id: 'bny', org: 'BNY', role: 'Software Engineering Intern',
-    dates: 'Jun 2026 – Aug 2026', location: 'Pittsburgh, PA', accent: 'bny',
+    dates: 'June 2026 – Aug 2026', location: 'Pittsburgh, PA', accent: 'bny',
     bullets: [
-      "Built an immutable payments audit trail on a private Hyperledger Besu blockchain (Solidity, Web3j), validating and recording 2B+ cleared debits and credits for real-time reconciliation across 3 fragmented systems with zero payment-latency impact. Tested end-to-end with Apache ActiveMQ Artemis simulating live message-queue traffic, fronted by an Angular/ethers.js UI that reads directly from Besu for live ledger visibility during backend downtime.",
-      "Developed a real-time SWIFT MT/MX \"blotter\" dashboard for an Agile payments team, tracing every message through the platform's Java/Spring Boot systems and delivering first-ever end-to-end visibility across 15B+ daily messages.",
-      "Built an Angular observability and troubleshooting dashboard for cross-functional ops teams, pulling from Splunk logs to monitor the health and security posture of all 11 payment-platform systems, surfacing per-system vulnerability counts and month-over-month trends, and auto-generating Jira tickets from flagged issues to cut manual triage time by 60%.",
+      "Built an immutable fintech payments audit trail on a private Hyperledger Besu blockchain (Solidity, Web3j), validating and recording $2B+ in cleared debits and credits for real-time reconciliation across 3 fragmented systems with zero payment-latency impact, tested end-to-end using Apache ActiveMQ Artemis to simulate live message-queue traffic, fronted by an Angular/ethers.js UI that reads directly from Besu for live ledger visibility during backend downtime.",
+      "Developed a real-time SWIFT MT/MX \"blotter\" dashboard for an Agile payments team, tracing every message as it moved through the platform's Java/Spring Boot systems, delivering first-ever end-to-end visibility into message flow across 15M+ daily messages.",
+      "Built an Angular observability and troubleshooting dashboard for cross-functional ops teams, pulling from Splunk logs to monitor the health and security posture of all 11 payment-platform systems, surfacing per-system vulnerability counts and month-over-month trends and auto-generating Jira tickets from flagged issues to cut manual triage time by 60%.",
     ],
     tags: ['Java', 'Spring Boot', 'Hyperledger Besu', 'Solidity', 'Web3j', 'ActiveMQ Artemis', 'Angular', 'ethers.js', 'Splunk', 'SWIFT'],
   },
@@ -39,7 +39,8 @@ export const experience = [
     dates: 'May 2025 – Aug 2025', location: 'Jersey City, NJ', accent: 'essex',
     bullets: [
       "Built an AI agent using LangChain and RAG (pgvector semantic search, FastAPI endpoints) to automate extraction and comparison of actual vs estimated EPS from quarterly earnings reports, cutting manual review time by over 70%.",
-      "Built an MVP crypto spot exchange in Python (FastAPI, PostgreSQL, asyncio) with an in-memory matching engine, REST/WebSocket APIs, and a double-entry ledger for accurate order execution and balance reconciliation; added risk controls, basic KYC, and automated trade settlement.",
+      "Built an MVP BTC-USD spot exchange in Python (FastAPI, asyncio, PostgreSQL) with a price-time-priority matching engine supporting limit/market orders, partial fills, self-trade prevention, and sequenced WebSocket market data.",
+      "Designed an append-only double-entry ledger with atomic per-trade settlement, pre-trade risk holds, and crash recovery that rebuilds the order book, with automated invariant checks proving every balance reconciles.",
       "Automated limit order execution via Bloomberg EMSX API integration, reducing manual entry time by 20%.",
     ],
     tags: ['LangChain', 'RAG', 'pgvector', 'FastAPI', 'PostgreSQL', 'asyncio', 'WebSockets', 'Bloomberg EMSX'],
@@ -48,9 +49,9 @@ export const experience = [
     id: 'azonix', org: 'Azonix Tech', role: 'Software Engineering Intern',
     dates: 'May 2024 – Aug 2024', location: 'Remote', accent: 'azonix',
     bullets: [
-      "Built a real-time facial-recognition pipeline processing a live 30 FPS video feed at the edge, using OpenCV and an ONNX-optimized InsightFace embedding model to detect and identify enrolled individuals in under 45 ms per frame at 96%+ accuracy.",
+      "Built a real-time facial-recognition pipeline on a live 30 FPS edge video feed, using OpenCV and an ONNX-optimized InsightFace embedding model to detect and identify enrolled individuals in under 45 ms per frame at 96%+ accuracy.",
       "Engineered an IoT telemetry platform ingesting 5,000+ MQTT messages/sec from 500 concurrent sensor devices, persisting time-series data to TimescaleDB for sub-second querying and streaming anomaly detection.",
-      "Trained an XGBoost predictive-maintenance model on 100K+ rows of device telemetry to forecast equipment failures roughly 6 hours in advance, reaching 0.92 AUC and cutting projected unplanned downtime by 40%.",
+      "Trained an ML (XGBoost) predictive-maintenance model on 100K+ rows of device telemetry to forecast equipment failures roughly 6 hours in advance, reaching 0.92 AUC and cutting projected unplanned downtime by 40%.",
     ],
     tags: ['OpenCV', 'ONNX', 'InsightFace', 'MQTT', 'TimescaleDB', 'XGBoost'],
   },
@@ -69,22 +70,22 @@ export const achievements = [
 export const projectsFallback = [
   {
     name: 'LeaseLink',
-    description: 'Won the MusaLabs Hackathon (50+ teams, 150+ participants): a Tinder-style housing marketplace connecting renters and landlords through mutual interest. React + Tailwind, Express.js, PostgreSQL, Google OAuth, and a gated real-time WebSocket chat with landlord approval workflows.',
+    description: "Built a full-stack Tinder-style housing marketplace connecting renters and landlords through mutual interest, with a React + Tailwind frontend, Express.js backend, PostgreSQL database, and Google OAuth authentication. Led backend development of a gated real-time chat system via WebSockets and implemented landlord approval workflows, streamlining property discovery and communication.",
     language: 'TypeScript', stars: 1, url: 'https://github.com/Purabhh/LeaseLink', homepage: 'https://www.leaselink.pro/', color: '#ffd34e', metallic: true, updated: '2025-08-21',
   },
   {
     name: 'FastRust',
-    description: 'An open-source, from-scratch Rust web framework on Hyper and Tokio with FastAPI-style ergonomics: a custom trie router with static-over-parameter precedence, typed extractors (Path, Query, JSON, State), macro routing across 7 HTTP methods, an onion-style middleware stack (CORS, bearer auth, logging), and OpenAPI 3.1 with live Swagger UI. Criterion benchmarks: 172 ns static and 849 ns parameterized router lookups, 1.4 to 2.3 µs request dispatch.',
+    description: "Created an open source, from-scratch Rust web framework on Hyper and Tokio that pairs FastAPI-style ergonomics with Rust-native performance, featuring a custom trie data structure for routing with static-over-parameter precedence, typed extractors (Path, Query, JSON, State), and macro-based routing across 7 HTTP methods. Layered on an onion-style middleware stack (CORS, bearer auth, logging) with OpenAPI 3.1 generation and a live Swagger UI, benchmarked with Criterion at sub-microsecond trie-router lookups (172 ns static, 849 ns parameterized) and 1.4 to 2.3 µs request dispatch.",
     language: 'Rust', stars: 3, url: 'https://github.com/Purabhh/FastRust', homepage: '', updated: '2026-06-29',
   },
   {
     name: 'VaultDB',
-    description: 'A native desktop knowledge base (Tauri: Rust + React/TypeScript) that turns an Obsidian markdown vault into a locally searchable vector database, generating embeddings with Ollama and indexing them in Qdrant entirely on-device. Includes a dual-layer semantic graph (react-force-graph-2d, d3-force) that blends explicit wiki-links with vector-similarity edges to surface note connections Obsidian itself cannot show.',
+    description: "Built a desktop app (Tauri, Rust + React/TypeScript) that turns an Obsidian markdown vault into a locally-searchable vector database, generating embeddings with Ollama and indexing them in Qdrant entirely on-device. Designed a dual-layer semantic graph visualizer (react-force-graph-2d, d3-force) that blends explicit wiki-links with vector-similarity edges, surfacing note connections Obsidian itself can't show.",
     language: 'TypeScript', stars: 0, url: 'https://github.com/Purabhh/vaultdb', homepage: '', updated: '2026-04-16',
   },
   {
     name: 'Anomalyy',
-    description: 'An unsupervised anomaly-detection pipeline that flags unusual trading days across major stocks (AAPL, MSFT, TSLA, AMZN, S&P 500) using Z-Score, Isolation Forest, and Local Outlier Factor in consensus, engineered from 40+ technical indicators over 10 years of price data. Each anomaly is classified by likely cause (macro events, sector contagion, sentiment spikes) by cross-referencing FOMC dates and GDELT news sentiment pulled via Google BigQuery, with Plotly charts per ticker.',
+    description: "Built an unsupervised anomaly-detection pipeline that flags unusual trading days across major stocks using Z-Score, Isolation Forest, and Local Outlier Factor in consensus, engineered from 40+ technical indicators. Classified detected anomalies by likely cause (macro events, sector contagion, sentiment spikes) by cross-referencing FOMC dates and GDELT news-sentiment data pulled via Google BigQuery.",
     language: 'Python', stars: 0, url: 'https://github.com/Purabhh/Anomalyy', homepage: '', updated: '2026-05-08',
   },
   {
