@@ -87,9 +87,12 @@ export const projectDetails = {
   },
   "CHESS-GAME": {
     lines: [
-      "Under construction, inspired by a hatred of the touch-move rule. In chess, once you touch a piece you have to move it, which is awful when you're still thinking.",
-      "The goal is a chess game you play without touching anything. Hold your finger over a piece for a couple of seconds and it shows every move that piece can legally make. Then say the piece and the square, and the game confirms each one out loud before it moves. Nothing happens until you say yes.",
+      "Gambit: hands-free 3D chess against a Stockfish bot, inspired by a hatred of the touch-move rule. You play without touching anything.",
+      "Say your move (\"knight f3\"), point at the board through your webcam, or use hand gestures: pinch and drag a piece, thumbs up to confirm, open palm to cancel. Every input feeds one move flow, so you can say \"knight\" and point at the square.",
+      "Toon pieces that fight on every capture, chess clocks (30, 10 or 5 minutes), takebacks, draw offers, a bot from 400 to 2800 Elo, and a spoken answer to \"what did it play?\".",
+      "Vite, three.js, chess.js, Stockfish in a Web Worker, and MediaPipe hand tracking, all in the browser. Multiplayer and an Elo rating system are coming soon.",
     ],
+    live: 'https://gambit-amber.vercel.app',
   },
   "REPO-ARCHAEOLOGIST": {
     lines: [
@@ -218,9 +221,9 @@ export const projectsFallback = [
     language: 'Python', stars: 0, url: 'https://github.com/Purabhh/REPO-ARCHAEOLOGIST', homepage: '', updated: '2026-03-11',
   },
   {
-    name: 'Chess Game',
-    description: 'A browser chess game with voice-to-speech controls. Work in progress, actively building it out.',
-    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/CHESS-GAME', homepage: '', updated: '2025-07-07',
+    name: 'CHESS-GAME',
+    description: 'Gambit: hands-free 3D chess vs Stockfish with voice, webcam pointing and hand gestures. Multiplayer and Elo coming soon.',
+    language: 'JavaScript', stars: 0, url: 'https://github.com/Purabhh/CHESS-GAME', homepage: 'https://gambit-amber.vercel.app', updated: '2026-10-20',
   },
   // Kept last on purpose so it lands at the back of the Projects grid.
   {
