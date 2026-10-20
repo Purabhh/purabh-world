@@ -125,7 +125,7 @@ export const projectDetails = {
       'Everyone in the group posts photos and videos from their trips, so the scrapbook fills up as the crew travels.',
       'Started as a small project inspired by a group trip to Colombia with friends, built to keep those memories in one place.',
     ],
-    live: 'http://137.184.65.14/',
+    // live: 'http://137.184.65.14/', // droplet down; card falls back to the Vercel homepage
   },
   Mochee: {
     lines: [
