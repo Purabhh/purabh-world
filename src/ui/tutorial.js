@@ -134,7 +134,8 @@ export function createTutorial({ onDone } = {}) {
     window[f]('wheel', onWheel, { capture: true, passive: true });
   }
 
-  function finish() {
+  // notify=false ends it silently (used when you leave free roam mid-tutorial)
+  function finish(notify = true) {
     if (!active) return;
     active = false;
     clearTimeout(timer); clearTimeout(fadeTimer);
@@ -142,7 +143,7 @@ export function createTutorial({ onDone } = {}) {
     held.clear();
     listen(false);
     setEnabled(false);
-    onDone && onDone();
+    if (notify) onDone && onDone();
   }
 
   function start() {
@@ -160,11 +161,11 @@ export function createTutorial({ onDone } = {}) {
   }
 
   elNext.addEventListener('click', () => go(1));
-  root.querySelector('.pw-tut__skip').addEventListener('click', finish);
+  root.querySelector('.pw-tut__skip').addEventListener('click', () => finish(true));
 
   return {
     start,
-    stop: finish,
+    stop: () => finish(false),
     shouldRun: () => enabled && !ranThisLoad,
     setEnabled,
     get enabled() { return enabled; },

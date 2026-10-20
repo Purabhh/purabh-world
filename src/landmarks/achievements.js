@@ -166,6 +166,7 @@ export function buildAchievements(ctx) {
     id: 'achievements',
     position: new THREE.Vector3(cx, 1.5, cz),
     radius: 6.5,
+    bounds: { x: cx, z: cz, hw: 8, hd: 8 },                   // the whole trophy plinth
     data: {
       title: 'LeaseLink',
       subtitle: 'MusaLabs Hackathon Winner, 1st of 50+ teams',

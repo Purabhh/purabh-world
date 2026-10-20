@@ -925,6 +925,7 @@
 .pw-hud-eye:hover { background: rgba(20, 14, 36, .82); }
 .pw-view-btn { right: 64px; }
 body.pw-hud-hidden .pw-hud__home, body.pw-hud-hidden .pw-hud__controls,
-body.pw-hud-hidden .pw-hud__toggle, body.pw-hud-hidden .pw-view-btn {
+body.pw-hud-hidden .pw-hud__toggle, body.pw-hud-hidden .pw-view-btn, body.pw-hud-hidden .pw-hud__prompt {
   opacity: 0 !important; pointer-events: none !important; transition: opacity .2s ease;
 }
+

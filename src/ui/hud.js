@@ -28,17 +28,6 @@ export function createHUD() {
   home.setAttribute('aria-label', 'Back to home');
   home.innerHTML = '<span aria-hidden="true">←</span> Home';
 
-  // --- Controls chip (bottom-left), hidden until enabled ---
-  const controls = document.createElement('div');
-  controls.className = 'pw-hud__controls';
-  controls.innerHTML = `
-    <span class="pw-ctl"><span class="pw-kbd">W/S</span>walk</span>
-    <span class="pw-ctl"><span class="pw-kbd">A/D</span>turn</span>
-    <span class="pw-ctl"><span class="pw-kbd">Scroll</span>zoom</span>
-    <span class="pw-ctl"><span class="pw-kbd">E</span>interact</span>
-    <span class="pw-ctl"><span class="pw-kbd">N</span>day/dusk</span>
-  `;
-
   // --- Day/dusk toggle chip (bottom-right), hidden until enabled ---
   const toggle = document.createElement('button');
   toggle.type = 'button';
@@ -60,7 +49,7 @@ export function createHUD() {
 
   prompt.append(promptKey, promptText);
 
-  root.append(home, controls, prompt, toggle);
+  root.append(home, prompt, toggle);
   uiRoot().appendChild(root);
 
   /**
@@ -93,7 +82,6 @@ export function createHUD() {
   }
 
   function setControlsVisible(visible) {
-    controls.classList.toggle('pw-show', !!visible);
     toggle.classList.toggle('pw-show', !!visible);
     home.classList.toggle('pw-show', !!visible);
   }
@@ -101,12 +89,10 @@ export function createHUD() {
   // Day/dusk chip: register a click handler and update its label.
   function onDayNight(cb) { toggle.addEventListener('click', cb); }
   function setDayNightLabel(text) { toggle.textContent = text; }
-  // Swap the controls chip copy (e.g. touch devices have no WASD/scroll/E keys).
-  function setControlsHint(html) { controls.innerHTML = html; }
   // Home button: register a click handler (back to the landing screen).
   function onHome(cb) { home.addEventListener('click', cb); }
 
-  return { setPrompt, setControlsVisible, onDayNight, setDayNightLabel, setControlsHint, onHome, el: root };
+  return { setPrompt, setControlsVisible, onDayNight, setDayNightLabel, onHome, el: root };
 }
 
 // "Press E — BNY" -> "BNY"; "Press E to open" -> "open"; otherwise pass through.

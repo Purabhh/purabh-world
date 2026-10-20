@@ -164,6 +164,7 @@ export function buildSkills(ctx) {
     id: 'skills',
     position: new THREE.Vector3(cx, 1.5, cz),
     radius: 6,
+    bounds: { x: cx, z: cz, hw: 10, hd: 10 },                 // anywhere under the orbiting stack, not just the center
     data: {
       title: 'My Stack',
       subtitle: 'The tools I build with',

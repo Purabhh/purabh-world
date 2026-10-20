@@ -199,6 +199,7 @@ export function buildEssex(ctx) {
     id: 'essex',
     position: worldE,
     radius: 4.5,
+    bounds: { x: cx, z: cz, hw: 14, hd: 14 },                 // the round plaza the tower stands on
     data: {
       title: 'Essex Securities: ' + role.role,
       subtitle: role.dates + ' · ' + role.location,

@@ -83,12 +83,6 @@ const panel = createPanel();
 const touch = createTouchControls();
 const nudge = createNudge(); // one-time "how to move" hint; desktop only, touch controls are self-explanatory
 player.setTouch(touch);
-if (touch.active) {
-  hud.setControlsHint(
-    'Left stick to move · drag right side to look · ' +
-    '<span class="pw-kbd">⦿</span> interact · <span class="pw-kbd">»</span> sprint',
-  );
-}
 
 // While an intro/tour owns the camera the player is suspended; both hand control
 // back to free-roam at spawn when they finish.
@@ -117,7 +111,8 @@ const cinematic = createCinematic(ctx, { onComplete: handoffToPlayer });
 // info card with auto-advance + controls, ending on a "Let's connect" CTA.
 const tour = createTour(ctx, { panel, onComplete: handoffToPlayer });
 
-const tutorial = createTutorial();
+// When the tutorial ends (finished or skipped), show the one-line hint at the top.
+const tutorial = createTutorial({ onDone: () => { if (!touch.active) nudge.show(); } });
 const landing = createLanding({
   tutorial,
   onEnter: () => { suspendPlayer(); cinematic.play(); },   // free roam (after the quick intro)
@@ -183,6 +178,7 @@ window.addEventListener('keydown', (e) => {
 });
 document.getElementById('ui').appendChild(hudBtn);
 
+
 hud.onHome(() => {
   // Finish a running intro/tour first: reset() is a no-op while one is playing,
   // which is why Home used to leave the tour card on screen.
@@ -195,6 +191,7 @@ hud.onHome(() => {
   tour.reset();
   nudge.hide();
   mode = 'home';          // after skip/exit, which would otherwise hand off to free roam
+  hud.setControlsVisible(false);   // the landing page shows no Home / Day chrome
   landing.show();
 });
 

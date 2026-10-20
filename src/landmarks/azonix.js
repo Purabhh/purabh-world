@@ -279,6 +279,7 @@ export function buildAzonix(ctx) {
     id: 'azonix',
     position: new THREE.Vector3(cx - 9, 1.5, cz),
     radius: 9,
+    bounds: { x: cx, z: cz, hw: 13.5, hd: 13.5 },             // the full square plaza under the building
     data: {
       title: 'Azonix Tech, ' + az.role,
       subtitle: az.dates + ' · ' + az.location,

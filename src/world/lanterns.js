@@ -141,9 +141,14 @@ export function buildLanterns(ctx) {
 
   // === 1) SPAWN PLAZA — four stone toro lanterns framing the corners ==========
   const PC = 9.5; // plaza corner offset (on the stone, between the diagonal paths)
+  const toroSpots = [];
   for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
     place(lampToro(false), sx * PC, sz * PC, 0, 0.9);
+    toroSpots.push([sx * PC, sz * PC]);
   }
+  // Two different lamp styles should never crowd each other: a streetlight is
+  // skipped if it would land within these distances of a gatepost / spawn lantern.
+  const MIN_GATE_GAP = 5.0, MIN_TORO_GAP = 4.5;
 
   // === 2) PATHS — drooping iron streetlights, staggered, arm over the walkway ==
   // and 3) DISTRICT ENTRANCES — a pair of wood gatepost lanterns at each plaza.
@@ -158,23 +163,27 @@ export function buildLanterns(ctx) {
     // Streetlights down the spoke, alternating sides; the curved arm always
     // reaches back toward the path centerline. Light only the first per spoke.
     const start = 16, end = dist - d.radius * 0.9, spacing = 15, sideOff = 3.4;
+    // Gatepost spots first, so the streetlights below can keep clear of them.
+    const gate = dist - d.radius - 1.5, sep = 4.0;
+    const gx = ux * gate, gz = uz * gate;
+    const gateSpots = [-1, 1].map((side) => [gx + px * side * sep, gz + pz * side * sep]);
     let idx = 0;
     for (let t = start; t <= end; t += spacing) {
       const side = idx % 2 === 0 ? 1 : -1;
       const x = ux * t + px * side * sideOff;
       const z = uz * t + pz * side * sideOff;
+      idx++;                                   // keep the left/right alternation steady even if one is skipped
+      const tooClose =
+        gateSpots.some(([qx, qz]) => Math.hypot(x - qx, z - qz) < MIN_GATE_GAP) ||
+        toroSpots.some(([qx, qz]) => Math.hypot(x - qx, z - qz) < MIN_TORO_GAP);
+      if (tooClose) continue;
       // arm (local +X) should point inward, toward the path: dir = -side*perp
       const dirx = -side * px, dirz = -side * pz;
       const rotY = Math.atan2(-dirz, dirx);
       place(lampHanging(false), x, z, rotY, 0.4);
-      idx++;
     }
 
     // Gateposts: a pair of wood lanterns flanking the path just outside the plaza.
-    const gate = dist - d.radius - 1.5, sep = 4.0;
-    const gx = ux * gate, gz = uz * gate;
-    for (const side of [-1, 1]) {
-      place(lampBox(false), gx + px * side * sep, gz + pz * side * sep, 0, 0.5);
-    }
+    for (const [qx, qz] of gateSpots) place(lampBox(false), qx, qz, 0, 0.5);
   }
 }

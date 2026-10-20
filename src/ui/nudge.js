@@ -3,15 +3,12 @@
 // the camera. The permanent HUD controls chip (bottom-left) is easy to miss
 // while looking at the 3D world; this sits center-top for a few seconds, then
 // self-dismisses on the player's first real move/look/interact input, or after
-// a timeout regardless. Shows once per browser tab (sessionStorage) so it
-// doesn't nag on repeat "Enter World" visits after Home.
+// a timeout regardless. Shown every time free roam starts, and after the tutorial.
 //
 //   import { createNudge } from './ui/nudge.js';
 //   const nudge = createNudge();
 //   nudge.show();   // call once free-roam actually has control
 import { injectStyles, uiRoot } from './styles.js';
-
-const SEEN_KEY = 'pw:nudge-seen';
 
 export function createNudge() {
   injectStyles();
@@ -21,21 +18,13 @@ export function createNudge() {
   root.setAttribute('aria-hidden', 'true');
   root.innerHTML = `
     <div class="pw-nudge__card">
-      <span class="pw-kbd">W/S</span> to walk &nbsp;·&nbsp; <span class="pw-kbd">A/D</span> to turn &nbsp;·&nbsp;
-      <span class="pw-kbd">E</span> to read a sign
+      Move closer to any monument and press <span class="pw-kbd">E</span> to see what it's about
     </div>
   `;
   uiRoot().appendChild(root);
 
   let visible = false;
   let cleanup = null;
-
-  function alreadySeen() {
-    try { return sessionStorage.getItem(SEEN_KEY) === '1'; } catch { return false; }
-  }
-  function markSeen() {
-    try { sessionStorage.setItem(SEEN_KEY, '1'); } catch {}
-  }
 
   function hide() {
     if (!visible) return;
@@ -45,9 +34,8 @@ export function createNudge() {
   }
 
   function show() {
-    if (visible || alreadySeen()) return;
+    if (visible) return;
     visible = true;
-    markSeen();
     root.classList.add('pw-show');
 
     const dismiss = () => hide();
@@ -57,7 +45,7 @@ export function createNudge() {
     const onPointerDown = () => dismiss();
     window.addEventListener('keydown', onKey);
     window.addEventListener('pointerdown', onPointerDown);
-    const timer = setTimeout(dismiss, 6000);
+    const timer = setTimeout(dismiss, 8000);
 
     cleanup = () => {
       window.removeEventListener('keydown', onKey);

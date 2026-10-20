@@ -38,6 +38,7 @@ export function buildEducation(ctx) {
     id: 'education',
     position: new THREE.Vector3(cx, 1.5, cz + hallD / 2 + 3),
     radius: 8,
+    bounds: { x: cx, z: cz, hw: halfW + 2, hd: halfW + 2 },   // whole 30x30 building footprint + a margin
     data: {
       title: 'Rutgers University',
       subtitle: resume.education.degree,

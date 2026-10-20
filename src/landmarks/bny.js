@@ -222,6 +222,7 @@ export function buildBny(ctx) {
     id: 'bny',
     position: new THREE.Vector3(cx + 10, 2.2, cz),
     radius: 8,
+    bounds: { x: cx, z: cz, hw: 15, hd: 15 },                 // the 26-wide pad the tower stands on, plus a margin
     data: {
       title: 'BNY: ' + bny.role,
       subtitle: bny.dates + ' · ' + bny.location,

@@ -19,7 +19,11 @@
 const interactables = [];
 
 export function registerInteractable(obj) {
-  // obj: { id, position: THREE.Vector3, radius: number, data: PanelData }
+  // obj: { id, position: THREE.Vector3, radius: number, data: PanelData,
+  //        bounds?: { x, z, hw, hd } }
+  // `position` is where the card pins and the fallback circle (radius) is centered.
+  // `bounds` (optional) is the monument's base: standing anywhere inside that
+  // rectangle counts, so big buildings don't need you at one exact spot.
   interactables.push(obj);
   return obj;
 }
@@ -38,8 +42,16 @@ export function getNearest(pos) {
   let bestDist = Infinity;
   for (const it of interactables) {
     if (!it.position) continue;
-    const d = it.position.distanceTo(pos);
-    if (d <= it.radius && d < bestDist) {
+    let d, inside;
+    if (it.bounds) {
+      const b = it.bounds;
+      inside = Math.abs(pos.x - b.x) <= b.hw && Math.abs(pos.z - b.z) <= b.hd;
+      d = Math.hypot(pos.x - b.x, pos.z - b.z);
+    } else {
+      d = it.position.distanceTo(pos);
+      inside = d <= it.radius;
+    }
+    if (inside && d < bestDist) {
       best = it;
       bestDist = d;
     }
