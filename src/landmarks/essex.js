@@ -1,6 +1,5 @@
 // Essex Securities landmark — the "ROTUNDA": a cylindrical glass-and-stone tower
-// with a dark mirror curtain-wall arc, a red lobby base, a rotating stock-ticker
-// crown, and a street lamp out front. Ported from the CASCADE 3D component.
+// with a blue glass curtain wall, a red lobby base, and a street lamp out front. Ported from the CASCADE 3D component.
 //
 // The single Essex role (AI EPS agent, crypto exchange MVP, Bloomberg EMSX)
 // stay as two plaque kiosks flanking the entrance, each its own interactable zone.
@@ -8,7 +7,7 @@ import * as THREE from 'three';
 import { makeWordmarkTexture, addFloatingLogo } from './floatingLogo.js';
 import { addCircle } from '../core/colliders.js';
 
-// soft radial sprite (lamp glow + crown halo)
+// soft radial sprite (lamp glow)
 function makeRadial(rgb, soft) {
   const S = 128, c = document.createElement('canvas'); c.width = c.height = S;
   const x = c.getContext('2d');
@@ -23,58 +22,71 @@ function makeRadial(rgb, soft) {
 // unrolled cylinder skin: white punched-window concrete + a dark mirror-glass
 // curtain-wall arc on the front, plus an emissive map for a few lit windows.
 function makeCylinderTex() {
+  // Full 360-degree glass curtain wall: the same blue glass, mullions and floor
+  // bands all the way round, so the back of the tower looks as good as the front.
   const W = 2048, H = 1180;
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
-  // Column/row counts scaled to the taller, wider tower so window panes keep
-  // their proportions instead of stretching.
-  const cols = 68, rows = 50, cw = W / cols, rh = H / rows;
+  const cols = 48, rows = 34, cw = W / cols, rh = H / rows;   // 34 floors, 48 bays
   let s = 20231; const rnd = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
 
-  x.fillStyle = '#e7eaee'; x.fillRect(0, 0, W, H);
+  // sky reflection: pale at the top, deep steel blue at the bottom
+  const sky = x.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#9fb6cf'); sky.addColorStop(.35, '#5a718a'); sky.addColorStop(.7, '#2f4152'); sky.addColorStop(1, '#1b2733');
+  x.fillStyle = sky; x.fillRect(0, 0, W, H);
+
+  // glass panes: each pane slightly different so the wall shimmers
   for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
-    const wx = i * cw + cw * 0.24, wy = j * rh + rh * 0.16, ww = cw * 0.52, wh = rh * 0.66;
-    const g = x.createLinearGradient(wx, wy, wx, wy + wh);
-    g.addColorStop(0, '#5d7186'); g.addColorStop(.5, '#33485b'); g.addColorStop(1, '#465e72');
-    x.fillStyle = g; x.fillRect(wx, wy, ww, wh);
-    x.fillStyle = 'rgba(220,234,248,.25)'; x.fillRect(wx, wy, ww, wh * 0.18);
+    const px = i * cw, py = j * rh;
+    const t = j / rows, v = (rnd() - 0.5) * 0.12;
+    const top = `rgb(${Math.round(120 + 70 * (1 - t) + v * 80)},${Math.round(150 + 60 * (1 - t) + v * 80)},${Math.round(180 + 50 * (1 - t) + v * 80)})`;
+    const bot = `rgb(${Math.round(40 + 40 * (1 - t))},${Math.round(60 + 40 * (1 - t))},${Math.round(84 + 40 * (1 - t))})`;
+    const g = x.createLinearGradient(px, py, px, py + rh);
+    g.addColorStop(0, top); g.addColorStop(1, bot);
+    x.fillStyle = g; x.fillRect(px, py, cw, rh);
   }
 
-  const gx0 = Math.floor(0.30 * W), gx1 = Math.floor(0.70 * W), gW = gx1 - gx0;
-  const gg = x.createLinearGradient(0, 0, 0, H);
-  gg.addColorStop(0, '#d4ddee'); gg.addColorStop(.30, '#7c8ca6'); gg.addColorStop(.52, '#3d4d61'); gg.addColorStop(.78, '#26333f'); gg.addColorStop(1, '#1a232e');
-  x.fillStyle = gg; x.fillRect(gx0, 0, gW, H);
-  const sweep = x.createLinearGradient(gx0, 0, gx1, H * 0.5);
-  sweep.addColorStop(0, 'rgba(225,232,245,.30)'); sweep.addColorStop(.45, 'rgba(225,232,245,0)');
-  x.fillStyle = sweep; x.fillRect(gx0, 0, gW, H);
-  const gcols = 30, gstep = gW / gcols;
-  for (let i = 0; i <= gcols; i++) {
-    const lx = gx0 + i * gstep;
-    x.strokeStyle = 'rgba(12,18,26,.55)'; x.lineWidth = 2; x.beginPath(); x.moveTo(lx, 0); x.lineTo(lx, H); x.stroke();
-    x.strokeStyle = 'rgba(200,218,242,.16)'; x.lineWidth = 1; x.beginPath(); x.moveTo(lx + 1.5, 0); x.lineTo(lx + 1.5, H); x.stroke();
+  // two soft diagonal sheen stripes across the whole wrap
+  x.save();
+  x.fillStyle = 'rgba(235,242,252,.10)';
+  for (const off of [W * 0.12, W * 0.62]) {
+    x.save(); x.translate(off, 0); x.rotate(0.10);
+    x.fillRect(0, -80, W * 0.09, H + 160); x.fillRect(W * 0.14, -80, W * 0.035, H + 160);
+    x.restore();
   }
-  for (let j = 0; j <= rows; j++) { const ly = j * rh; x.strokeStyle = 'rgba(12,18,26,.5)'; x.lineWidth = 2; x.beginPath(); x.moveTo(gx0, ly); x.lineTo(gx1, ly); x.stroke(); }
-  x.fillStyle = 'rgba(232,238,250,.12)';
-  x.save(); x.beginPath(); x.rect(gx0, 0, gW, H); x.clip();
-  x.translate(gx0 + gW * 0.35, 0); x.rotate(0.12); x.fillRect(0, -50, gW * 0.10, H + 100); x.fillRect(gW * 0.28, -50, gW * 0.05, H + 100); x.restore();
-  x.strokeStyle = '#f1f3f6'; x.lineWidth = 5;
-  x.beginPath(); x.moveTo(gx0, 0); x.lineTo(gx0, H); x.stroke();
-  x.beginPath(); x.moveTo(gx1, 0); x.lineTo(gx1, H); x.stroke();
+  x.restore();
+
+  // floor spandrels: a dark band with a light edge between every floor
+  for (let j = 0; j <= rows; j++) {
+    const ly = j * rh;
+    x.fillStyle = 'rgba(14,20,28,.78)'; x.fillRect(0, ly - rh * 0.11, W, rh * 0.22);
+    x.fillStyle = 'rgba(210,222,238,.28)'; x.fillRect(0, ly + rh * 0.11, W, 2);
+  }
+  // mullions: thin dark line + light highlight on each bay
+  for (let i = 0; i <= cols; i++) {
+    const lx = i * cw;
+    x.fillStyle = 'rgba(14,20,28,.7)'; x.fillRect(lx - 1.5, 0, 3, H);
+    x.fillStyle = 'rgba(210,222,238,.22)'; x.fillRect(lx + 1.5, 0, 1, H);
+  }
+  // four evenly spaced metal fins for rhythm (one lands on the front)
+  for (let k = 0; k < 4; k++) {
+    const fx = (k / 4) * W;
+    const fg = x.createLinearGradient(fx - 7, 0, fx + 7, 0);
+    fg.addColorStop(0, '#9aa5b2'); fg.addColorStop(.5, '#eef2f6'); fg.addColorStop(1, '#8792a0');
+    x.fillStyle = fg; x.fillRect(fx - 7, 0, 14, H);
+  }
 
   const map = new THREE.CanvasTexture(c);
   map.wrapS = THREE.RepeatWrapping; map.wrapT = THREE.ClampToEdgeWrapping; map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = 8;
 
+  // emissive: lit windows scattered all the way round, warmer toward the bottom floors
   const e = document.createElement('canvas'); e.width = W; e.height = H; const ex = e.getContext('2d');
   ex.fillStyle = '#000'; ex.fillRect(0, 0, W, H);
-  for (let i = 0; i < cols; i++) {
-    const inGlass = (i * cw > gx0 - cw && i * cw < gx1);
-    for (let j = 0; j < rows; j++) {
-      const p = inGlass ? 0.05 : 0.12;
-      if (rnd() < p) {
-        const warm = rnd() > 0.25; const a = 0.4 + rnd() * 0.3;
-        ex.fillStyle = warm ? `rgba(232,170,96,${a})` : `rgba(150,185,225,${a})`;
-        ex.fillRect(i * cw + cw * 0.24, j * rh + rh * 0.16, cw * 0.52, rh * 0.66);
-      }
+  for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) {
+    if (rnd() < 0.16) {
+      const warm = rnd() > 0.35; const a = 0.45 + rnd() * 0.35;
+      ex.fillStyle = warm ? `rgba(240,186,110,${a})` : `rgba(160,196,236,${a})`;
+      ex.fillRect(i * cw + 3, j * rh + rh * 0.13, cw - 6, rh * 0.74);
     }
   }
   const emis = new THREE.CanvasTexture(e);
@@ -103,43 +115,6 @@ function makeLogoTex() {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 }
 
-// scrolling stock-ticker strip for the crown. Each item is drawn large enough to
-// read as actual market data; the strip wraps the cylinder roughly once (repeat
-// ~1) so it never compresses into a blur of colored lines.
-function makeTickerTex() {
-  // symbol, last price, change — a realistic spread of equities, indices, crypto,
-  // rates and FX. Up = green, down = red (derived from the ▲/▼ glyph below).
-  const items = [
-    'ESX ▲ 142.50 +1.8%', 'SPX ▲ 5,821.00 +0.4%', 'NDX ▲ 20,140 +0.7%',
-    'BTC ▲ 68,420 +2.3%', 'ETH ▼ 3,540 -0.9%', 'AAPL ▲ 226.10 +0.6%',
-    'NVDA ▲ 131.40 +3.1%', 'GLD ▲ 2,410 +0.2%', '10Y ▲ 4.18%',
-    'VIX ▼ 12.90 -4.0%', 'EUR/USD ▼ 1.0843', 'OIL ▼ 71.30 -1.1%',
-  ];
-  const colFor = (t) => (t.includes('▼') ? '#ff5b5b' : '#46e07a');
-  // High-res canvas + anisotropy keep the text sharp where the band curves away.
-  const H = 192, font = '700 104px "IBM Plex Mono", monospace', gap = 130;
-  let c = document.createElement('canvas'); let x = c.getContext('2d');
-  x.font = font;
-  let seqW = 0; items.forEach((t) => { seqW += x.measureText(t).width + gap; });
-  c.width = Math.round(seqW); c.height = H;
-  x = c.getContext('2d');
-  x.fillStyle = '#05080f'; x.fillRect(0, 0, c.width, H);
-  x.font = font; x.textBaseline = 'middle';
-  // thin LED rails top and bottom so the band still reads as a ticker up close
-  x.fillStyle = 'rgba(120,150,190,.22)'; x.fillRect(0, 10, c.width, 4); x.fillRect(0, H - 14, c.width, 4);
-  let px = gap / 2;
-  for (let i = 0; i < items.length; i++) {
-    x.fillStyle = colFor(items[i]);
-    // crisp edge: dark stroke under the glyphs so they stay legible over bloom
-    x.lineWidth = 6; x.strokeStyle = 'rgba(0,8,16,.9)'; x.strokeText(items[i], px, H / 2 + 2);
-    x.fillText(items[i], px, H / 2 + 2);
-    px += x.measureText(items[i]).width + gap;
-  }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = THREE.RepeatWrapping;
-  t.anisotropy = 16; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
-  return t;
-}
-
 export function buildEssex(ctx) {
   const { scene, css, layout, resume, registerInteractable, onUpdate, envMap } = ctx;
   const [cx, cz] = layout.DISTRICTS.essex.center; // [54, 28]
@@ -161,12 +136,12 @@ export function buildEssex(ctx) {
   essex.rotation.y = -Math.PI / 2;
   scene.add(essex);
 
-  // Sized to stand as tall as the BNY tower (~y39 at the crown).
+  // Sized to stand as tall as the BNY tower (~y39 at the roof).
   const R = 6, TH = 34, baseTop = 5, towerCy = baseTop + TH / 2;
 
   // ---- tower (glass + stone cylinder) ----
   const { map, emis } = makeCylinderTex();
-  const towerMat = new THREE.MeshStandardMaterial({ map, emissive: 0xffffff, emissiveMap: emis, emissiveIntensity: 0.55, color: 0xdfe4ea, roughness: 0.4, metalness: 0.38, envMap, envMapIntensity: 0.7 });
+  const towerMat = new THREE.MeshStandardMaterial({ map, emissive: 0xffffff, emissiveMap: emis, emissiveIntensity: 0.6, color: 0xffffff, roughness: 0.3, metalness: 0.45, envMap, envMapIntensity: 0.9 });
   const tower = new THREE.Mesh(new THREE.CylinderGeometry(R, R, TH, 80, 1, true), towerMat);
   tower.position.y = towerCy; tower.rotation.y = Math.PI; tower.castShadow = true; tower.receiveShadow = true;
   essex.add(tower);
@@ -188,15 +163,6 @@ export function buildEssex(ctx) {
   // blooms at night.
   const logoSign = new THREE.Mesh(new THREE.PlaneGeometry(3.1, 0.91), new THREE.MeshStandardMaterial({ map: makeLogoTex(), transparent: true, roughness: 1, metalness: 0 }));
   logoSign.position.set(0, 2.62, R + 0.52); essex.add(logoSign);
-
-  // ---- rotating stock-ticker crown + halo ----
-  const tickTex = makeTickerTex();
-  tickTex.repeat.set(1, 1); // one legible wrap around the crown, not a blur of lines
-  const crownY = baseTop + TH - 1.4;
-  const crown = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.12, R + 0.12, 1.7, 80, 1, true), new THREE.MeshBasicMaterial({ map: tickTex, side: THREE.DoubleSide }));
-  crown.position.y = crownY; essex.add(crown);
-  const crownHalo = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.22, R + 0.22, 1.9, 80, 1, true), new THREE.MeshBasicMaterial({ map: makeRadial('rgb(150,185,230)', 0.5), transparent: true, opacity: 0.14, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, color: new THREE.Color(0x8fb4e0) }));
-  crownHalo.position.y = crownY; essex.add(crownHalo);
 
   // ---- street lamp (out on the plaza) ----
   const lampMetal = new THREE.MeshStandardMaterial({ color: 0x1c2027, roughness: 0.6, metalness: 0.5 });
@@ -223,13 +189,6 @@ export function buildEssex(ctx) {
   addFloatingLogo(ctx, {
     tex: makeWordmarkTexture({ primary: 'ESSEX', secondary: 'SECURITIES', bg: '#0e1726', fg: '#eaf0fb' }),
     center: [cx, cz], y: 48, size: [9.5, 3.8], bob: 0.35,
-  });
-
-  // ---- animation: scroll the ticker + spin the crown ----
-  onUpdate((dt) => {
-    tickTex.offset.x = (tickTex.offset.x + dt * 0.03) % 1;
-    crown.rotation.y -= dt * 0.12;
-    crownHalo.rotation.y = crown.rotation.y;
   });
 
   // ---- interactable (one Essex role, zone centered on the entrance) ----

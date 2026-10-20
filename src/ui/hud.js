@@ -32,11 +32,11 @@ export function createHUD() {
   const controls = document.createElement('div');
   controls.className = 'pw-hud__controls';
   controls.innerHTML = `
-    <span class="pw-kbd">WASD</span> move ·
-    drag to orbit ·
-    scroll to zoom ·
-    <span class="pw-kbd">E</span> interact ·
-    <span class="pw-kbd">N</span> day/dusk
+    <span class="pw-ctl"><span class="pw-kbd">W/S</span>walk</span>
+    <span class="pw-ctl"><span class="pw-kbd">A/D</span>turn</span>
+    <span class="pw-ctl"><span class="pw-kbd">Scroll</span>zoom</span>
+    <span class="pw-ctl"><span class="pw-kbd">E</span>interact</span>
+    <span class="pw-ctl"><span class="pw-kbd">N</span>day/dusk</span>
   `;
 
   // --- Day/dusk toggle chip (bottom-right), hidden until enabled ---
@@ -75,7 +75,20 @@ export function createHUD() {
       promptText.textContent = '';
       return;
     }
-    promptText.textContent = formatPrompt(String(text));
+    // Structured form: { title, keys: [[key, label], ...] } -> title + spaced keycap groups.
+    if (typeof text === 'object') {
+      prompt.classList.add('pw-hud__prompt--rich');
+      promptKey.style.display = 'none';
+      const esc = (v) => String(v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      promptText.innerHTML =
+        (text.title ? `<span class="pw-hud__prompt-title">${esc(text.title)}</span>` : '') +
+        (text.keys || []).map(([k, label]) =>
+          `<span class="pw-hud__prompt-item"><kbd>${esc(k)}</kbd>${esc(label)}</span>`).join('');
+    } else {
+      prompt.classList.remove('pw-hud__prompt--rich');
+      promptKey.style.display = '';
+      promptText.textContent = formatPrompt(String(text));
+    }
     prompt.classList.add('pw-show');
   }
 

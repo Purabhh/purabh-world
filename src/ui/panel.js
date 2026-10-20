@@ -24,7 +24,8 @@ export function createPanel() {
   root.setAttribute('role', 'dialog');
   root.setAttribute('aria-hidden', 'true');
   root.innerHTML = `
-    <button class="pw-card__close" type="button" aria-label="Close">&times;</button>
+    <button class="pw-card__grow" type="button" aria-label="Enlarge" title="Enlarge">&#x2922;</button>
+    <button class="pw-card__close" type="button" aria-label="Close" title="Close">&times;</button>
     <span class="pw-card__eyebrow"></span>
     <h2 class="pw-card__title"></h2>
     <p class="pw-card__sub"></p>
@@ -39,6 +40,7 @@ export function createPanel() {
   const body = root.querySelector('.pw-card__body');
   const metaEl = root.querySelector('.pw-card__meta');
   const closeBtn = root.querySelector('.pw-card__close');
+  const growBtn = root.querySelector('.pw-card__grow');
 
   let open = false;
 
@@ -105,8 +107,53 @@ export function createPanel() {
     metaEl.style.display = meta ? '' : 'none';
   }
 
-  function show(data) {
+  // Enlarge toggles a centered, wide version of the same card.
+  // Enlarged mode: measure the card at 1x, then scale it so it fills ~80% of the
+  // screen. Short content gets a bigger scale; long content is capped by height.
+  function fitBig() {
+    if (!root.classList.contains('pw-card--big')) return;
+    root.style.setProperty('--z', '1');
+    const w = root.offsetWidth, h = root.offsetHeight;
+    const z = Math.min(2.8, Math.max(0.6, Math.min(window.innerWidth * 0.8 / w, window.innerHeight * 0.8 / h)));
+    root.style.setProperty('--z', z.toFixed(3));
+  }
+  window.addEventListener('resize', fitBig);
+
+  function setBig(v) {
+    root.classList.toggle('pw-card--big', v);
+    if (v) fitBig(); else root.style.removeProperty('--z');
+    growBtn.innerHTML = v ? '&#x2921;' : '&#x2922;';
+    growBtn.setAttribute('aria-label', v ? 'Shrink' : 'Enlarge');
+    growBtn.title = v ? 'Shrink' : 'Enlarge';
+  }
+  growBtn.addEventListener('click', () => setBig(!root.classList.contains('pw-card--big')));
+
+  // The very first card a visitor opens points out the enlarge + close buttons.
+  const HINT_KEY = 'pw-card-hint-seen';
+  let hintEl = null, hintTimer = 0;
+  function clearHint() {
+    clearTimeout(hintTimer);
+    root.classList.remove('pw-card--hinting');
+    if (hintEl) { hintEl.remove(); hintEl = null; }
+  }
+  function maybeHint() {
+    let seen = false;
+    try { seen = localStorage.getItem(HINT_KEY) === '1'; localStorage.setItem(HINT_KEY, '1'); } catch (_) {}
+    if (seen) return;
+    hintEl = document.createElement('div');
+    hintEl.className = 'pw-card__hint';
+    hintEl.innerHTML = '<span>Enlarge</span><span>Close</span>';
+    root.appendChild(hintEl);
+    root.classList.add('pw-card--hinting');
+    hintTimer = setTimeout(clearHint, 5000);
+  }
+  growBtn.addEventListener('click', clearHint);
+
+  // opts.big opens straight into the enlarged view (used by the guided tour).
+  function show(data, opts = {}) {
     render(data || {});
+    setBig(!!opts.big);
+    if (opts.big) fitBig();
     body.scrollTop = 0;
     open = true;
     root.setAttribute('aria-hidden', 'false');
@@ -115,6 +162,7 @@ export function createPanel() {
     root.classList.remove('pw-pop');
     void root.offsetWidth;
     root.classList.add('pw-pop');
+    maybeHint();
   }
 
   function hide() {
@@ -123,6 +171,8 @@ export function createPanel() {
     // Remove BOTH classes: pw-pop's `animation-fill-mode: both` otherwise pins the
     // card at opacity:1 forever, so dropping only pw-open would leave it on screen.
     root.classList.remove('pw-open', 'pw-pop');
+    clearHint();
+    setBig(false);
     root.setAttribute('aria-hidden', 'true');
   }
 
@@ -133,7 +183,7 @@ export function createPanel() {
   // point, clamped to the viewport. visible=false (point behind the camera) tucks
   // it away without closing.
   function setAnchor(x, y, visible) {
-    if (!open) return;
+    if (!open || root.classList.contains('pw-card--big')) return;
     if (!visible) { root.style.visibility = 'hidden'; return; }
     root.style.visibility = '';
     const w = root.offsetWidth || 240, h = root.offsetHeight || 160;

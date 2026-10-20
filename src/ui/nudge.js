@@ -21,8 +21,7 @@ export function createNudge() {
   root.setAttribute('aria-hidden', 'true');
   root.innerHTML = `
     <div class="pw-nudge__card">
-      <span class="pw-kbd">WASD</span> to walk &nbsp;·&nbsp;
-      click + hold, then drag to look &nbsp;·&nbsp;
+      <span class="pw-kbd">W/S</span> to walk &nbsp;·&nbsp; <span class="pw-kbd">A/D</span> to turn &nbsp;·&nbsp;
       <span class="pw-kbd">E</span> to read a sign
     </div>
   `;

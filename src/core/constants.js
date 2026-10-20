@@ -9,6 +9,24 @@ export const config = {
   GITHUB_USERNAME: 'Purabhh', // GitHub handle (powers the Projects district)
   LINKEDIN_URL: 'https://www.linkedin.com/in/purabh/', // LinkedIn profile (landing pill + tour CTA)
   RESUME_FILE: 'Resume.pdf',  // lives in /public; powers the "Resume" button
+  // Projects district filter. GITHUB_INCLUDE: if non-empty, ONLY these repo names
+  // show, in this order. GITHUB_EXCLUDE: always hidden. REQUIRE_DESCRIPTION: hide
+  // repos with no GitHub description (off: it would hide real projects with no description).
+  GITHUB_INCLUDE: [],
+  // empty stubs (<3 KB of code), the profile repo, and this site itself
+  GITHUB_EXCLUDE: [
+    // empty stubs (<3 KB of code), the profile repo, and this site itself
+    '3d-Portfolio', 'Agent1', 'Agent2', 'C_create', 'CartMaker', 'COPWATCH-FRONTEND', 'Purabhh', 'purabh-world',
+    // 1-2 commit, unfinished for now (add back to GITHUB_INCLUDE when they're done)
+    'coolfinder', 'EpsReport_Ai_Agent', 'Humanizing-Workflow', 'LimitOrder', 'stockvizzy', 'FireBot', 'Hermes',
+    // removed by request
+    'SwipeHousing', 'Kalonji-Website', 'CryptoWhaleTracker',
+  ],
+  GITHUB_REQUIRE_DESCRIPTION: false,
+  // Layout order: GITHUB_ORDER goes first (in this order), GITHUB_LAST goes at the end.
+  // Everything else keeps GitHub's order in between.
+  GITHUB_ORDER: ['FastRust', 'Mochee', 'vaultdb'],
+  GITHUB_LAST: ['stormlink'],
 };
 
 // --- Colors as three.js hex numbers -----------------------------------------

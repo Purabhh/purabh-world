@@ -13,7 +13,7 @@
 import { profile } from '../data/resume.js';
 import { injectStyles, uiRoot } from './styles.js';
 
-export function createLanding({ onEnter, onTour } = {}) {
+export function createLanding({ onEnter, onTour, tutorial } = {}) {
   injectStyles();
 
   const root = document.createElement('section');
@@ -25,7 +25,8 @@ export function createLanding({ onEnter, onTour } = {}) {
     <div class="pw-landing__inner">
       <h1 class="pw-landing__title"><span class="pw-apos">3D</span> PORTFOLIO</h1>
       <p class="pw-landing__name">${escapeHtml(profile.name)}</p>
-      <p class="pw-landing__subtitle">${escapeHtml(profile.tagline)}<br>${escapeHtml(profile.school)}</p>
+      <p class="pw-landing__subtitle">${escapeHtml(profile.tagline)}</p>
+      <p class="pw-landing__school">${escapeHtml(profile.school)}</p>
 
       <div class="pw-landing__cta">
         <button class="pw-btn-enter" type="button" data-tour>🧭 Take the Tour</button>
@@ -45,17 +46,40 @@ export function createLanding({ onEnter, onTour } = {}) {
         <a class="pw-pill" data-linkedin target="_blank" rel="noopener">
           <span class="pw-pill__ico" aria-hidden="true">in</span>LinkedIn
         </a>
+        <button class="pw-pill" type="button" data-tutorial aria-pressed="true">
+          <span class="pw-pill__ico" aria-hidden="true">🎓</span><span data-tutorial-label>Tutorial: On</span>
+        </button>
       </nav>
 
-      <p class="pw-landing__hint">New here? <b>Take the Tour</b> needs no controls at all.<br class="pw-landing__hint-br">Exploring on foot: <b>WASD</b> to walk · click + hold to look around · <b>E</b> to read a sign</p>
+      <div class="pw-landing__hintwrap"><div class="pw-landing__hint">
+        <p class="pw-hint__row">New here? <b>Take the Tour</b> needs no controls at all.</p>
+        <p class="pw-hint__row pw-hint__keys">
+          <span>Exploring on foot:</span>
+          <span><b>W/S</b> walk</span>
+          <span><b>A/D</b> turn</span>
+          <span><b>E</b> read a sign</span>
+        </p>
+      </div></div>
     </div>
-    <p class="pw-landing__footer">made with three.js</p>
   `;
 
   // Wire external links from the profile (single source of truth).
   root.querySelector('[data-resume]').href = profile.resume;
   root.querySelector('[data-github]').href = profile.github;
   root.querySelector('[data-linkedin]').href = profile.linkedin;
+
+  // Tutorial toggle: on for first-time visitors, off once they've done or skipped it.
+  const tutBtn = root.querySelector('[data-tutorial]');
+  const tutLabel = root.querySelector('[data-tutorial-label]');
+  function syncTutorial() {
+    const on = !!(tutorial && tutorial.enabled);
+    tutLabel.textContent = `Tutorial: ${on ? 'On' : 'Off'}`;
+    tutBtn.setAttribute('aria-pressed', String(on));
+  }
+  if (tutorial) {
+    tutBtn.addEventListener('click', () => { tutorial.setEnabled(!tutorial.enabled); syncTutorial(); });
+    syncTutorial();
+  } else tutBtn.remove();
 
   let hidden = false;
 
@@ -90,6 +114,7 @@ export function createLanding({ onEnter, onTour } = {}) {
 
   function show() {
     hidden = false;
+    if (tutorial) syncTutorial();
     root.style.display = '';
     // Force reflow so removing .pw-hidden animates the fade back in.
     void root.offsetWidth;
@@ -98,7 +123,7 @@ export function createLanding({ onEnter, onTour } = {}) {
 
   uiRoot().appendChild(root);
 
-  return { hide, show, el: root };
+  return { hide, show, el: root, get visible() { return !hidden; } };
 }
 
 function escapeHtml(s) {

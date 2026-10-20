@@ -238,7 +238,7 @@ export const UI_CSS = `
   position: fixed;
   left: 0; top: 0;
   z-index: 30;
-  width: min(266px, 86vw);
+  width: min(440px, 90vw);
   display: flex;
   flex-direction: column;
   color: #fbf3e6;
@@ -270,6 +270,48 @@ export const UI_CSS = `
 .pw-card__close:active { transform: scale(0.95); }
 .pw-card__close:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
+/* enlarge toggle, sits left of the x */
+.pw-card__grow {
+  position: absolute; top: 9px; right: 39px;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; line-height: 1; color: #fbf3e6;
+  background: rgba(255, 255, 255, 0.12); border: 0; border-radius: 50%; cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+.pw-card__grow:hover { background: rgba(255, 255, 255, 0.24); transform: scale(1.08); }
+.pw-card__grow:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* enlarged: scaled as a whole so text grows with the card. panel.js sets --z from
+   the card's content so it fills ~80% of the screen (more for short content). */
+.pw-card.pw-card--big {
+  --z: 1;
+  left: 50% !important; top: 50% !important;
+  width: min(440px, 90vw); min-height: 0;
+  translate: -50% -50%; scale: var(--z);
+  padding: 22px 26px 18px;
+}
+.pw-card--big .pw-card__body { max-height: calc(80vh / var(--z)); }
+/* first-time hint pointing at the two buttons */
+.pw-card__hint {
+  position: absolute; top: 42px; right: 4px; display: flex; gap: 8px; z-index: 2;
+  pointer-events: none; animation: pw-hint-in 0.4s ease both;
+}
+.pw-card__hint span {
+  position: relative; font-size: 0.72rem; font-weight: 800; color: #2b2620;
+  background: #ffd34e; padding: 5px 9px; border-radius: 999px; white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35); animation: pw-hint-bob 1s ease-in-out infinite alternate;
+}
+.pw-card__hint span::after {
+  content: ''; position: absolute; top: -6px; right: 12px;
+  border: 6px solid transparent; border-top: 0; border-bottom-color: #ffd34e;
+}
+.pw-card--hinting .pw-card__close, .pw-card--hinting .pw-card__grow {
+  animation: pw-hint-ring 1.1s ease-out infinite;
+}
+@keyframes pw-hint-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes pw-hint-bob { to { transform: translateY(4px); } }
+@keyframes pw-hint-ring { 0% { box-shadow: 0 0 0 0 rgba(255, 211, 78, 0.8); } 100% { box-shadow: 0 0 0 10px rgba(255, 211, 78, 0); } }
+
 .pw-card__eyebrow {
   align-self: flex-start;
   font-size: 0.62rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
@@ -280,14 +322,14 @@ export const UI_CSS = `
 .pw-card__title { margin: 0; font-size: 1.16rem; font-weight: 800; line-height: 1.12; padding-right: 22px; }
 .pw-card__sub { margin: 4px 0 0; font-size: 0.82rem; font-weight: 600; color: #e7cfa8; }
 
-.pw-card__body { margin-top: 11px; max-height: 170px; overflow-y: auto; padding-right: 5px; scrollbar-width: thin; scrollbar-color: rgba(255, 240, 214, 0.3) transparent; }
+.pw-card__body { margin-top: 11px; max-height: min(280px, 45vh); overflow-y: auto; padding-right: 5px; scrollbar-width: thin; scrollbar-color: rgba(255, 240, 214, 0.3) transparent; }
 .pw-card__body::-webkit-scrollbar { width: 6px; }
 .pw-card__body::-webkit-scrollbar-thumb { background: rgba(255, 240, 214, 0.3); border-radius: 999px; }
 
 .pw-card__lines { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
 .pw-card__line {
   position: relative; padding-left: 16px;
-  font-size: 0.83rem; font-weight: 500; line-height: 1.4; color: #f3e6d2;
+  font-size: 0.92rem; font-weight: 500; line-height: 1.4; color: #f3e6d2;
 }
 .pw-card__line::before {
   content: ''; position: absolute; left: 0; top: 0.5em;
@@ -502,6 +544,28 @@ export const UI_CSS = `
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.14);
 }
 
+/* rich prompt (e.g. riding Raja): title, then spaced keycap + label groups */
+.pw-hud__prompt.pw-hud__prompt--rich { gap: 0; padding: 10px 12px 10px 20px; }
+.pw-hud__prompt.pw-hud__prompt--rich > .pw-kbd-e { display: none; }
+.pw-hud__prompt.pw-hud__prompt--rich .pw-hud__prompt-text { display: inline-flex; align-items: center; flex-wrap: nowrap; gap: 16px; }
+.pw-hud__prompt-title {
+  padding-right: 18px; font-size: 1.02rem; font-weight: 800; letter-spacing: .01em;
+  border-right: 2px solid rgba(7, 59, 18, 0.22);
+}
+.pw-hud__prompt .pw-hud__prompt-item { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-size: .9rem; font-weight: 600; color: #0b4a18; }
+.pw-hud__prompt-item kbd {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; padding: 0 8px;
+  font: 800 .78rem/1 ui-monospace, 'SFMono-Regular', Consolas, monospace; letter-spacing: .04em;
+  color: var(--pw-cta-dark); background: #fff; border-radius: 7px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.16), 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.pw-hud__prompt--rich.pw-show { animation: none; }
+@media (max-width: 640px) {
+  .pw-hud__prompt--rich { white-space: normal; max-width: calc(100vw - 32px); border-radius: 22px; }
+  .pw-hud__prompt--rich .pw-hud__prompt-text { flex-wrap: wrap; justify-content: center; gap: 8px 14px; }
+  .pw-hud__prompt-title { flex-basis: 100%; text-align: center; border-right: 0; padding-right: 0; }
+}
+
 /* ---------------------------------------------------------------------------
    CINEMATIC INTRO — letterbox bars, lower-third caption, skip button
    --------------------------------------------------------------------------- */
@@ -562,6 +626,18 @@ export const UI_CSS = `
 /* ---------------------------------------------------------------------------
    RECRUITER TOUR — control bar (bottom-center): Prev / Pause / Next / dots / Exit
    --------------------------------------------------------------------------- */
+.pw-tour-intro {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px;
+  background: rgba(20, 14, 8, 0.35); pointer-events: auto;
+}
+.pw-tour-intro__card {
+  max-width: 400px; background: rgba(36, 28, 20, 0.94); color: #fff4e2; border-radius: 22px;
+  padding: 22px 24px; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4); font-weight: 600; line-height: 1.45;
+}
+.pw-tour-intro__eyebrow { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #5fd06a; margin-bottom: 10px; }
+.pw-tour-intro__card ul { margin: 0 0 18px; padding-left: 18px; }
+.pw-tour-intro__card li { margin-bottom: 8px; }
+.pw-tour-intro__go { width: 100%; }
 .pw-tour {
   position: fixed;
   left: 50%;
@@ -752,6 +828,197 @@ export const UI_CSS = `
     animation: none !important;
     transition-duration: 0.001s !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   LANDING (dusk redesign): transparent over the live 3D world, which orbits
+   behind it. Staggered rise-in animations per element.
+   --------------------------------------------------------------------------- */
+.pw-root.pw-landing {
+  font-family: 'Ubuntu', 'Baloo 2', system-ui, sans-serif;
+  background: radial-gradient(ellipse 48% 60% at 50% 48%, rgba(16, 10, 32, 0.6) 0%, rgba(16, 10, 32, 0.4) 55%, rgba(16, 10, 32, 0) 100%);
+  gap: 0; padding: 48px 24px 96px;
+}
+.pw-root.pw-landing::before { display: none; }
+.pw-landing .pw-landing__inner { gap: 0; animation: none; }
+.pw-landing .pw-landing__title {
+  font-weight: 700; font-size: clamp(54px, 7.5vw, 88px); line-height: 1; letter-spacing: -1px; color: #fff4dc;
+  text-shadow: 0 5px 0 rgba(12, 8, 30, 0.55), 0 18px 40px rgba(12, 8, 30, 0.45);
+  animation: pwl-title 1.1s cubic-bezier(.2, .7, .2, 1) both .2s;
+}
+.pw-landing .pw-landing__title .pw-apos { color: #4ccc5c; text-shadow: 0 5px 0 #1e6b2b, 0 18px 40px rgba(12, 8, 30, 0.45); }
+.pw-landing .pw-landing__name {
+  margin: 22px 0 0; font-weight: 700; font-size: 18px; letter-spacing: .3px; color: #ffd47c;
+  animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both .55s, pwl-name 4s ease-in-out infinite 1.6s;
+}
+.pw-landing .pw-landing__subtitle {
+  margin: 20px 0 0; max-width: 440px; font-weight: 400; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: #f6eedc;
+  text-wrap: pretty; animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both .7s;
+}
+.pw-landing .pw-landing__school {
+  margin: 6px 0 0; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: #f6eedc;
+  animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both .82s;
+}
+.pw-landing .pw-landing__cta { margin-top: 32px; gap: 14px; }
+.pw-landing .pw-btn-enter {
+  font-family: inherit; display: inline-flex; align-items: center; gap: 10px; margin: 0;
+  padding: 16px 40px; font-weight: 700; font-size: 20px; line-height: 1; color: #0e2a15; background: #3fbf52;
+  box-shadow: 0 0 0 7px rgba(63, 191, 82, .25), 0 14px 36px rgba(63, 191, 82, .35);
+  animation: pwl-pop .7s cubic-bezier(.2, .8, .2, 1.2) both 1s, pwl-cta 2.8s ease-in-out infinite 1.8s;
+}
+.pw-landing .pw-btn-enter:hover { background: #56d368; transform: translateY(-2px); filter: none; }
+.pw-landing .pw-btn-secondary, .pw-landing .pw-pill {
+  font-family: inherit; color: #fff4dc; font-weight: 700; line-height: 1.1;
+  background: rgba(255, 244, 220, .12); border: 1.5px solid rgba(255, 244, 220, .38); box-shadow: none;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.pw-landing .pw-btn-secondary { padding: 14px 30px; font-size: 16px; animation: pwl-rise .7s cubic-bezier(.2, .7, .2, 1) both 1.15s; }
+.pw-landing .pw-btn-secondary:hover, .pw-landing .pw-pill:hover { background: rgba(255, 244, 220, .24); box-shadow: none; }
+.pw-landing .pw-nav { margin-top: 30px; gap: 12px; }
+.pw-landing .pw-pill { padding: 14px 22px; font-size: 15px; gap: 8px; background: rgba(255, 244, 220, .1); border-color: rgba(255, 244, 220, .28); }
+.pw-landing .pw-pill:nth-child(1) { animation: pwl-rise .7s cubic-bezier(.2, .7, .2, 1) both 1.3s; }
+.pw-landing .pw-pill:nth-child(2) { animation: pwl-rise .7s cubic-bezier(.2, .7, .2, 1) both 1.4s; }
+.pw-landing .pw-pill:nth-child(3) { animation: pwl-rise .7s cubic-bezier(.2, .7, .2, 1) both 1.5s; }
+.pw-landing .pw-pill:nth-child(4) { animation: pwl-rise .7s cubic-bezier(.2, .7, .2, 1) both 1.6s; }
+.pw-landing .pw-landing__hintwrap { margin-top: 22px; animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both 1.85s; }
+.pw-landing .pw-landing__hint {
+  padding: 14px 26px; border-radius: 22px; background: rgba(20, 14, 36, .55); border: 1px solid rgba(255, 244, 220, .16);
+  color: #ece3cf; font-weight: 400; font-size: 15px; line-height: 1.75;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); animation: pwl-float 5s ease-in-out infinite 2.7s;
+}
+.pw-landing .pw-landing__hint b { color: #5bd06a; }
+.pw-landing .pw-landing__footer { font-size: 12px; font-weight: 400; color: #c3bac9; opacity: 1; animation: pwl-fade 1.2s ease both 2.2s; }
+@keyframes pwl-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pwl-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pwl-pop { from { opacity: 0; transform: scale(.86) translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes pwl-title { from { opacity: 0; transform: translateY(-22px); letter-spacing: 8px; } to { opacity: 1; transform: none; letter-spacing: -1px; } }
+@keyframes pwl-cta { 0%, 100% { box-shadow: 0 0 0 7px rgba(63, 191, 82, .25), 0 14px 36px rgba(63, 191, 82, .35); } 50% { box-shadow: 0 0 0 13px rgba(63, 191, 82, .1), 0 16px 46px rgba(63, 191, 82, .55); } }
+@keyframes pwl-name { 0%, 100% { text-shadow: 0 0 0 rgba(255, 212, 124, 0); } 50% { text-shadow: 0 0 18px rgba(255, 212, 124, .6); } }
+@keyframes pwl-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@media (prefers-reduced-motion: reduce) {
+  .pw-landing *, .pw-landing .pw-landing__hint { animation-duration: .01s !important; animation-iteration-count: 1 !important; }
+}
+
+.pw-landing .pw-landing__hint { padding: 16px 30px; line-height: 1.5; }
+.pw-landing .pw-hint__row { margin: 0; }
+.pw-landing .pw-hint__keys { margin-top: 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; }
+.pw-landing .pw-hint__keys b { display: inline-block; padding: 1px 8px; margin-right: 4px; border-radius: 6px; background: rgba(91, 208, 106, .14); border: 1px solid rgba(91, 208, 106, .35); }
+
+/* readability: a soft dark glass panel behind the intro text so it reads over a busy scene */
+.pw-landing .pw-landing__subtitle,
+.pw-landing .pw-landing__school {
+  display: inline-block; padding: 6px 20px; border-radius: 16px;
+  background: rgba(16, 10, 32, .5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .65), 0 0 2px rgba(0, 0, 0, .5);
+}
+.pw-landing .pw-landing__school { margin-top: 10px; }
+
+/* home-screen backdrop: blur the 3D world behind the intro text (strongest in the middle) */
+.pw-root.pw-landing::before {
+  content: ''; display: block; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: rgba(16, 10, 32, .2);
+  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+  -webkit-mask-image: radial-gradient(ellipse 50% 60% at 50% 48%, #000 55%, transparent 100%);
+          mask-image: radial-gradient(ellipse 50% 60% at 50% 48%, #000 55%, transparent 100%);
+}
+
+/* home text: no box color, just the blurred world behind it */
+.pw-landing .pw-landing__subtitle,
+.pw-landing .pw-landing__school {
+  background: none; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .75), 0 0 3px rgba(0, 0, 0, .6);
+}
+.pw-root.pw-landing::before {
+  background: rgba(16, 10, 32, .08);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+
+/* View mode button: top right, free roam only; #ui is click-through so opt in */
+.pw-view-btn {
+  position: fixed; top: 14px; right: 14px; z-index: 12; pointer-events: auto;
+  padding: 10px 18px; font-family: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  color: #fff4dc; background: rgba(20, 14, 36, .6); border: 1.5px solid rgba(255, 244, 220, .3);
+  border-radius: 999px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.pw-view-btn:hover { background: rgba(20, 14, 36, .8); }
+
+/* HUD in the dusk theme: dark glass chips, cream text, green key badges (matches the home screen) */
+.pw-hud__home, .pw-hud__controls, .pw-hud__toggle, .pw-view-btn {
+  font-family: 'Ubuntu', 'Baloo 2', system-ui, sans-serif;
+  color: #fff4dc; background: rgba(20, 14, 36, .6);
+  border: 1.5px solid rgba(255, 244, 220, .28); box-shadow: 0 8px 22px rgba(8, 4, 20, .35);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.pw-hud__home, .pw-hud__toggle, .pw-view-btn { font-weight: 700; font-size: .95rem; padding: 10px 18px; border-radius: 999px; }
+.pw-hud__home:hover, .pw-hud__toggle:hover, .pw-view-btn:hover { background: rgba(20, 14, 36, .82); }
+.pw-hud__controls { display: flex; align-items: center; gap: 16px; padding: 10px 18px; border-radius: 16px; font-size: .9rem; font-weight: 500; }
+.pw-hud__controls .pw-ctl { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.pw-hud__controls .pw-kbd {
+  margin: 0; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: .8rem; color: #5bd06a;
+  background: rgba(91, 208, 106, .14); border: 1px solid rgba(91, 208, 106, .35); box-shadow: none;
+}
+
+/* first-visit tutorial card ("Tutorial 2a" design): bottom-center dark glass,
+   segmented progress, inline keycaps that press while held, green ring when done */
+.pw-tut {
+  position: fixed; left: 50%; top: 18px; z-index: 35; pointer-events: auto;
+  width: 340px; max-width: calc(100vw - 32px); box-sizing: border-box; padding: 16px;
+  font-family: 'Lexend', 'Ubuntu', system-ui, sans-serif; color: #F5EBDD;
+  background: rgba(28, 20, 36, .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-radius: 12px; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 8px 24px rgba(10, 6, 14, .45);
+  opacity: 0; visibility: hidden; translate: -50% -10px;
+  transition: opacity .25s ease, translate .25s ease, box-shadow .25s ease, visibility 0s linear .25s;
+}
+.pw-tut.pw-show { opacity: 1; visibility: visible; translate: -50% 0; transition: opacity .25s ease, translate .25s ease, box-shadow .25s ease; }
+.pw-tut.pw-tut--done { box-shadow: 0 0 0 2px #6BE584, 0 8px 24px rgba(10, 6, 14, .45); }
+.pw-tut__head { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #5EDB76; }
+.pw-tut__segs { display: flex; gap: 4px; margin-top: 8px; }
+.pw-tut__segs i { flex: 1; height: 4px; border-radius: 2px; background: #463C50; transition: background .25s; }
+.pw-tut__segs i.past, .pw-tut__segs i.cur { background: #46C95E; }
+.pw-tut--done .pw-tut__segs i.cur { background: #6BE584; }
+.pw-tut__fade { opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; }
+.pw-tut--in .pw-tut__fade { opacity: 1; transform: none; }
+.pw-tut__title { margin-top: 16px; font-size: 1.15rem; font-weight: 700; color: #FFF6EA; }
+.pw-tut__body { margin-top: 8px; font-size: .92rem; line-height: 1.75; color: #E6DAD0; }
+.pw-tut__key {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 26px;
+  padding: 0 8px; margin: 0 2px; box-sizing: border-box; vertical-align: middle; border-radius: 6px; cursor: pointer;
+  font: 700 12px/1 'JetBrains Mono', ui-monospace, monospace; color: #B8F5C4;
+  background: #24412C; border: 1px solid #46C95E; border-bottom-width: 3px;
+  transition: transform 80ms, background .15s, border-color .15s;
+}
+.pw-tut__key.held { border-bottom-width: 1px; transform: translateY(2px); }
+.pw-tut--done .pw-tut__key { background: #2F5A3A; border-color: #6BE584; }
+.pw-tut__foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 16px; }
+.pw-tut__next {
+  height: 32px; padding: 0 16px; border: 0; border-radius: 16px; cursor: pointer;
+  background: #46C95E; color: #14261A; font-family: inherit; font-size: 14px; font-weight: 700; box-shadow: 0 2px 0 #2E8F42;
+}
+.pw-tut__next:hover { background: #57D86E; }
+.pw-tut__next:focus-visible { outline: 2px solid #F5EBDD; outline-offset: 2px; }
+.pw-tut__skip {
+  height: 32px; padding: 0 12px; border: 0; border-radius: 16px; cursor: pointer;
+  background: transparent; color: #A99BB3; font-family: inherit; font-size: 13px; font-weight: 500;
+}
+.pw-tut__skip:hover { background: rgba(255, 255, 255, .08); color: #F5EBDD; }
+.pw-tut__skip:focus-visible { outline: 2px solid #5EDB76; outline-offset: 1px; }
+@media (prefers-reduced-motion: reduce) { .pw-tut, .pw-tut__fade, .pw-tut__key, .pw-tut__segs i { transition: none; } }
+/* the home-screen tutorial toggle rises in with the other pills */
+.pw-landing .pw-pill:nth-child(5) { animation: pwl-rise .7s cubic-bezier(.2, .7, .2, 1) both 1.7s; }
+
+/* eye button: hides the HUD chips; sits in the top-right corner, View mode moves left of it */
+.pw-hud-eye {
+  position: fixed; top: 14px; right: 14px; z-index: 12; pointer-events: auto;
+  width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; cursor: pointer; border-radius: 50%;
+  color: #fff4dc; background: rgba(20, 14, 36, .6); border: 1.5px solid rgba(255, 244, 220, .28);
+  box-shadow: 0 8px 22px rgba(8, 4, 20, .35); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.pw-hud-eye:hover { background: rgba(20, 14, 36, .82); }
+.pw-view-btn { right: 64px; }
+body.pw-hud-hidden .pw-hud__home, body.pw-hud-hidden .pw-hud__controls,
+body.pw-hud-hidden .pw-hud__toggle, body.pw-hud-hidden .pw-view-btn {
+  opacity: 0 !important; pointer-events: none !important; transition: opacity .2s ease;
 }
 `;
 

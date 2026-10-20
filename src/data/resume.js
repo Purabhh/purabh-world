@@ -4,8 +4,10 @@ import { config } from '../core/constants.js';
 
 export const profile = {
   name: 'Purabh Singh',
-  tagline: 'I build fintech, blockchain & AI',
+  tagline: 'I like to code, build AI agents and infrastructure, make video games and 3D models, and generally just enjoy solving problems.',
   school: 'CS @ Rutgers',
+  // longer bio for the tour's welcome card
+  about: "I like to code all kinds of things. I got started making video games and 3D models, which I still do today, and these days I also build AI agents and AI infrastructure, with some recent dabbling in complex blockchain systems. I find pretty much all of tech interesting, even outside my niche, and lately I've been getting into low latency systems. FastRust is my newest big project, and with my coursework you can expect more C and Rust stuff soon.",
   location: 'New Brunswick, NJ',
   email: 'purabhsingh123@gmail.com',
   github: 'https://github.com/Purabhh',
@@ -67,6 +69,108 @@ export const achievements = [
 // last synced 2026-09-11). Order = kiosk order; the tour card lists the first 5.
 // LeaseLink + FastRust are the projects on the main resume; VaultDB + Anomalyy are
 // the two on the alternate (data-science) variant.
+// Write-ups for the Projects district, keyed by GitHub repo name. When a repo
+// matches, its kiosk card shows these lines instead of the one-line GitHub blurb.
+// `live` adds a "Visit site" link; `house: true` builds that kiosk as a house.
+export const projectDetails = {
+  "2d-Tutor": {
+    lines: [
+      "My first attempt at an interactive AI tutor, built with Next.js, TypeScript and Supabase. It's where I started thinking about teaching with a character you walk around with, instead of a chat box.",
+      "Now known as Mochee, which replaces it.",
+    ],
+  },
+  Anomalyy: {
+    lines: [
+      "A school project for CS 210 (Data Management for Data Science). It's a pipeline that scans 10 years of stock price data for AAPL, MSFT, TSLA, AMZN and the S&P 500, and flags unusual trading days using three unsupervised machine learning methods.",
+      "Each flag is checked against FOMC meeting dates and GDELT news sentiment. It could be sharper with a paid market data feed, a richer news API, and volatility signals from options prices.",
+    ],
+  },
+  "CHESS-GAME": {
+    lines: [
+      "Under construction, inspired by a hatred of the touch-move rule. In chess, once you touch a piece you have to move it, which is awful when you're still thinking.",
+      "The goal is a chess game you play without touching anything. Hold your finger over a piece for a couple of seconds and it shows every move that piece can legally make. Then say the piece and the square, and the game confirms each one out loud before it moves. Nothing happens until you say yes.",
+    ],
+  },
+  "REPO-ARCHAEOLOGIST": {
+    lines: [
+      "A command line tool that scans a git repository for things that have gone stale.",
+      "It finds dead functions and classes, files nobody has touched in months or years, dependencies that are installed but never imported, and old branches that were never merged. Each finding gets a decay score from 0 to 100, so the riskiest parts show up first.",
+      "It works on Python and JavaScript/TypeScript, and it can export a markdown report.",
+    ],
+  },
+  "polymarket-prophet": {
+    lines: [
+      "A read-only command line tool that pulls live prediction market prices from Polymarket.",
+      "It's still in progress: the model ensemble runs on heuristics until it's trained, and the news and economic data aren't feeding into it yet. Next up are training on resolved markets, adding those data sources, and comparing prices with other prediction markets.",
+    ],
+  },
+  "gesture-whiteboard": {
+    lines: [
+      "A collaborative whiteboard you draw on with your hand, using just a webcam. Point with your index finger to draw, make a peace sign to erase, open your palm to pan, and make a fist to lift the pen.",
+      "Create a room, share the code, and friends can join with video and audio. There's also a sandbox mode for drawing alone, and an infinite canvas. The gesture detection is ported from Chris Alexis's gesture-drone project.",
+    ],
+  },
+  vaultdb: {
+    lines: [
+      "VaultDB, a native desktop knowledge base. It turns an Obsidian vault into a local vector database that finds connections you never wrote down.",
+      "Built in Rust and React on Tauri, so the app is about 10 MB native, versus 150 MB+ for an Electron app. The ingestion pipeline parses markdown, frontmatter, [[wikilinks]], tags and aliases, and chunks notes into roughly 512-token segments. Each chunk is embedded locally with Ollama (nomic-embed-text, 768-dim).",
+      "Each vault is stored as its own Qdrant collection, with semantic search over all notes. The graph view combines explicit wiki-links with vector-similarity edges, which surfaces related notes that Obsidian's graph misses.",
+      "Fully offline: no cloud, no accounts.",
+    ],
+  },
+  PassportBros: {
+    lines: [
+      'A shared travel scrapbook for you and your friends. Every trip gets its own chronicle, and every country you visit gets its own page in it.',
+      'Each person can keep a personal scrapbook that holds every country they have been to. You invite friends in with a link, and they pick a name and join with no signup.',
+      'Everyone in the group posts photos and videos from their trips, so the scrapbook fills up as the crew travels.',
+      'Started as a small project inspired by a group trip to Colombia with friends, built to keep those memories in one place.',
+    ],
+    live: 'http://137.184.65.14/',
+  },
+  Mochee: {
+    lines: [
+      '3D AI study buddy built at HackRU Fall 2026. Upload your lecture notes and an animated 3D tutor teaches them back to you: he walks, points at the notes and whiteboard, narrates in a real voice, and runs a quick check at the end.',
+      'Document Q&A with Gemini where every answer cites the exact page it came from, and says so when the notes do not cover the question.',
+      'React 19 + TypeScript with react-three-fiber, Rapier physics, and a zustand-driven state machine controlling a Blender-rigged character with 58 animations.',
+      'ElevenLabs voice that starts playing as audio streams in, with server-side caching and a daily cost cap.',
+      'Study and Play modes with coins, a shop, and a boss battle for each topic.',
+    ],
+    live: 'https://138-197-85-46.sslip.io/',
+  },
+  FastRust: {
+    lines: [
+      'Open-source Rust web framework built from scratch on Hyper and Tokio, pairing FastAPI-style ergonomics with Rust performance.',
+      'Custom trie router with typed extractors (Path, Query, JSON, State) and macro-based routing across 7 HTTP methods.',
+      'Middleware stack (CORS, bearer auth, logging), OpenAPI 3.1 generation, and live Swagger UI.',
+      'Benchmarked with Criterion: 172 ns static and 849 ns parameterized route lookups, 1.4–2.4 µs request dispatch.',
+    ],
+  },
+  internpilot: {
+    house: true,
+    lines: [
+      'Local-first job application tracker I built for my own search.',
+      'Pulls new intern and new-grad postings from public GitHub aggregator repos and filters them to my niche (fintech, banks, payments, trading).',
+      'Polls Gmail on a schedule and classifies replies with rules + Claude Haiku, automatically moving tracker cards from applied to interview to offer or rejection.',
+      'Next.js 15, TypeScript, SQLite + Drizzle, node-cron, Zod, Vitest.',
+    ],
+  },
+  stormlink: {
+    lines: [
+      'Multi-agent AI disaster-response app built at HackUSF 2026.',
+      'Google ADK orchestrator routes natural-language questions to Data Monitor and Resource Matcher agents that pull live NOAA weather alerts and nearby shelters, hospitals, and food banks.',
+      'Next.js 16 + React 19 frontend with a Leaflet map, 5–250 mile radius search, and a live panel visualizing each agent handoff.',
+      'Voice-accessible answers through ElevenLabs text-to-speech.',
+    ],
+  },
+  LeaseLink: {
+    lines: [
+      'Built a full-stack Tinder-style housing marketplace connecting renters and landlords through mutual interest.',
+      'Full-stack React + Tailwind, Express.js, PostgreSQL, and Google OAuth.',
+      'Led backend development of a gated real-time chat (WebSockets) and landlord approval workflows.',
+    ],
+  },
+};
+
 export const projectsFallback = [
   {
     name: 'LeaseLink',

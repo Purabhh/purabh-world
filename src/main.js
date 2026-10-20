@@ -18,6 +18,7 @@ import { buildProjectsDistrict } from './projects/projectsDistrict.js';
 import { createHUD } from './ui/hud.js';
 import { createPanel } from './ui/panel.js';
 import { createLanding } from './ui/landing.js';
+import { createTutorial } from './ui/tutorial.js';
 import { createCinematic } from './ui/cinematic.js';
 import { createTour } from './ui/tour.js';
 import { createTouchControls } from './ui/touchControls.js';
@@ -56,6 +57,10 @@ buildLandmarks(ctx);
 // in before the player so the player can kick up dust the moment it spawns.
 buildAtmosphere(ctx);
 
+// Which screen the player is on. Prompts, Raja and E only work in 'free' (walking).
+//   home: start screen   view: intro/tour (camera drives)   free: free roam
+let mode = 'home';
+
 // --- player (gated behind the landing screen) -------------------------------
 const player = createPlayer(ctx);
 player.setEnabled(false);
@@ -88,18 +93,22 @@ if (touch.active) {
 // While an intro/tour owns the camera the player is suspended; both hand control
 // back to free-roam at spawn when they finish.
 function suspendPlayer() {
+  mode = 'view';
+  if (tutorial.active) tutorial.stop();   // leaving free roam ends the tutorial
   player.setEnabled(false);
   player.setCinematic(true);
   player.root.visible = false;
   touch.setVisible(false);
 }
 function handoffToPlayer() {
+  mode = 'free';
   player.setCinematic(false);
   player.setEnabled(true);
   player.root.visible = true;
   hud.setControlsVisible(true);
   touch.setVisible(true);
-  if (!touch.active) nudge.show();
+  // First visit: the step-by-step tutorial. Otherwise just the one-line nudge.
+  if (!touch.active) { if (tutorial.shouldRun()) tutorial.start(); else nudge.show(); }
 }
 
 // Cinematic intro: a labeled fly-through past every landmark (captions only).
@@ -108,21 +117,84 @@ const cinematic = createCinematic(ctx, { onComplete: handoffToPlayer });
 // info card with auto-advance + controls, ending on a "Let's connect" CTA.
 const tour = createTour(ctx, { panel, onComplete: handoffToPlayer });
 
+const tutorial = createTutorial();
 const landing = createLanding({
+  tutorial,
   onEnter: () => { suspendPlayer(); cinematic.play(); },   // free roam (after the quick intro)
   onTour: () => { suspendPlayer(); tour.play(); },         // guided recruiter tour
+});
+
+// Behind the landing screen the real world slowly orbits the plaza at dusk:
+// a dolly-in on load, then an endless slow circle.
+suspendPlayer();
+let isDusk = false;
+ctx.dayNight.subscribe((d) => { isDusk = d; });
+if (!isDusk) ctx.dayNight.toggle();
+let orbitA = 0.8, orbitT = 0;
+engine.onUpdate((dt) => {
+  if (!landing.visible || cinematic.playing || tour.playing) { orbitT = 0; return; }
+  orbitT += dt;
+  const e = 1 - Math.pow(1 - Math.min(1, orbitT / 4.5), 3);
+  orbitA += 0.055 * dt * (1 + (1 - e) * 2.5);
+  const r = 62 - 16 * e, h = 26 - 8 * e;
+  ctx.camera.position.set(Math.cos(orbitA) * r, h, Math.sin(orbitA) * r);
+  ctx.camera.lookAt(0, 4, 0);
 });
 
 // Home button (HUD, top-left): bail out of free-roam back to the landing
 // screen. Rewinds the intro/tour so "Enter World" / "Take the Tour" play
 // again cleanly next time, instead of no-op'ing because they'd already run.
+// "View mode" button (top right, free roam only): drops into the guided tour.
+const viewBtn = document.createElement('button');
+viewBtn.type = 'button';
+viewBtn.className = 'pw-pill pw-view-btn';
+viewBtn.textContent = '🧭 View mode';
+viewBtn.style.display = 'none';
+viewBtn.addEventListener('click', () => {
+  if (mode !== 'free') return;
+  if (panel.isOpen()) panel.hide();
+  if (pet.isMounted()) pet.dismount();
+  suspendPlayer();
+  tour.reset();
+  tour.play();
+});
+document.getElementById('ui').appendChild(viewBtn);
+
+// Hide/show the HUD chips (Home, View mode, controls, day/dusk) for a clean view.
+// The eye button itself stays put so you can bring them back; H does the same.
+const hudBtn = document.createElement('button');
+hudBtn.type = 'button';
+hudBtn.className = 'pw-hud-eye';
+hudBtn.setAttribute('aria-label', 'Hide buttons');
+hudBtn.title = 'Hide buttons (H)';
+hudBtn.textContent = '👁';
+hudBtn.style.display = 'none';
+function toggleHud() {
+  const hidden = document.body.classList.toggle('pw-hud-hidden');
+  hudBtn.textContent = hidden ? '🙈' : '👁';
+  hudBtn.setAttribute('aria-label', hidden ? 'Show buttons' : 'Hide buttons');
+  hudBtn.title = hidden ? 'Show buttons (H)' : 'Hide buttons (H)';
+}
+hudBtn.addEventListener('click', toggleHud);
+window.addEventListener('keydown', (e) => {
+  const t = e.target;
+  if (e.code !== 'KeyH' || mode !== 'free' || (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable))) return;
+  toggleHud();
+});
+document.getElementById('ui').appendChild(hudBtn);
+
 hud.onHome(() => {
+  // Finish a running intro/tour first: reset() is a no-op while one is playing,
+  // which is why Home used to leave the tour card on screen.
+  cinematic.skip();
+  tour.exit();
   if (panel.isOpen()) panel.hide();
   if (pet.isMounted()) pet.dismount();
   suspendPlayer();
   cinematic.reset();
   tour.reset();
   nudge.hide();
+  mode = 'home';          // after skip/exit, which would otherwise hand off to free roam
   landing.show();
 });
 
@@ -150,9 +222,25 @@ function touchActionLabel() {
   return 'Interact';
 }
 engine.onUpdate(() => {
-  if (cinematic.playing || tour.playing) { hud.setPrompt(null); near = null; touch.setInteract(false); return; } // mute during intro/tour
+  // Only free roam shows prompts, Raja and the E button. Home, the intro and the
+  // tour are all silent so nothing from the world pops up over them.
+  viewBtn.style.display = mode === 'free' ? '' : 'none';
+  hudBtn.style.display = mode === 'free' ? '' : 'none';
+  pet.root.visible = mode === 'free';
+  if (mode !== 'free') {
+    // the tour shows its own cards; only the home screen forces them closed
+    if (mode === 'home' && panel.isOpen()) panel.hide();
+    hud.setPrompt(null); near = null; touch.setInteract(false);
+    return;
+  }
+  // the tutorial owns the screen: no prompts, cards, Raja prompt or nudge over it
+  if (tutorial.active) {
+    if (panel.isOpen()) panel.hide();
+    hud.setPrompt(null); near = null; touch.setInteract(false);
+    return;
+  }
   if (pet.isMounted()) {
-    hud.setPrompt('Riding Raja · WASD drive · Shift sprint · Space leap · E to hop off');
+    hud.setPrompt({ title: 'Riding Raja', keys: [['WASD', 'Drive'], ['Shift', 'Sprint'], ['Space', 'Leap'], ['E', 'Hop off']] });
     near = null; touch.setInteract(true, 'Hop off'); return;
   }
   near = interaction.getNearest(player.position);
@@ -171,11 +259,11 @@ engine.onUpdate(() => {
 });
 // Shared interact: the E key and the on-screen touch button both run this.
 function triggerInteract() {
-  if (cinematic.playing || tour.playing) return;        // the tour drives its own cards
+  if (mode !== 'free' || tutorial.active) return;                          // only free roam is interactive
   if (pet.isMounted()) { pet.dismount(); return; }      // hop off from anywhere
   if (panel.isOpen()) panel.hide();
   else if (near && near.action) near.action();          // mount Raja / open a card
-  else if (near) { openAnchor = near.position; panel.show({ ...near.data, eyebrow: eyebrowFor(near.id) }); }
+  else if (near) { openAnchor = near.position; panel.show({ ...near.data, eyebrow: eyebrowFor(near.id) }, { big: true }); }
 }
 window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyE') triggerInteract();

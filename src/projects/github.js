@@ -58,7 +58,28 @@ function normalize(rawList) {
     .slice(0, MAX_REPOS);
 }
 
-export async function fetchRepos(username) {
+// Apply the district's filter at display time, so config edits show up right away
+// even when the repo list is cached.
+function pick(list, opts = {}) {
+  if (!list) return list;
+  const exclude = new Set((opts.exclude || []).map((n) => n.toLowerCase()));
+  let out = list.filter((r) => !exclude.has(r.name.toLowerCase()));
+  if (opts.requireDescription) out = out.filter((r) => r.description.trim() !== '');
+  if (opts.include && opts.include.length) {
+    const order = opts.include.map((n) => n.toLowerCase());
+    out = out
+      .filter((r) => order.includes(r.name.toLowerCase()))
+      .sort((a, b) => order.indexOf(a.name.toLowerCase()) - order.indexOf(b.name.toLowerCase()));
+  }
+  return out;
+}
+
+export async function fetchRepos(username, opts = {}) {
+  const r = await fetchRaw(username);
+  return pick(r, opts);
+}
+
+async function fetchRaw(username) {
   try {
     if (!username) return null;
 

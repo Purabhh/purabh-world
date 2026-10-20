@@ -11,28 +11,16 @@ import { addBox } from '../core/colliders.js';
 // The BNY wordmark (teal arrowhead + navy "BNY") drawn to a canvas, used as a
 // transparent sign texture on the tower's front face.
 function makeBnyLogoTexture() {
-  const w = 1024, h = 410;
+  // Just the navy "BNY" wordmark, cropped tight so the plane is mostly ink.
+  const w = 720, h = 260;
   const c = document.createElement('canvas');
   c.width = w; c.height = h;
   const g = c.getContext('2d');
-
-  // teal arrowhead / chevron
-  const cy = h / 2;
-  g.fillStyle = '#2E9CB8';
-  g.beginPath();
-  g.moveTo(150, cy - 150);
-  g.lineTo(372, cy);
-  g.lineTo(150, cy + 150);
-  g.lineTo(226, cy);
-  g.closePath();
-  g.fill();
-
-  // navy "BNY"
   g.fillStyle = '#0C2340';
   g.font = '900 232px Arial, "Arial Black", sans-serif';
   g.textBaseline = 'middle';
-  g.textAlign = 'left';
-  g.fillText('BNY', 432, cy + 6);
+  g.textAlign = 'center';
+  g.fillText('BNY', w / 2, h / 2 + 6);
 
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -156,16 +144,14 @@ export function buildBny(ctx) {
   add(boxGeo(7.5, 2.6, 0.2), lobbyMat, 0, 2.0, baseD / 2 + 0.02, false);
 
   // ---- BNY logo plate on the front face ----
-  // Oversized wordmark: the visible mark spans wider than the tower itself
-  // (~12.3 of ink vs the 12-wide base), centered on the facade. It overlaps the
-  // climbing-light column on the right, so the column skips the cells behind it
-  // (see the light loop below).
+  // Wordmark sits left of center and stays clear of the climbing-light column
+  // on the right edge, so the lights run in one unbroken line.
   const logoTex = makeBnyLogoTexture();
-  const logoMat = new THREE.MeshStandardMaterial({ map: logoTex, transparent: true, alphaTest: 0.4, roughness: 0.5, metalness: 0, emissive: 0xffffff, emissiveMap: logoTex, emissiveIntensity: 0.6, side: THREE.DoubleSide });
-  const signW = 17, signH = 6.8;
+  const logoMat = new THREE.MeshStandardMaterial({ map: logoTex, transparent: true, alphaTest: 0.4, roughness: 0.5, metalness: 0, emissive: 0x0c2340, emissiveIntensity: 0.6, side: THREE.DoubleSide });
+  const signW = 8.3, signH = 3.0;
   const signY = topY * 0.66;
   const logoPlate = new THREE.Mesh(new THREE.PlaneGeometry(signW, signH), logoMat);
-  logoPlate.position.set(0, signY, baseD / 2 + 0.12);
+  logoPlate.position.set(-1.2, signY, baseD / 2 + 0.12);
   tower.add(logoPlate);
 
   // ---- climbing "increment" lights up the front corner (emissive; the world's
@@ -178,10 +164,6 @@ export function buildBny(ctx) {
   const offColor = new THREE.Color(0x2c3a52);
   for (let i = 0; i < 24; i++) {
     const cy = 2.4 + i * cellH;
-    // The oversized wordmark covers this stretch of the column — drop the cells
-    // behind it so the climb reads: lights, then the sign (no lights), then
-    // lights again above it.
-    if (cy + cellH * 0.43 > signY - signH / 2 && cy - cellH * 0.43 < signY + signH / 2) continue;
     const m = new THREE.MeshStandardMaterial({ color: offColor.clone(), emissive: offColor.clone(), emissiveIntensity: 0, roughness: 0.4, metalness: 0.1 });
     const cube = new THREE.Mesh(boxGeo(1.5, cellH * 0.86, 1.5), m);
     const tt = i / 24;
@@ -192,7 +174,8 @@ export function buildBny(ctx) {
   }
 
   // ---- animation: climbing-light fill loop + beacon blink ----
-  let litCount = 0, incT = 0, holdT = 0;
+  let litCount = 0, incT = 0, holdT = 0, logoLit = 0;
+  const logoDim = new THREE.Color(0x0c2340);
   onUpdate((dt, elapsed) => {
     if (litCount < cells.length) {
       incT += dt;
@@ -209,16 +192,29 @@ export function buildBny(ctx) {
       c.mat.emissiveIntensity = c.lit * flick * 3.2;
       c.mat.color.copy(offColor).lerp(onColor, c.lit * 0.8);
     }
+    // once the whole column is lit, the wordmark lights up in the same blue
+    const full = litCount >= cells.length ? 1 : 0;
+    logoLit += (full - logoLit) * Math.min(1, dt * 5);
+    logoMat.emissive.copy(logoDim).lerp(onColor, logoLit);
+    logoMat.emissiveIntensity = 0.6 + logoLit * 2.6;
+    floatLogo.material.emissive.copy(logoDim).lerp(onColor, logoLit);
+    floatLogo.material.emissiveIntensity = 0.6 + logoLit * 2.6;
     const b = Math.max(0, Math.sin(elapsed * 2.4)); const pulse = b * b;
     beaconMat.emissiveIntensity = 0.4 + pulse * 3.2;
   });
 
   // Floating BNY logo above the tower (no background panel, just the mark),
   // billboarding toward the player like the Essex banner.
-  addFloatingLogo(ctx, {
+  const floatLogo = addFloatingLogo(ctx, {
     tex: makeBnyLogoTexture(),
-    center: [cx, cz], y: 56, size: [11, 4.4], bob: 0.4,
+    center: [cx, cz], y: 56, size: [9, 3.25], bob: 0.4,
   });
+  // Same glow as the facade sign: drop the texture-as-emissive so only the
+  // wordmark's color lights up (the plane is alpha-clipped to the text).
+  floatLogo.material.emissiveMap = null;
+  floatLogo.material.emissive.set(0x0c2340);
+  floatLogo.material.emissiveIntensity = 0.6;
+  floatLogo.material.needsUpdate = true;
 
   // --- Interactable from the BNY experience entry (anchored at the entrance) ---
   const bny = resume.experience.find((e) => e.id === 'bny');

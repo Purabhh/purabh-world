@@ -1,6 +1,6 @@
 // Third-person blocky avatar with a Roblox-style orbit camera.
-//   move:  WASD / arrows (relative to where the camera faces)
-//   look:  hold LEFT or RIGHT mouse + drag to swing the camera around you
+//   move:  W/S walk forward/back, A/D turn (the camera turns with you)
+//   look:  optional: hold LEFT or RIGHT mouse + drag to swing the camera
 //          (one-finger drag on touch)
 //   zoom:  mouse wheel / pinch (scroll all the way in to enter first person)
 //   jump:  space
@@ -44,33 +44,54 @@ export function createPlayer(ctx) {
 
   // --- orbit camera (third-person only) ---------------------------------------
   // dist drives the zoom: large = far third-person, ~0 = first person.
+  // zoomTo is where the wheel wants us; dist eases toward it so zoom glides.
   const cam = { yaw: 0, pitch: 0.4, dist: 24 };
+  let zoomTo = cam.dist;
   const MIN_DIST = 0.5, MAX_DIST = 42, FP_DIST = 1.5; // below FP_DIST = first person
-  let dragging = false, rightDrag = false, lastX = 0, lastY = 0, pinchDist = 0;
+  const SENS = 0.0022;          // radians per pixel of mouse travel
+  const MAX_STEP = 60;          // ignore pointer-lock spikes bigger than this (px)
+  let dragging = false, lastX = 0, lastY = 0, pinchDist = 0;
+  // Look input is queued here and eased in each frame, so the camera turns
+  // smoothly instead of snapping on every raw mouse event.
+  let lookDX = 0, lookDY = 0;
   const orbit = (dx, dy) => {
     cam.yaw -= dx;
     cam.pitch = THREE.MathUtils.clamp(cam.pitch - dy, -1.2, 1.45);
   };
 
-  // Hold LEFT or RIGHT mouse + drag to orbit. Right-click never opens the menu,
-  // and it locks the cursor in place (Roblox-style) so the mouse doesn't move on
-  // screen while you look around; the cursor reappears when you let go.
-  window.addEventListener('contextmenu', (e) => e.preventDefault());
+  // Hold LEFT or RIGHT mouse + drag to orbit. Right-drag locks the pointer
+  // (Roblox-style) so it stays put while you look; it comes back on release.
+  // The canvas shows a grab hand so there's always a visible cursor.
+  el.style.cursor = 'grab';
+  const isLocked = () => document.pointerLockElement === el;
+  window.addEventListener('contextmenu', (e) => { if (e.target === el) e.preventDefault(); });
   el.addEventListener('mousedown', (e) => {
-    if (e.button === 2) { rightDrag = true; dragging = true; if (el.requestPointerLock) el.requestPointerLock(); }
-    else if (e.button === 0) { rightDrag = false; dragging = true; }
+    if (e.button !== 0 && e.button !== 2) return;
+    dragging = true;
+    el.style.cursor = 'grabbing';
+    if (e.button === 2 && el.requestPointerLock) {
+      try { const r = el.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch (_) {}
+    }
   });
-  window.addEventListener('mouseup', (e) => {
-    if (e.button === 2 && document.pointerLockElement === el) document.exitPointerLock();
-    rightDrag = false; dragging = false;
-  });
+  const endDrag = () => {
+    dragging = false;
+    el.style.cursor = cam.dist > FP_DIST ? 'grab' : 'crosshair';
+    if (isLocked()) document.exitPointerLock();
+  };
+  window.addEventListener('mouseup', endDrag);
+  // If the lock lands after the button was already released, drop it right away
+  // so the cursor never gets stuck hidden.
+  document.addEventListener('pointerlockchange', () => { if (isLocked() && !dragging) document.exitPointerLock(); });
   window.addEventListener('mousemove', (e) => {
     if (!dragging) return;
-    orbit((e.movementX || 0) * 0.005, (e.movementY || 0) * 0.004);
+    if (!e.buttons && !isLocked()) { endDrag(); return; } // released outside the window
+    const dx = e.movementX || 0, dy = e.movementY || 0;
+    if (Math.abs(dx) > MAX_STEP || Math.abs(dy) > MAX_STEP) return;
+    lookDX += dx * SENS; lookDY += dy * SENS * 0.85;
   });
   // Scroll forward = zoom in (closer, eventually first person); back = zoom out.
   el.addEventListener('wheel', (e) => {
-    cam.dist = THREE.MathUtils.clamp(cam.dist + Math.sign(e.deltaY) * Math.max(1.2, cam.dist * 0.16), MIN_DIST, MAX_DIST);
+    zoomTo = THREE.MathUtils.clamp(zoomTo + Math.sign(e.deltaY) * Math.max(1.2, zoomTo * 0.14), MIN_DIST, MAX_DIST);
   }, { passive: true });
 
   // Look/zoom from finger drags on the 3D canvas. Touches that began on the
@@ -86,11 +107,11 @@ export function createPlayer(ctx) {
   el.addEventListener('touchmove', (e) => {
     const ts = onCanvas(e);
     if (ts.length === 1 && dragging) {
-      orbit((ts[0].clientX - lastX) * 0.006, (ts[0].clientY - lastY) * 0.005);
+      lookDX += (ts[0].clientX - lastX) * 0.005; lookDY += (ts[0].clientY - lastY) * 0.004;
       lastX = ts[0].clientX; lastY = ts[0].clientY;
     } else if (ts.length === 2) {
       const d = touchDist(ts);
-      cam.dist = THREE.MathUtils.clamp(cam.dist + (pinchDist - d) * 0.06, MIN_DIST, MAX_DIST);
+      zoomTo = THREE.MathUtils.clamp(zoomTo + (pinchDist - d) * 0.06, MIN_DIST, MAX_DIST);
       pinchDist = d;
     }
   }, { passive: true });
@@ -108,14 +129,20 @@ export function createPlayer(ctx) {
   });
   window.addEventListener('keyup', (e) => { keys[e.code] = false; });
   // Drop held keys if focus is lost (alt-tab, tab switch) — no stuck-key drift.
-  const clearInput = () => { for (const k in keys) keys[k] = false; dragging = false; };
+  const clearInput = () => { for (const k in keys) keys[k] = false; lookDX = lookDY = 0; endDrag(); };
   window.addEventListener('blur', clearInput);
   document.addEventListener('visibilitychange', () => { if (document.hidden) clearInput(); });
 
   // --- movement ---------------------------------------------------------------
   const WALK = 12, RUN = 19, JUMP = 9.5, G = 26;
+  const TURN_SPEED = 2.4; // radians/sec for A/D
   const half = layout.groundSize / 2 - 3;
   const vel = new THREE.Vector3();          // smoothed horizontal velocity
+  const focus = new THREE.Vector3(0, 2.4, 8); // eased follow point for the camera
+  // small center dot shown in first person so you know where you're looking
+  const crosshair = document.createElement('div');
+  crosshair.style.cssText = 'position:fixed;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.45);pointer-events:none;z-index:5;display:none';
+  document.body.appendChild(crosshair);
   const tmpTarget = new THREE.Vector3();
   let yVel = 0, grounded = true, enabled = false, gait = 0;
   let mounted = false;        // true while riding Raja (movement is handed to pet.js)
@@ -135,18 +162,36 @@ export function createPlayer(ctx) {
 
   // Third-person follow camera (shared by walking and riding).
   function followCam(dt) {
+    // ease queued look + zoom in (fast enough to feel direct, no jitter)
+    const lk = 1 - Math.exp(-28 * dt);
+    orbit(lookDX * lk, lookDY * lk);
+    lookDX -= lookDX * lk; lookDY -= lookDY * lk;
+    cam.dist += (zoomTo - cam.dist) * (1 - Math.exp(-12 * dt));
     const EYE = 2.4;
     const cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
     const px = root.position.x, py = root.position.y + EYE, pz = root.position.z;
     tmpTarget.set(px + Math.sin(cam.yaw) * cp * cam.dist, py + sp * cam.dist, pz + Math.cos(cam.yaw) * cp * cam.dist);
-    camera.position.lerp(tmpTarget, 1 - Math.exp(-16 * dt));
+    // Orbit is applied exactly (no lag on rotation); only the follow point eases,
+    // so the camera trails the player a hair without swimming when you turn.
+    focus.x += (px - focus.x) * (1 - Math.exp(-20 * dt));
+    focus.y += (py - focus.y) * (1 - Math.exp(-10 * dt));
+    focus.z += (pz - focus.z) * (1 - Math.exp(-20 * dt));
+    camera.position.set(focus.x + (tmpTarget.x - px), focus.y + (tmpTarget.y - py), focus.z + (tmpTarget.z - pz));
     if (camera.position.y < 0.6) camera.position.y = 0.6;   // don't dip below ground
     camera.lookAt(camera.position.x - Math.sin(cam.yaw) * cp, camera.position.y - sp, camera.position.z - Math.cos(cam.yaw) * cp);
-    root.visible = cam.dist > FP_DIST;                       // hide avatar in first person
+    const fp = cam.dist <= FP_DIST;
+    root.visible = !fp;                                      // hide avatar in first person
+    if (crosshair) crosshair.style.display = fp ? 'block' : 'none';
+    if (!dragging) el.style.cursor = fp ? 'crosshair' : 'grab';
   }
 
   function update(dt) {
     if (suspended) return; // cinematic intro owns the camera; don't move or follow
+    // A/D (or left/right arrows) turn you and the camera together.
+    if (enabled) {
+      const turn = ((keys['KeyA'] || keys['ArrowLeft']) ? 1 : 0) - ((keys['KeyD'] || keys['ArrowRight']) ? 1 : 0);
+      cam.yaw += turn * TURN_SPEED * dt;
+    }
     if (mounted) {          // riding Raja: pet.js pins us onto her back each frame
       legL.rotation.x = 1.15; legR.rotation.x = 1.15;   // sit astride
       armL.rotation.x = 0.6; armR.rotation.x = 0.6;     // hands forward on her neck
@@ -158,8 +203,6 @@ export function createPlayer(ctx) {
     if (enabled) {
       if (keys['KeyW'] || keys['ArrowUp']) mz -= 1;
       if (keys['KeyS'] || keys['ArrowDown']) mz += 1;
-      if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
-      if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
       if (touch) { const m = touch.getMove(); mx += m.x; mz += m.z; }  // joystick (analog)
     }
     // Analog magnitude: keyboard is always full tilt (mag 1); a half-pushed
@@ -178,7 +221,7 @@ export function createPlayer(ctx) {
       desiredX = (wx / len) * maxSpeed;
       desiredZ = (wz / len) * maxSpeed;
     }
-    const k = 1 - Math.exp(-((mx || mz) ? 13 : 18) * dt);
+    const k = 1 - Math.exp(-((mx || mz) ? 10 : 14) * dt);
     vel.x += (desiredX - vel.x) * k;
     vel.z += (desiredZ - vel.z) * k;
     root.position.x += vel.x * dt;
@@ -186,14 +229,15 @@ export function createPlayer(ctx) {
 
     const speed = Math.hypot(vel.x, vel.z);
     if (speed > 0.2) {
-      root.rotation.y = lerpAngle(root.rotation.y, Math.atan2(vel.x, vel.z), 0.2);
+      root.rotation.y = lerpAngle(root.rotation.y, mz > 0 && !mx ? cam.yaw + Math.PI : Math.atan2(vel.x, vel.z), 1 - Math.exp(-14 * dt));
       gait += dt * (4 + speed * 0.95);
       const swing = Math.sin(gait) * THREE.MathUtils.clamp(speed / WALK, 0.15, 1.4) * 0.6;
       legL.rotation.x = swing; legR.rotation.x = -swing;
       armL.rotation.x = -swing; armR.rotation.x = swing;
     } else {
-      legL.rotation.x *= 0.8; legR.rotation.x *= 0.8;
-      armL.rotation.x *= 0.8; armR.rotation.x *= 0.8;
+      const settle = Math.exp(-12 * dt);
+      legL.rotation.x *= settle; legR.rotation.x *= settle;
+      armL.rotation.x *= settle; armR.rotation.x *= settle;
     }
 
     // Kick up a little dust each stride while walking on the ground.
@@ -246,8 +290,6 @@ export function createPlayer(ctx) {
     let mx = 0, mz = 0;
     if (keys['KeyW'] || keys['ArrowUp']) mz -= 1;
     if (keys['KeyS'] || keys['ArrowDown']) mz += 1;
-    if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
-    if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
     if (touch) { const m = touch.getMove(); mx += m.x; mz += m.z; }   // joystick steers Raja too
     let wx = 0, wz = 0;
     const moving = Math.hypot(mx, mz) > 0.12;

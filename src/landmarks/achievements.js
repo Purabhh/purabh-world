@@ -76,10 +76,65 @@ export function buildAchievements(ctx) {
 
   // big faceted gem on top (its own material so it can pulse + counter-spin)
   const gem = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(1.25, 0),
+    new THREE.IcosahedronGeometry(1.25, 1),   // more facets = more sparkle
     new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 1, roughness: 0.15, flatShading: true, envMap, envMapIntensity: 1.5, emissive: 0xffd95a, emissiveIntensity: 0.18 }),
   );
   gem.position.y = topY + 4.2; trophy.add(gem);
+
+  // --- detail pass: everything below is parented to the trophy, so it spins with it
+  // heptagon ring that lines up with the 7-sided lathe (first vertex on +Z)
+  const hepRing = (r, tube, y, mat) => {
+    const g = new THREE.TorusGeometry(r, tube, 8, 7);
+    g.rotateX(Math.PI / 2); g.rotateY(-Math.PI / 2);
+    const m = new THREE.Mesh(g, mat); m.position.y = y; trophy.add(m); return m;
+  };
+  hepRing(1.86, 0.07, topY + 3.47, gold);      // rolled lip on the rim
+  hepRing(1.33, 0.06, topY + 2.3, goldDark);   // band where the bowl flares out
+  // stem: snug collars top + bottom and a round knop in the middle
+  const collar = (r, y) => {
+    const m = new THREE.Mesh(new THREE.TorusGeometry(r, 0.07, 10, 28), goldDark);
+    m.rotation.x = Math.PI / 2; m.position.y = y; trophy.add(m);
+  };
+  collar(0.43, topY + 0.5); collar(0.47, topY + 1.4);
+  const knop = new THREE.Mesh(new THREE.SphereGeometry(0.55, 20, 12), gold);
+  knop.scale.set(1, 0.55, 1); knop.position.y = topY + 0.95; trophy.add(knop);
+
+  // two scrolled handles; both ends sink into the bowl so they're attached
+  for (const s of [-1, 1]) {
+    const pts = [[1.45, 3.25], [2.3, 3.45], [2.85, 3.0], [2.75, 2.3], [2.2, 1.95], [1.4, 2.05], [0.85, 2.1]]
+      .map(([x, y]) => new THREE.Vector3(s * x, topY + y, 0));
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 64, 0.11, 12, false), gold);
+    trophy.add(tube);
+    // little curl at the top + decorative bands along the handle
+    const curl = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.07, 8, 20), goldDark);
+    curl.position.set(s * 2.95, topY + 3.25, 0); trophy.add(curl);
+    for (const [x, y] of [[2.8, 2.7], [2.45, 2.05]]) {
+      const b = new THREE.Mesh(new THREE.SphereGeometry(0.16, 14, 10), goldDark);
+      b.position.set(s * x, topY + y, 0); trophy.add(b);
+    }
+  }
+
+  // gem setting: six prongs from the rim up to the gem's waist, ball tips
+  const prongMat = goldDark;
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+    const from = new THREE.Vector3(Math.cos(a) * 1.45, topY + 3.45, Math.sin(a) * 1.45);
+    const to = new THREE.Vector3(Math.cos(a) * 1.0, topY + 4.35, Math.sin(a) * 1.0);
+    const len = from.distanceTo(to);
+    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.1, len, 8), prongMat);
+    p.position.copy(from).lerp(to, 0.5);
+    p.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), to.clone().sub(from).normalize());
+    trophy.add(p);
+    const tip = new THREE.Mesh(new THREE.SphereGeometry(0.11, 10, 8), gold);
+    tip.position.copy(to); trophy.add(tip);
+  }
+  // detail riding on the gem (spins with it): a waist band + a star finial on top
+  const band = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.08, 8, 40), goldDark);
+  band.rotation.x = Math.PI / 2; gem.add(band);
+  const finial = new THREE.Mesh(new THREE.OctahedronGeometry(0.32, 0), gem.material);
+  finial.scale.set(0.7, 1.5, 0.7); finial.position.y = 1.55; gem.add(finial);
+  const finBase = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.2, 0.3, 10), goldDark);
+  finBase.position.y = 1.15; gem.add(finBase);
 
   // facet diamonds ringing the cup
   for (let i = 0; i < 6; i++) {

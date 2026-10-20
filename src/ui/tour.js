@@ -31,13 +31,10 @@ export function createTour(ctx, { panel, onComplete } = {}) {
   // from the interaction registry; `card` is inline data (welcome / projects /
   // CTA); `anchor` overrides the world point the card pins to.
   const STOPS = [
-    { name: '3D PORTFOLIO', sub: 'A 60-second tour', pos: V(0, 28, 52), look: V(0, 5, 0), hold: 6.5, anchor: V(0, 7, 0),
+    { name: '3D PORTFOLIO', sub: 'A 60-second tour', pos: V(0, 28, 52), look: V(0, 5, 0), hold: 14, anchor: V(0, 7, 0),
       card: {
-        eyebrow: 'Welcome', title: "Hi, I'm Purabh", subtitle: profile.tagline + ' · ' + profile.school, accent: '#5fd06a',
-        lines: [
-          "This walkable world is my portfolio. I'll fly you past each stop: school, internships, projects, and my stack.",
-          'Use the bar below to step through, pause to read, or exit any time to explore on foot.',
-        ],
+        eyebrow: 'Welcome', title: "Hi, I'm Purabh", subtitle: profile.school, accent: '#5fd06a',
+        lines: [profile.about],
       } },
     { id: 'achievements', eyebrow: 'Hackathon', name: 'MusaLabs Hackathon', sub: 'Winner, 1st of 50+ teams', pos: V(0, 9, 15), look: V(0, 4.5, 0), hold: 7 },
     { id: 'education', eyebrow: 'Education', name: 'Rutgers University', sub: 'B.S. Computer Science', pos: V(0, 13, -30), look: V(0, 9, -52), hold: 7 },
@@ -187,11 +184,31 @@ export function createTour(ctx, { panel, onComplete } = {}) {
     elPlay.setAttribute('aria-label', v ? 'Play' : 'Pause');
   }
 
+  // Quick "how this works" popup before the camera starts flying.
+  function showIntro(go) {
+    const box = document.createElement('div');
+    box.className = 'pw-root pw-tour-intro';
+    box.innerHTML = `<div class="pw-tour-intro__card">
+      <div class="pw-tour-intro__eyebrow">Before we go</div>
+      <ul>
+        <li>This walkable world is my portfolio. I'll fly you past each stop: school, internships, projects, and my stack.</li>
+        <li>Use the bar below to step through, pause to read, or exit any time to explore on foot.</li>
+      </ul>
+      <button type="button" class="pw-btn-enter pw-tour-intro__go">Start the tour</button>
+    </div>`;
+    uiRoot().appendChild(box);
+    const btn = box.querySelector('button');
+    btn.addEventListener('click', () => { box.remove(); go(); });
+    btn.focus();
+  }
+
   function play() {
     if (playing || done) return;
-    playing = true;
-    root.classList.add('pw-tour--on');
-    beginSegment(0);
+    showIntro(() => {
+      playing = true;
+      root.classList.add('pw-tour--on');
+      beginSegment(0);
+    });
   }
 
   function finish() {

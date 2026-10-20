@@ -12,6 +12,7 @@
 // and links (GitHub + optional live demo).
 import * as THREE from 'three';
 import { fetchRepos } from './github.js';
+import { projectDetails } from '../data/resume.js';
 import { makeTextTexture, addBuildingSign, addFloatingLogo } from '../landmarks/floatingLogo.js';
 import { addBox } from '../core/colliders.js';
 
@@ -86,7 +87,10 @@ export async function buildProjectsDistrict(ctx) {
 
   // --- Load projects: live GitHub if a username is set, else null ------------
   const username = config.GITHUB_USERNAME;
-  let repos = username ? await fetchRepos(username) : null;
+  let repos = username ? await fetchRepos(username, {
+    include: config.GITHUB_INCLUDE, exclude: config.GITHUB_EXCLUDE,
+    requireDescription: config.GITHUB_REQUIRE_DESCRIPTION,
+  }) : null;
 
   // Offline / empty → resume fallback, plus a small "info" sign so the area
   // explains how to enable live mode and never looks broken.
@@ -142,8 +146,30 @@ export async function buildProjectsDistrict(ctx) {
     ? Math.max(6, (southLimit - startZ) / (rows - 1))
     : spacing;
 
+  // Apply the layout order from the config (case-insensitive). Stable sort keeps
+  // GitHub's order for everything not named.
+  {
+    const lower = (xs) => (xs || []).map((n) => n.toLowerCase());
+    const front = lower(config.GITHUB_ORDER), back = lower(config.GITHUB_LAST);
+    const rank = (r) => {
+      const n = r.name.toLowerCase();
+      if (front.includes(n)) return front.indexOf(n);
+      if (back.includes(n)) return 1e6 + back.indexOf(n);
+      return front.length;
+    };
+    repos.sort((a, b) => rank(a) - rank(b));
+  }
+
+  // InternPilot goes in the middle of the grid so it's the first thing you hit.
+  const midIdx = repos.findIndex((r) => r.name === 'internpilot');
+  if (midIdx >= 0) {
+    const [pin] = repos.splice(midIdx, 1);
+    repos.splice(Math.floor(repos.length / 2), 0, pin);
+  }
+
   // --- Build a kiosk per project ---------------------------------------------
   repos.forEach((repo, i) => {
+    const info = projectDetails[repo.name] || {};
     const row = Math.floor(i / perRow);
     const col = i % perRow;
 
@@ -166,14 +192,30 @@ export async function buildProjectsDistrict(ctx) {
 
     // Pedestal (stone) + building whose height scales gently with stars.
     const ped = 0.8;
-    const bodyH = Math.min(11, 4 + Math.sqrt(Math.max(0, repo.stars)) * 1.2); // clamp 4..11
+    const bodyH = info.house ? 4.5 : Math.min(11, 4 + Math.sqrt(Math.max(0, repo.stars)) * 1.2); // clamp 4..11
     const foot = [4.2, 4.2];
     addBox(x, z, 2.3, 2.3, { top: ped + bodyH, leap: ped + bodyH <= 5 }); // solid; short kiosks are pounce-able
 
     parts.push(box({ size: [foot[0] + 1, ped, foot[1] + 1], color: metal ? numColor : palette.stone, pos: [x, ped / 2, z], ...metal }));
-    parts.push(pillar({ footprint: foot, height: bodyH, color: numColor, pos: [x, z], y0: ped, ...metal }));
+    if (info.house) {
+      // House: a walled body with a pitched roof, in the project's color
+      parts.push(box({ size: [3.4, bodyH, 3.4], color: numColor, pos: [x, ped + bodyH / 2, z], ...metal }));
+      // Gable roof: a triangle extruded along Z, so the ridge runs front-to-back and
+      // the triangular gable faces the player (the door side).
+      const gable = new THREE.Shape();
+      gable.moveTo(-2.0, 0); gable.lineTo(2.0, 0); gable.lineTo(0, 2.2); gable.closePath();
+      const roofGeo = new THREE.ExtrudeGeometry(gable, { depth: 3.9, bevelEnabled: false });
+      roofGeo.translate(0, 0, -1.95);
+      const roof = new THREE.Mesh(roofGeo, new THREE.MeshStandardMaterial({ color: 0x7a3b2e, flatShading: true, roughness: 0.8 }));
+      roof.position.set(x, ped + bodyH, z); roof.castShadow = true;
+      parts.push(roof);
+      // door on the player-facing side
+      parts.push(box({ size: [0.9, 1.6, 0.12], color: palette.trunk, pos: [x, ped + 0.8, z - 1.72] }));
+    } else {
+      parts.push(pillar({ footprint: foot, height: bodyH, color: numColor, pos: [x, z], y0: ped, ...metal }));
+    }
     // Roof cap in a darker tone of the same color family (reuse the language color).
-    parts.push(box({ size: [foot[0] + 0.6, 0.8, foot[1] + 0.6], color: numColor, pos: [x, ped + bodyH + 0.4, z], emissive: numColor, emissiveIntensity: 0.15, ...metal }));
+    if (!info.house) parts.push(box({ size: [foot[0] + 0.6, 0.8, foot[1] + 0.6], color: numColor, pos: [x, ped + bodyH + 0.4, z], emissive: numColor, emissiveIntensity: 0.15, ...metal }));
     // Language-colored label/banner block on the player-facing (-Z) side.
     parts.push(box({
       size: [foot[0] - 0.4, 1.4, 0.4], color: numColor,
@@ -189,13 +231,14 @@ export async function buildProjectsDistrict(ctx) {
     // can read each project at a glance.
     addFloatingLogo(ctx, {
       tex: makeTextTexture(repo.name, '#ffffff'),
-      center: [x, z], y: ped + bodyH + 2.3, size: [5.6, 1.4], bob: 0.16,
+      center: [x, z], y: ped + bodyH + (info.house ? 3.6 : 2.3), size: [5.6, 1.4], bob: 0.16,
     });
 
     // Links: the GitHub repo reads "Visit repo"; any live URL reads "Visit site".
     const links = [];
     if (repo.url) links.push({ label: /github\.com/i.test(repo.url) ? 'Visit repo' : 'Visit site', url: repo.url });
     if (repo.homepage) links.push({ label: 'Visit site', url: repo.homepage });
+    if (info.live) links.push({ label: 'Visit site', url: info.live });
 
     registerInteractable({
       id: `project-${i}-${repo.name}`,
@@ -205,7 +248,7 @@ export async function buildProjectsDistrict(ctx) {
         title: repo.name,
         subtitle: (repo.language || 'Project') + (repo.stars ? ` · ★ ${repo.stars}` : ''),
         accent: cssColor,
-        lines: [repo.description || 'No description.'],
+        lines: info.lines || [repo.description || 'No description.'],
         links,
         // Date-only strings parse as UTC midnight, which shows the previous day in US
         // timezones; pin them to local noon so the card shows the real date.
