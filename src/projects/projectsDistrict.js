@@ -237,8 +237,9 @@ export async function buildProjectsDistrict(ctx) {
     // Links: the GitHub repo reads "Visit repo"; any live URL reads "Visit site".
     const links = [];
     if (repo.url) links.push({ label: /github\.com/i.test(repo.url) ? 'Visit repo' : 'Visit site', url: repo.url });
-    if (repo.homepage) links.push({ label: 'Visit site', url: repo.homepage });
-    if (info.live) links.push({ label: 'Visit site', url: info.live });
+    // One site button: a write-up's own live URL wins over the repo's homepage.
+    const site = info.live || repo.homepage;
+    if (site) links.push({ label: 'Visit site', url: site });
 
     registerInteractable({
       id: `project-${i}-${repo.name}`,
