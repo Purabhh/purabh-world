@@ -1021,6 +1021,40 @@ body.pw-hud-hidden .pw-hud__toggle, body.pw-hud-hidden .pw-view-btn, body.pw-hud
   opacity: 0 !important; pointer-events: none !important; transition: opacity .2s ease;
 }
 
+
+/* ---- phone pass: home screen fits short/narrow screens ---- */
+@media (max-width: 480px) {
+  .pw-root.pw-landing { padding: 18px 14px 24px; overflow-y: auto; justify-content: flex-start; }
+  .pw-landing .pw-landing__inner { margin: auto 0; }
+  .pw-landing .pw-landing__title { font-size: clamp(38px, 11.5vw, 52px); }
+  .pw-landing .pw-landing__name { margin-top: 12px; font-size: 16px; }
+  .pw-landing .pw-landing__subtitle { margin-top: 10px; font-size: 16px; max-width: 320px; }
+  .pw-landing .pw-landing__school { margin-top: 4px; font-size: 16px; }
+  .pw-landing .pw-landing__cta { margin-top: 20px; gap: 10px; }
+  .pw-landing .pw-btn-enter { padding: 14px 32px; font-size: 18px; }
+  .pw-landing .pw-btn-secondary { padding: 12px 26px; font-size: 15px; }
+  .pw-landing .pw-nav { margin-top: 18px; gap: 8px; }
+  .pw-landing .pw-pill { padding: 10px 14px; font-size: 14px; }
+  .pw-landing .pw-landing__hintwrap { margin-top: 14px; }
+  .pw-landing .pw-landing__hint { padding: 10px 14px; font-size: 13px; line-height: 1.5; }
+  .pw-landing .pw-hint__keys { gap: 4px 12px; margin-top: 6px; }
+}
+
+/* ---- phone pass: top-right buttons stack instead of overlapping ----
+   eye (top right), Day to its left, View mode on the row below */
+.pw-touch-active .pw-hud__toggle { right: calc(64px + env(safe-area-inset-right, 0px)); top: calc(14px + env(safe-area-inset-top, 0px)); padding: 9px 14px; }
+.pw-touch-active .pw-view-btn { right: 14px; top: calc(62px + env(safe-area-inset-top, 0px)); padding: 9px 14px; }
+.pw-touch-active .pw-hud__home { padding: 9px 14px; }
+
+/* ---- phone pass: enlarged card sits a bit higher, clear of the joystick ---- */
+.pw-touch-active .pw-card.pw-card--big { top: 44% !important; }
+
+/* ---- phone pass: tour bar counter stays on one line ---- */
+@media (max-width: 480px) {
+  .pw-tour__meta { min-width: 0; flex-shrink: 0; }
+  .pw-tour__count { white-space: nowrap; }
+  .pw-tour__name { display: none; }
+}
 `;
 
 /**

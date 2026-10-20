@@ -81,6 +81,12 @@ export function createLanding({ onEnter, onTour, tutorial } = {}) {
     syncTutorial();
   } else tutBtn.remove();
 
+  // Touch screens have no keyboard: swap the key hints for touch wording.
+  if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+    const keys = root.querySelector('.pw-hint__keys');
+    if (keys) keys.innerHTML = '<span>Exploring on foot:</span><span><b>Stick</b> walk</span><span><b>Drag</b> look</span><span><b>Button</b> read a sign</span>';
+  }
+
   let hidden = false;
 
   function enter() {

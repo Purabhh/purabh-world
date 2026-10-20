@@ -114,7 +114,9 @@ export function createPanel() {
     if (!root.classList.contains('pw-card--big')) return;
     root.style.setProperty('--z', '1');
     const w = root.offsetWidth, h = root.offsetHeight;
-    const z = Math.min(2.8, Math.max(0.6, Math.min(window.innerWidth * 0.8 / w, window.innerHeight * 0.8 / h)));
+    // Touch screens keep the joystick + buttons clear at the bottom and the HUD row at the top.
+    const vFrac = document.body.classList.contains('pw-touch-active') ? 0.64 : 0.8;
+    const z = Math.min(2.8, Math.max(0.6, Math.min(window.innerWidth * 0.8 / w, window.innerHeight * vFrac / h)));
     root.style.setProperty('--z', z.toFixed(3));
   }
   window.addEventListener('resize', fitBig);
