@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe6ba"/>
+      <stop offset="0.55" stop-color="#ffd183"/>
+      <stop offset="1" stop-color="#ffc06b"/>
+    </linearGradient>
+    <clipPath id="tile">
+      <rect x="40" y="40" width="432" height="432" rx="100"/>
+    </clipPath>
+  </defs>
+
+  <!-- Sky tile -->
+  <rect x="40" y="40" width="432" height="432" rx="100" fill="url(#sky)"/>
+  <g clip-path="url(#tile)">
+    <!-- Soft sun glow -->
+    <circle cx="140" cy="132" r="58" fill="#fffaf0" opacity="0.55"/>
+    <!-- Blocky clouds -->
+    <rect x="352" y="104" width="64" height="20" rx="10" fill="#fffaf0" opacity="0.8"/>
+    <rect x="372" y="88" width="32" height="20" rx="10" fill="#fffaf0" opacity="0.8"/>
+  </g>
+  <rect x="42" y="42" width="428" height="428" rx="98" fill="none" stroke="#e9a24c" stroke-width="4"/>
+
+  <!-- Bold ink silhouette outline -->
+  <polygon points="136,229 211,186 211,139 256,113 301,139 301,186 376,229 376,359 256,428 136,359"
+           fill="#2b2620" stroke="#2b2620" stroke-width="22" stroke-linejoin="round"/>
+
+  <g stroke="#2b2620" stroke-width="6" stroke-linejoin="round">
+    <!-- Dirt sides -->
+    <polygon points="136,229 256,298 256,428 136,359" fill="#7a5f38"/>
+    <polygon points="256,298 376,229 376,359 256,428" fill="#5f4a2c"/>
+
+    <!-- Grass overhang with drips -->
+    <polygon points="136,229 256,298 256,328 196,293.5 196,317.5 166,300.3 166,276.3 136,259" fill="#3fb14e"/>
+    <polygon points="256,298 376,229 376,259 346,276.3 346,300.3 316,317.5 316,293.5 256,328" fill="#2e8f3c"/>
+
+    <!-- Grass top -->
+    <polygon points="256,160 376,229 256,298 136,229" fill="#5fd06a"/>
+
+    <!-- Gold tower block -->
+    <polygon points="211,139 256,165 256,255 211,229" fill="#f2b632"/>
+    <polygon points="256,165 301,139 301,229 256,255" fill="#d4901e"/>
+    <polygon points="256,113 301,139 256,165 211,139" fill="#ffe07a"/>
+  </g>
+
+  <!-- Dirt pixel specks -->
+  <polygon points="160,342 184,356 184,374 160,360" fill="#5f4a2c"/>
+  <polygon points="214,352 236,365 236,383 214,370" fill="#5f4a2c"/>
+  <polygon points="300,368 324,354 324,372 300,386" fill="#4a3920"/>
+  <polygon points="340,320 360,308 360,326 340,338" fill="#4a3920"/>
+
+  <!-- Grass top highlight pixels -->
+  <polygon points="168,229 192,215 208,224 184,238" fill="#8be08f"/>
+  <polygon points="300,252 324,238 340,247 316,261" fill="#8be08f"/>
+
+  <!-- Tower glowing window -->
+  <polygon points="268,183 290,170.4 290,200.4 268,213" fill="#2b2620"/>
+  <polygon points="273,186 285,179 285,195 273,202" fill="#fffaf0"/>
+</svg>
