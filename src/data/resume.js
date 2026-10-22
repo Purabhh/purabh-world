@@ -20,7 +20,7 @@ export const education = {
   degree: 'B.S. Computer Science, Minor in Data Science',
   dates: 'Aug 2023 – May 2027',
   location: 'New Brunswick, NJ',
-  honors: ["Dean's List", 'Coursework: Data Structures, Algorithms, Computer Architecture, Discrete Structures I & II, AI, Databases'],
+  honors: ["Dean's List", 'Coursework: Data Structures, Algorithms, Computer Architecture, Discrete Structures I & II, Intro to AI, Systems Engineering, Data Management for Data Science'],
 };
 
 // Each entry maps to one landmark in the world. Bullets mirror the Oct 2026
@@ -51,7 +51,7 @@ export const experience = [
     id: 'azonix', org: 'Azonix Tech', role: 'Software Engineering Intern',
     dates: 'May 2024 – Aug 2024', location: 'Remote', accent: 'azonix',
     bullets: [
-      "Built a real-time facial-recognition pipeline on a live 30 FPS edge video feed, using OpenCV and an ONNX-optimized InsightFace embedding model to detect and identify enrolled individuals in under 45 ms per frame at 96%+ accuracy.",
+      "Built a real-time facial-recognition pipeline processing a live 30 FPS video feed at the edge, using OpenCV and an ONNX-optimized InsightFace embedding model to detect and identify enrolled individuals in under 45 ms per frame at 96%+ accuracy.",
       "Engineered an IoT telemetry platform ingesting 5,000+ MQTT messages/sec from 500 concurrent sensor devices, persisting time-series data to TimescaleDB for sub-second querying and streaming anomaly detection.",
       "Trained an ML (XGBoost) predictive-maintenance model on 100K+ rows of device telemetry to forecast equipment failures roughly 6 hours in advance, reaching 0.92 AUC and cutting projected unplanned downtime by 40%.",
     ],
@@ -60,7 +60,7 @@ export const experience = [
 ];
 
 export const achievements = [
-  { title: 'MusaLabs Hackathon, Winner', detail: '1st of 50+ teams, sponsored by Microsoft Azure.' },
+  { title: 'MusaLabs Hackathon, Winner', detail: '1st of 50+ teams, for LeaseLink, a full-stack housing-matching app.' },
   { title: "Dean's List", detail: 'Spring 2025.' },
 ];
 
@@ -247,10 +247,11 @@ export const projectsFallback = [
 ];
 
 export const skills = {
-  Languages: ['Python', 'Java', 'TypeScript', 'JavaScript', 'SQL', 'C++', 'C', 'C#', 'Go', 'Ruby', 'Rust'],
-  Frontend: ['React', 'Angular', 'Next.js', 'Swift'],
-  Backend: ['Node.js', 'Express', 'NestJS', 'Spring Boot', 'FastAPI', 'LangChain', 'Pandas', 'Kafka', 'RabbitMQ', 'ActiveMQ Artemis'],
-  'DevOps / Cloud': ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Splunk', 'Datadog'],
-  Blockchain: ['Solidity', 'Hyperledger Besu', 'Web3j', 'ethers.js', 'Web3.js'],
-  Database: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'DynamoDB', 'Elasticsearch', 'Oracle', 'Qdrant', 'TimescaleDB'],
+  Languages: ['Python', 'Java', 'TypeScript', 'JavaScript', 'Rust', 'C++', 'C', 'SQL'],
+  Backend: ['Node.js', 'Spring Boot', 'FastAPI', 'Express', 'NestJS', 'Kafka', 'ActiveMQ Artemis', 'REST', 'WebSockets', 'MQTT', 'OAuth'],
+  Data: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'TimescaleDB', 'BigQuery', 'Qdrant', 'pgvector'],
+  Frontend: ['React', 'Next.js', 'Angular', 'Tailwind CSS', 'Tauri', 'Swift'],
+  'AI / ML': ['LangChain', 'Ollama', 'scikit-learn', 'XGBoost', 'OpenCV', 'Pandas'],
+  'Cloud / DevOps': ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD', 'Splunk'],
+  Blockchain: ['Solidity', 'Hyperledger Besu', 'Web3j', 'ethers.js'],
 };
