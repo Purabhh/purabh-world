@@ -121,7 +121,7 @@ export const projectDetails = {
       "Fully offline: no cloud, no accounts.",
     ],
   },
-  PassportBros: {
+  PassportClub: {
     lines: [
       'A shared travel scrapbook for you and your friends. Every trip gets its own chronicle, and every country you visit gets its own page in it.',
       'Each person can keep a personal scrapbook that holds every country they have been to. You invite friends in with a link, and they pick a name and join with no signup.',
@@ -201,9 +201,9 @@ export const projectsFallback = [
     language: 'JavaScript', stars: 0, url: 'https://github.com/Purabhh/coolfinder', homepage: 'https://coolfinder.vercel.app', updated: '2026-07-02',
   },
   {
-    name: 'PassportBros',
-    description: 'A shared travel scrapbook for you and your friends: anyone with the invite link joins, posts photos and videos to each country, and sees what everyone shared. No passwords or signups. Postgres, Cloudflare R2 for media, with a boarding-pass landing.',
-    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/PassportBros', homepage: 'https://passport-bros.vercel.app', updated: '2026-06-28',
+    name: 'PassportClub',
+    description: 'A shared travel scrapbook for you and your friends: anyone with the invite link joins, posts photos and videos to each country, and sees what everyone shared. No passwords or signups. A boarding-pass landing, a stamp page for every country, and a shared passport that fills up as the crew travels.',
+    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/PassportClub', homepage: 'https://passport-bros.vercel.app', updated: '2026-06-28',
   },
   {
     name: 'GestureBoard',
