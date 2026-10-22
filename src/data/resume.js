@@ -165,6 +165,14 @@ export const projectDetails = {
       'Voice-accessible answers through ElevenLabs text-to-speech.',
     ],
   },
+  Gencost: {
+    lines: [
+      'Metering proxy and smart router for generative-AI APIs, started at a hackathon in April 2026 and built with Ronil Basu. Every call to a model provider flows through it, so cost and latency are logged live.',
+      'Routes each request to the cheapest model that meets a Draft, Standard or Premium quality tier, across 5 providers and 27 priced models (LLM, voice, sound effects, image, video and music), with a budget cap and a savings-versus-premium readout.',
+      'Per-model fallback chains and circuit breakers: if a provider fails, the next cheapest model takes over, and a model that keeps failing is skipped until it cools down. Covered by 58 backend tests.',
+      'FastAPI backend with a Next.js and Supabase dashboard that streams live cost updates over WebSocket.',
+    ],
+  },
   LeaseLink: {
     lines: [
       'Built a full-stack Tinder-style housing marketplace connecting renters and landlords through mutual interest.',
@@ -224,6 +232,11 @@ export const projectsFallback = [
     name: 'CHESS-GAME',
     description: 'Gambit: hands-free 3D chess vs Stockfish with voice, webcam pointing and hand gestures. Multiplayer and Elo coming soon.',
     language: 'JavaScript', stars: 0, url: 'https://github.com/Purabhh/CHESS-GAME', homepage: 'https://gambit-amber.vercel.app', updated: '2026-10-20',
+  },
+  {
+    name: 'Gencost',
+    description: 'Metering proxy and smart router for generative-AI APIs: logs per-call cost and latency, routes each request to the cheapest model that meets a Draft/Standard/Premium quality tier across 5 providers and 27 priced models, with fallback chains and circuit breakers. FastAPI backend, Next.js and Supabase dashboard with live WebSocket updates.',
+    language: 'Python', stars: 0, url: 'https://github.com/Purabhh/Gencost', homepage: '', updated: '2026-10-22',
   },
   // Kept last on purpose so it lands at the back of the Projects grid.
   {

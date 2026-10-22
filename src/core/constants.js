@@ -26,7 +26,7 @@ export const config = {
   // Layout order: GITHUB_ORDER goes first (in this order), GITHUB_LAST goes at the end.
   // Everything else keeps GitHub's order in between.
   GITHUB_ORDER: ['FastRust', 'Mochee', 'vaultdb'],
-  GITHUB_LAST: ['stormlink'],
+  GITHUB_LAST: ['Gencost', 'stormlink'],
 };
 
 // --- Colors as three.js hex numbers -----------------------------------------
