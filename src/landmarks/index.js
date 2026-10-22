@@ -17,6 +17,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 // Blender detail passes (handles, trim, portico...) layered over the code-built
 // landmarks. Each GLB is authored around its landmark's center at ground level.
 const DETAIL_MODELS = [
+  { url: 'public/models/trophy_detail.glb', at: [0, 0] },
   { url: 'public/models/bny_detail.glb', at: [-54, 28] },
   { url: 'public/models/essex_detail.glb', at: [54, 28] },
   { url: 'public/models/azonix_detail.glb', at: [54, -28] },
@@ -50,5 +51,5 @@ export function buildLandmarks(ctx) {
   buildAzonix(ctx);        // Azonix Tech + panning CCTV camera           @ [-54, 28]
   buildSkills(ctx);        // Skills constellation (glowing tech icons)   @ [-54, -28]
   buildAchievements(ctx);  // Gold trophy centerpiece                     @ [0, 0]
-  loadDetails(ctx);        // Blender detail layers (trophy, BNY)
+  loadDetails(ctx);        // Blender detail layers (trophy, BNY, Essex, Azonix)
 }
