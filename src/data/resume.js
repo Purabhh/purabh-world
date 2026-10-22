@@ -203,7 +203,7 @@ export const projectsFallback = [
   {
     name: 'PassportClub',
     description: 'A shared travel scrapbook for you and your friends: anyone with the invite link joins, posts photos and videos to each country, and sees what everyone shared. No passwords or signups. A boarding-pass landing, a stamp page for every country, and a shared passport that fills up as the crew travels.',
-    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/PassportClub', homepage: 'https://passport-bros.vercel.app', updated: '2026-06-28',
+    language: 'HTML', stars: 0, url: 'https://github.com/Purabhh/PassportClub', homepage: 'https://passportclub.vercel.app', updated: '2026-06-28',
   },
   {
     name: 'GestureBoard',
