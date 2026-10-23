@@ -13,6 +13,7 @@ import { buildAzonix } from './azonix.js';
 import { buildAchievements } from './achievements.js';
 import { buildSkills } from './skills.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { prepareGlb } from '../core/glb.js';
 
 // Blender detail passes (handles, trim, portico...) layered over the code-built
 // landmarks. Each GLB is authored around its landmark's center at ground level.
@@ -27,18 +28,8 @@ function loadDetails(ctx) {
   const loader = new GLTFLoader();
   for (const { url, at } of DETAIL_MODELS) {
     loader.load(url, (gltf) => {
+      prepareGlb(gltf.scene, ctx.scene);
       gltf.scene.position.set(at[0], 0, at[1]);
-      gltf.scene.traverse((o) => {
-        if (!o.isMesh) return;
-        o.castShadow = true; o.receiveShadow = true;
-        // Full metal goes black with nothing to reflect; borrow the world's env map
-        // when there is one, otherwise tone metal down so the gold still reads.
-        const m = o.material;
-        if (m && m.metalness > 0.5) {
-          if (ctx.scene.environment) m.envMap = ctx.scene.environment;
-          else { m.metalness = 0.35; m.roughness = Math.max(m.roughness, 0.35); }
-        }
-      });
       ctx.scene.add(gltf.scene);
     }, undefined, (e) => console.warn('[landmarks] detail model failed', url, e));
   }

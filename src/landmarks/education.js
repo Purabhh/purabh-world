@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import { addBox } from '../core/colliders.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { prepareGlb } from '../core/glb.js';
 
 export function buildEducation(ctx) {
   const { scene, voxel, palette, css, layout, resume, registerInteractable, } = ctx;
@@ -19,17 +20,9 @@ export function buildEducation(ctx) {
   addBox(cx - 8.4, cz - 5.0, 4.4, 8.2, { top: 1.7 });  // north wing base
   const hallD = halfW * 2;          // depth, used to place the interactable in front
   new GLTFLoader().load('public/models/rutgers_business.glb', (gltf) => {
+    prepareGlb(gltf.scene, scene);
     gltf.scene.position.set(cx, 0, cz);
     gltf.scene.scale.setScalar(SCALE);
-    gltf.scene.traverse((o) => {
-      if (!o.isMesh) return;
-      o.castShadow = true; o.receiveShadow = true;
-      const m = o.material;
-      if (m && m.metalness > 0.5) {
-        if (scene.environment) m.envMap = scene.environment;
-        else { m.metalness = 0.35; m.roughness = Math.max(m.roughness, 0.35); }
-      }
-    });
     scene.add(gltf.scene);
   }, undefined, (e) => console.warn('[education] model failed', e));
 
