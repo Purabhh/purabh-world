@@ -141,7 +141,7 @@ export function buildFallingLeaves(ctx, trees, low) {
     for (let i = 0; i < N; i++) {
       const k = i * 3;
       pos[k + 1] -= speed[i] * dt;
-      // same breeze as the grass (world/grass.js), plus a little flutter
+      // the same gentle breeze as the tree sway, plus a little flutter
       const wind = Math.sin(t * 1.7 + pos[k] * 0.35 + pos[k + 2] * 0.22) * 0.22 + 0.3;
       pos[k] += (0.8 * wind + Math.sin(t * 3 + phase[i]) * 0.4) * dt;
       pos[k + 2] += (0.45 * wind + Math.cos(t * 2.3 + phase[i]) * 0.3) * dt;

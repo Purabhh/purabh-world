@@ -180,7 +180,6 @@ export function buildAtmosphere(ctx) {
 
   // ===========================================================================
   // 3) TREE SWAY — every tree (tagged via swayables) leans on one gentle breeze.
-  //    The grass field has its own wind in its shader (world/grass.js).
   // ===========================================================================
   onUpdate((dt, t) => {
     // a slow, small lean (trees pivot at their base).

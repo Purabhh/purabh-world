@@ -1,6 +1,6 @@
 // Where open grass is. terrain.js paints the plaza, paths, district floors and
-// beach from these same numbers, so the grass field (grass.js) can never grow
-// over a walkway that terrain drew.
+// beach from these same numbers, so anything scattered with isGround() can never
+// land on a walkway that terrain drew.
 import { layout } from '../core/constants.js';
 
 export const PLAZA = 24;         // spawn plaza footprint

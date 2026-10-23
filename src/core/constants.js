@@ -38,7 +38,6 @@ export const palette = {
 
   // ground + nature
   grass: 0xa8b84a, grassDark: 0x7f8f35, grassLight: 0xc9cf62,
-  grassRoot: 0x4f5a22, grassTip: 0xd9d860,   // grass blade gradient (world/grass.js)
   soil: 0x9b6b43, sand: 0xf0dca0,
   path: 0xead9a8, pathEdge: 0xd8c184,
   water: 0x6fc6e0, waterDeep: 0x4fb0d6,
