@@ -46,6 +46,7 @@ const ctx = {
   hemi: engine.hemi,
   envMap: engine.envMap,
   bloom: engine.bloom,
+  grade: engine.grade,
   invalidateShadows: engine.invalidateShadows,
 };
 

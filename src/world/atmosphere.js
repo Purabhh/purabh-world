@@ -306,11 +306,15 @@ export function buildAtmosphere(ctx) {
 
   const fogDay = new THREE.Color(palette.worldSkyHaze), fogDusk = new THREE.Color(0xf4b078);
   const hemiDay = new THREE.Color(palette.worldSkyLight), hemiDusk = new THREE.Color(0xffc89c);
+  // Ground bounce is purple, so shadowed sides read violet instead of grey.
+  const bounceDay = new THREE.Color(0x6a4a8a), bounceDusk = new THREE.Color(0x5a3a7a);
   const sunDay = new THREE.Color(0xfff4e0), sunDusk = new THREE.Color(0xffab58);
   const sunPosDay = new THREE.Vector3(70, 110, 50), sunPosDusk = new THREE.Vector3(125, 24, 40);
   function applyEnv(m) {
     if (scene.fog) scene.fog.color.copy(fogDay).lerp(fogDusk, m);
     hemi.color.copy(hemiDay).lerp(hemiDusk, m);
+    hemi.groundColor.copy(bounceDay).lerp(bounceDusk, m);
+    if (ctx.grade) ctx.grade.setMix(m);
     hemi.intensity = 0.95 + (0.6 - 0.95) * m;
     sun.color.copy(sunDay).lerp(sunDusk, m);
     sun.intensity = 1.15 + (0.85 - 1.15) * m;

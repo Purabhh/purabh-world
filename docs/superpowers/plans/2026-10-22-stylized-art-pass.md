@@ -73,7 +73,7 @@ Compare screenshots against `docs/art-ref/reference.webp` by eye. The goal is th
 
 Also record the tree count: `(await import('/src/voxel/voxel.js')).swayables.length` (after the 8s wait, so the Projects district trees are in).
 
-Baseline (fill in): calls = ___ , tris = ___ , meshes = ___ , trees = ___
+Baseline (2026-10-22, camera [[18,10,22],[0,1,0]]): calls = 917 , tris = 136,738 , meshes = 921 , trees = 40
 
 ---
 

@@ -8,6 +8,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { palette } from './constants.js';
 import { createShadowCache } from './shadowCache.js';
+import { createGradePass } from './grade.js';
 
 // A clear blue-white vertical sky gradient, baked once into a canvas texture.
 function makeSkyTexture() {
@@ -67,7 +68,7 @@ export function createEngine(mount) {
   camera.position.set(0, 20, 30);
 
   // Soft sunny lighting.
-  const hemi = new THREE.HemisphereLight(palette.worldSkyLight, palette.grassDark, 0.95);
+  const hemi = new THREE.HemisphereLight(palette.worldSkyLight, 0x6a4a8a, 0.95);
   scene.add(hemi);
 
   const sun = new THREE.DirectionalLight(0xfff4e0, 1.15);
@@ -93,6 +94,9 @@ export function createEngine(mount) {
   const bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.85, 0.5, 0.6);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
+  // Painted look: purple shadows, warm highlights (see grade.js). Follows day/dusk.
+  const grade = createGradePass();
+  composer.addPass(grade);
   composer.setPixelRatio(Math.min(window.devicePixelRatio, DPR_CAP));
   composer.setSize(window.innerWidth, window.innerHeight);
 
@@ -168,5 +172,5 @@ export function createEngine(mount) {
     composer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  return { THREE, scene, camera, renderer, composer, bloom, onUpdate, start, stop, clock, sun, hemi, envMap, setLowQuality, renderFrame, invalidateShadows: shadows.invalidate, get lowQuality() { return lowQuality; } };
+  return { THREE, scene, camera, renderer, composer, bloom, grade, onUpdate, start, stop, clock, sun, hemi, envMap, setLowQuality, renderFrame, invalidateShadows: shadows.invalidate, get lowQuality() { return lowQuality; } };
 }
