@@ -4,8 +4,10 @@ import { config } from '../core/constants.js';
 
 export const profile = {
   name: 'Purabh Singh',
-  tagline: 'I like to code, build AI agents and infrastructure, make video games and 3D models, and generally just enjoy solving problems.',
+  role: 'Software Engineer',
+  tagline: 'I build backend systems, AI agents, and low-latency infrastructure. Previously interned at BNY, Essex Securities, and Azonix.',
   school: 'CS @ Rutgers',
+  classYear: "'27",
   // longer bio for the tour's welcome card
   about: "I like to code all kinds of things. I got started making video games and 3D models, which I still do today, and these days I also build AI agents and AI infrastructure, with some recent dabbling in complex blockchain systems. I find pretty much all of tech interesting, even outside my niche, and lately I've been getting into low latency systems. FastRust is my newest big project, and with my coursework you can expect more C and Rust stuff soon.",
   location: 'New Brunswick, NJ',

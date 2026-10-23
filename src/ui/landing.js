@@ -1,6 +1,6 @@
-// Landing overlay — the full-screen "3D PORTFOLIO" title screen.
+// Landing overlay — the full-screen title screen.
 //
-// Mounts into #ui. Shows a huge wordmark, a tagline, a glowing green
+// Mounts into #ui. Shows the name as a huge wordmark, a role line, a tagline, a glowing green
 // "▶ Enter World" CTA, and a rounded pill nav (Projects / Resume / GitHub /
 // LinkedIn). Enter World (and Projects) drop the player into the 3D world.
 //
@@ -23,10 +23,10 @@ export function createLanding({ onEnter, onTour, tutorial } = {}) {
 
   root.innerHTML = `
     <div class="pw-landing__inner">
-      <h1 class="pw-landing__title"><span class="pw-apos">3D</span> PORTFOLIO</h1>
-      <p class="pw-landing__name">${escapeHtml(profile.name)}</p>
+      <h1 class="pw-landing__title">${titleHtml(profile.name)}</h1>
+      <p class="pw-landing__name">${escapeHtml(`${profile.role} · ${profile.school} ${profile.classYear}`)}</p>
       <p class="pw-landing__subtitle">${escapeHtml(profile.tagline)}</p>
-      <p class="pw-landing__school">${escapeHtml(profile.school)}</p>
+      <p class="pw-landing__school">Explore my work in 3D, or take the guided tour.</p>
 
       <div class="pw-landing__cta">
         <button class="pw-btn-enter" type="button" data-tour>🧭 Take the Tour</button>
@@ -130,6 +130,13 @@ export function createLanding({ onEnter, onTour, tutorial } = {}) {
   uiRoot().appendChild(root);
 
   return { hide, show, el: root, get visible() { return !hidden; } };
+}
+
+// "Purabh Singh" -> "PURABH <green>SINGH</green>", the wordmark's two-tone look.
+function titleHtml(name) {
+  const words = String(name).toUpperCase().split(' ');
+  const last = words.pop();
+  return `${escapeHtml(words.join(' '))} <span class="pw-apos">${escapeHtml(last)}</span>`;
 }
 
 function escapeHtml(s) {

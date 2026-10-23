@@ -852,11 +852,11 @@ export const UI_CSS = `
   animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both .55s, pwl-name 4s ease-in-out infinite 1.6s;
 }
 .pw-landing .pw-landing__subtitle {
-  margin: 20px 0 0; max-width: 440px; font-weight: 400; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: #f6eedc;
+  margin: 20px 0 0; max-width: 520px; font-weight: 400; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: #f6eedc;
   text-wrap: pretty; animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both .7s;
 }
 .pw-landing .pw-landing__school {
-  margin: 6px 0 0; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: #f6eedc;
+  margin: 14px 0 0; font-size: clamp(14px, 1.2vw, 16px); line-height: 1.5; color: #c9bfd0;
   animation: pwl-rise .8s cubic-bezier(.2, .7, .2, 1) both .82s;
 }
 .pw-landing .pw-landing__cta { margin-top: 32px; gap: 14px; }
