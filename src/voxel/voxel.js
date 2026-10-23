@@ -7,6 +7,7 @@
 //  - pillar()/building()/tree() positions are [x, z] on the ground and grow UP.
 import * as THREE from 'three';
 import { addCircle } from '../core/colliders.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { canopy, CANOPY_COLORS } from '../world/foliage.js';
 
 const _matCache = new Map();
@@ -39,9 +40,21 @@ export function material(color, opts = {}) {
   return m;
 }
 
+// Soft bevelled edges catch a thin highlight, which is most of what makes a box
+// read as "made" instead of "default cube". Shared per size; the bake merges them.
+const _boxGeo = new Map();
+function boxGeometry(w, h, d, bevel) {
+  const key = `${w}|${h}|${d}|${bevel}`;
+  if (!_boxGeo.has(key)) {
+    const r = Math.min(0.08, 0.18 * Math.min(w, h, d));
+    _boxGeo.set(key, bevel && r > 0.01 ? new RoundedBoxGeometry(w, h, d, 2, r) : new THREE.BoxGeometry(w, h, d));
+  }
+  return _boxGeo.get(key);
+}
+
 // Core primitive. size=[w,h,d]; pos=[x,y,z] is the center. mat opts pass through.
-export function box({ size = [1, 1, 1], color = 0xffffff, pos = [0, 0, 0], shadow = true, ...mat } = {}) {
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(size[0], size[1], size[2]), material(color, mat));
+export function box({ size = [1, 1, 1], color = 0xffffff, pos = [0, 0, 0], shadow = true, bevel = true, ...mat } = {}) {
+  const mesh = new THREE.Mesh(boxGeometry(size[0], size[1], size[2], bevel), material(color, mat));
   mesh.position.set(pos[0], pos[1], pos[2]);
   mesh.castShadow = shadow;
   mesh.receiveShadow = shadow;
@@ -73,7 +86,7 @@ export function building({ footprint = [6, 6], height = 8, color = 0xcccccc, roo
 
 // Flat ground slab centered at origin; its TOP is at y = 0.
 export function groundSlab({ size = 200, thickness = 2, color = 0x8fce6b, pos = [0, 0] } = {}) {
-  const mesh = box({ size: [size, thickness, size], color, pos: [pos[0], -thickness / 2, pos[1]], roughness: 1 });
+  const mesh = box({ size: [size, thickness, size], color, pos: [pos[0], -thickness / 2, pos[1]], roughness: 1, bevel: false });
   mesh.castShadow = false;
   return mesh;
 }
@@ -85,7 +98,7 @@ export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.0
   // district pads sitting on grass — never z-fight. The stable opaque paint order
   // (creation order) layers them instead of the depth buffer.
   const mesh = box({
-    size: [size[0], 0.2, size[1]], color, pos: [pos[0], y, pos[1]], roughness: 1,
+    size: [size[0], 0.2, size[1]], color, pos: [pos[0], y, pos[1]], roughness: 1, bevel: false,
     depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
   });
   mesh.castShadow = false;
