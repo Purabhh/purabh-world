@@ -14,6 +14,7 @@ import { buildEnvironment } from './world/environment.js';
 import { buildLanterns } from './world/lanterns.js';
 import { buildAtmosphere } from './world/atmosphere.js';
 import { buildGrass } from './world/grass.js';
+import { buildFallingLeaves } from './world/foliage.js';
 import { buildPet } from './world/pet.js';
 import { buildLandmarks } from './landmarks/index.js';
 import { buildProjectsDistrict } from './projects/projectsDistrict.js';
@@ -68,6 +69,7 @@ let mode = 'home';
 // --- player (gated behind the landing screen) -------------------------------
 const player = createPlayer(ctx);
 buildGrass(ctx, player, engine);
+buildFallingLeaves(ctx, voxel.swayables, engine.lowQuality || new URLSearchParams(location.search).get('quality') === 'low');
 player.setEnabled(false);
 engine.onUpdate((dt) => player.update(dt));
 

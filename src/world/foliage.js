@@ -95,3 +95,59 @@ export function canopy({ clusters, color, seed = 1 }) {
   mesh.userData.canopy = true;
   return mesh;
 }
+
+// Leaves drifting down from the canopies: one Points cloud. Each leaf falls,
+// sways on the same breeze as the grass, and respawns under a random tree's
+// canopy (read live from swayables, so the Projects district trees count too).
+export function buildFallingLeaves(ctx, trees, low) {
+  const { scene, onUpdate } = ctx;
+  const N = low ? 150 : 400;
+  const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  const speed = new Float32Array(N), phase = new Float32Array(N);
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const _c = new THREE.Color(), _s = new THREE.Sphere();
+
+  function respawn(i, anywhere) {
+    const tr = trees[(Math.random() * trees.length) | 0];
+    const leaves = tr && tr.children.find((c) => c.userData.canopy);
+    if (!leaves) { pos[i * 3 + 1] = -10; return; }
+    if (!leaves.geometry.boundingSphere) leaves.geometry.computeBoundingSphere();
+    _s.copy(leaves.geometry.boundingSphere).applyMatrix4(leaves.matrixWorld);
+    const a = Math.random() * Math.PI * 2, r = Math.random() * _s.radius * 0.8;
+    pos[i * 3] = _s.center.x + Math.cos(a) * r;
+    pos[i * 3 + 2] = _s.center.z + Math.sin(a) * r;
+    pos[i * 3 + 1] = anywhere ? Math.random() * _s.center.y : _s.center.y - Math.random() * 1.2;
+    _c.copy(leaves.material.color).multiplyScalar(0.9 + Math.random() * 0.2);
+    col[i * 3] = _c.r; col[i * 3 + 1] = _c.g; col[i * 3 + 2] = _c.b;
+    geo.attributes.color.needsUpdate = true;
+    speed[i] = 0.4 + Math.random() * 0.4;
+    phase[i] = Math.random() * 10;
+  }
+
+  const points = new THREE.Points(geo, new THREE.PointsMaterial({
+    map: leafTexture(), size: 0.35, sizeAttenuation: true, vertexColors: true,
+    alphaTest: 0.5, depthWrite: true,
+  }));
+  points.frustumCulled = false;
+  points.name = 'falling-leaves';
+  scene.add(points);
+
+  let started = false;
+  onUpdate((dt, t) => {
+    if (!trees.length) return;
+    if (!started) { for (let i = 0; i < N; i++) respawn(i, true); started = true; }
+    for (let i = 0; i < N; i++) {
+      const k = i * 3;
+      pos[k + 1] -= speed[i] * dt;
+      // same breeze as the grass (world/grass.js), plus a little flutter
+      const wind = Math.sin(t * 1.7 + pos[k] * 0.35 + pos[k + 2] * 0.22) * 0.22 + 0.3;
+      pos[k] += (0.8 * wind + Math.sin(t * 3 + phase[i]) * 0.4) * dt;
+      pos[k + 2] += (0.45 * wind + Math.cos(t * 2.3 + phase[i]) * 0.3) * dt;
+      if (pos[k + 1] < 0.05) respawn(i, false);
+    }
+    geo.attributes.position.needsUpdate = true;
+  });
+  return points;
+}
