@@ -7,6 +7,7 @@
 //  - pillar()/building()/tree() positions are [x, z] on the ground and grow UP.
 import * as THREE from 'three';
 import { addCircle } from '../core/colliders.js';
+import { canopy, CANOPY_COLORS } from '../world/foliage.js';
 
 const _matCache = new Map();
 
@@ -96,14 +97,25 @@ export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.0
 // picked up automatically by whoever iterates it each frame.
 export const swayables = [];
 
-// A chunky low-poly tree. Built at LOCAL origin with the group planted at [pos],
-// so rotating the group leans the whole tree from its base (used for wind sway).
-export function tree({ pos = [0, 0], h = 4.5, trunk = 0x8a5a2b, leaf = 0x6fbf52 } = {}) {
-  const g = group([
-    pillar({ footprint: [0.8, 0.8], height: h, color: trunk, pos: [0, 0] }),
-    box({ size: [3.2, 3, 3.2], color: leaf, pos: [0, h + 0.6, 0] }),
-    box({ size: [2.1, 2.1, 2.1], color: leaf, pos: [0, h + 2.4, 0] }),
-  ]);
+// A fluffy tree: tapered trunk plus a leaf-card canopy (world/foliage.js). Built at
+// LOCAL origin with the group planted at [pos], so rotating the group leans the
+// whole tree from its base (used for wind sway).
+const _trunkGeo = new Map();
+export function tree({ pos = [0, 0], h = 4.5, trunk = 0x8a5a2b, leaf = CANOPY_COLORS.green } = {}) {
+  const key = h.toFixed(2);
+  if (!_trunkGeo.has(key)) _trunkGeo.set(key, new THREE.CylinderGeometry(0.22, 0.38, h + 1, 6).translate(0, (h + 1) / 2, 0));
+  const stem = new THREE.Mesh(_trunkGeo.get(key), material(trunk));
+  stem.castShadow = true; stem.receiveShadow = true;
+  const seed = Math.round(pos[0] * 73 + pos[1] * 151) >>> 0;
+  const leaves = canopy({
+    color: leaf, seed,
+    clusters: [
+      { center: [0, h + 0.8, 0], radius: 2.2, cards: 520 },
+      { center: [0.95, h - 0.1, 0.3], radius: 1.4, cards: 230 },
+      { center: [-0.85, h + 0.1, -0.45], radius: 1.4, cards: 230 },
+    ],
+  });
+  const g = group([stem, leaves]);
   g.position.set(pos[0], 0, pos[1]);
   g.userData.sway = true;
   swayables.push(g);

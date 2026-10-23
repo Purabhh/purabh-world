@@ -6,6 +6,7 @@
 // every load, which makes it easy to tune. Total mesh count is kept modest
 // (well under ~350) for performance: trees are 3 meshes, lamps 3, clouds ~3.
 import * as THREE from 'three';
+import { CANOPY_COLORS } from './foliage.js';
 import { addCircle } from '../core/colliders.js';
 
 // ---- deterministic RNG (mulberry32) ----------------------------------------
@@ -46,7 +47,8 @@ export function buildEnvironment(ctx) {
   // a few trees around each with varied height/leaf tone. Clustering reads more
   // "natural" than a uniform scatter.
   // ---------------------------------------------------------------------------
-  const leafTones = [palette.leaf, palette.leafDark, palette.grassDark];
+  // One canopy color per grove, so groves read as groups (mostly green).
+  const groveTones = [CANOPY_COLORS.green, CANOPY_COLORS.green, CANOPY_COLORS.yellow, CANOPY_COLORS.pink, CANOPY_COLORS.red];
   let clusters = 0, tries = 0;
   while (clusters < 9 && tries < 400) {
     tries++;
@@ -55,12 +57,14 @@ export function buildEnvironment(ctx) {
     if (!isOpen(ax, az, 9)) continue;
     clusters++;
     const n = 3 + Math.floor(rng() * 4); // 3–6 trees per cluster
+    // from the anchor, not rng(), so the tree layout stays exactly as it was
+    const leaf = groveTones[Math.abs(Math.round(ax * 7 + az * 13)) % groveTones.length];
     for (let i = 0; i < n; i++) {
       const tx = ax + (rng() * 2 - 1) * 9;
       const tz = az + (rng() * 2 - 1) * 9;
       if (!isOpen(tx, tz, 5)) continue;
       const h = 3.6 + rng() * 3.4;
-      add(tree({ pos: [tx, tz], h, trunk: palette.trunk, leaf: leafTones[(rng() * leafTones.length) | 0] }));
+      add(tree({ pos: [tx, tz], h, trunk: palette.trunk, leaf }));
     }
   }
 
