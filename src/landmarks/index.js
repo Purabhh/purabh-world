@@ -31,6 +31,7 @@ function loadDetails(ctx) {
       prepareGlb(gltf.scene, ctx.scene);
       gltf.scene.position.set(at[0], 0, at[1]);
       ctx.scene.add(gltf.scene);
+      ctx.invalidateShadows();
     }, undefined, (e) => console.warn('[landmarks] detail model failed', url, e));
   }
 }

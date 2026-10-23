@@ -128,6 +128,7 @@ export function buildAtmosphere(ctx) {
       box({ size: [5 + rng() * 3, 2.0, 4 + rng() * 2], color: palette.cloud, pos: [3 + rng() * 2, 0.4, -1], shadow: false, roughness: 1 }),
     ]);
     g.position.set((rng() * 2 - 1) * cloudSpan, 40 + rng() * 22, (rng() * 2 - 1) * cloudSpan);
+    g.userData.dynamic = true; // drifts; keep it out of the static bake
     add(g);
     clouds.push({ g, speed: 0.25 + rng() * 0.55 }); // units / sec, gentle parallax
   }
@@ -209,6 +210,7 @@ export function buildAtmosphere(ctx) {
     }
     const g = group(blades);
     g.position.set(x, 0, z);
+    g.userData.sway = true;
     add(g);
     tufts.push({ g, phase: x * 0.6 + z * 0.4 });
   }
@@ -234,6 +236,7 @@ export function buildAtmosphere(ctx) {
       map: dot, color: 0xe9dabf, transparent: true, opacity: 0, depthWrite: false,
     }));
     m.visible = false;
+    m.userData.dynamic = true;
     scene.add(m);
     puffs.push({ m, life: 0, dur: 0.5, vx: 0, vy: 0, vz: 0, s0: 0.4, s1: 1.4 });
   }
@@ -430,6 +433,7 @@ export function buildAtmosphere(ctx) {
     const m = new THREE.Mesh(bfGeo, new THREE.MeshBasicMaterial({ map: bfTex, color: bfCols[i % bfCols.length], transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }));
     const s = 0.7 + rng() * 0.5;
     m.scale.set(s, s, s);
+    m.userData.dynamic = true;
     add(m);
     butterflies.push({ m, ax: (rng() * 2 - 1) * (half - 30), az: (rng() * 2 - 1) * (half - 30), ph: rng() * 6.28, sp: 0.4 + rng() * 0.5, s });
   }

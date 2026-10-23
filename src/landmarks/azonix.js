@@ -248,6 +248,7 @@ export function buildAzonix(ctx) {
   lArm.position.set(0, top + 3.4, 0.5); lArm.rotation.x = Math.PI / 2.6; lArm.castShadow = true; lamp.add(lArm);
 
   const housing = new THREE.Group();
+  housing.userData.dynamic = true; // pans; keep it out of the static bake
   const box = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.0, 1.4), mat(0x4a3320, { roughness: 0.65, metalness: 0.3 }));
   box.castShadow = true; housing.add(box);
   const lens = new THREE.Mesh(

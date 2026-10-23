@@ -55,6 +55,7 @@ export function buildAchievements(ctx) {
   const trophy = new THREE.Group();
   trophy.position.set(cx, 0, cz);
   trophy.scale.setScalar(SCALE);
+  trophy.userData.dynamic = true; // spins; keep it out of the static bake
 
   // hex tiered base
   const b1 = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 3.4, 0.6, 6), marble); b1.position.y = 0.3; trophy.add(b1);

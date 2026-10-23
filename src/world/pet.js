@@ -102,6 +102,7 @@ export function buildPet(ctx, player) {
 
   // === rig =================================================================
   const root = new THREE.Group();           // world transform (position + yaw)
+  root.userData.dynamic = true;             // moves; keep it out of the static bake
   const torso = new THREE.Group();           // body container: bob, roll, breathe
   root.add(torso);
 
@@ -224,7 +225,7 @@ export function buildPet(ctx, player) {
   const hearts = [];
   for (let i = 0; i < 8; i++) {
     const m = new THREE.Mesh(heartGeo, new THREE.MeshBasicMaterial({ map: heartTex, transparent: true, opacity: 0, depthWrite: false }));
-    m.visible = false; scene.add(m);
+    m.visible = false; m.userData.dynamic = true; scene.add(m);
     hearts.push({ m, life: 0, vx: 0, vy: 0, vz: 0 });
   }
   let hc = 0;

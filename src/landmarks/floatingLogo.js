@@ -56,6 +56,7 @@ export function addFloatingLogo(ctx, { tex, center, y, size = [10, 3.75], bob = 
     }),
   );
   mesh.position.set(center[0], y, center[1]);
+  mesh.userData.dynamic = true; // bobs and billboards
   scene.add(mesh);
   onUpdate((dt, elapsed) => {
     mesh.position.y = y + Math.sin(elapsed * 1.1) * bob;

@@ -24,6 +24,7 @@ export function buildEducation(ctx) {
     gltf.scene.position.set(cx, 0, cz);
     gltf.scene.scale.setScalar(SCALE);
     scene.add(gltf.scene);
+    ctx.invalidateShadows();
   }, undefined, (e) => console.warn('[education] model failed', e));
 
   // --- Interactable: in front of the entrance ---

@@ -134,6 +134,7 @@ export function buildBny(ctx) {
   add(boxGeo(0.35, 8, 0.35), mat(0x3a2c0c), 0, roofY + 4, 0);
   add(boxGeo(0.18, 5, 0.18), mat(0x3a2c0c), 0, roofY + 8 + 2.5, 0);
   const beaconMat = new THREE.MeshStandardMaterial({ color: 0xff3322, emissive: 0xff2a1a, emissiveIntensity: 2 });
+  beaconMat.userData.animated = true; // blinks; keep it out of the static bake
   const beacon = add(new THREE.SphereGeometry(0.45, 12, 12), beaconMat, 0, roofY + 8, 0, false);
 
   // entrance canopy + lobby glow (front face = +Z local)
@@ -148,6 +149,7 @@ export function buildBny(ctx) {
   // on the right edge, so the lights run in one unbroken line.
   const logoTex = makeBnyLogoTexture();
   const logoMat = new THREE.MeshStandardMaterial({ map: logoTex, transparent: true, alphaTest: 0.4, roughness: 0.5, metalness: 0, emissive: 0x0c2340, emissiveIntensity: 0.6, side: THREE.DoubleSide });
+  logoMat.userData.animated = true;
   const signW = 8.3, signH = 3.0;
   const signY = topY * 0.66;
   const logoPlate = new THREE.Mesh(new THREE.PlaneGeometry(signW, signH), logoMat);
@@ -165,6 +167,7 @@ export function buildBny(ctx) {
   for (let i = 0; i < 24; i++) {
     const cy = 2.4 + i * cellH;
     const m = new THREE.MeshStandardMaterial({ color: offColor.clone(), emissive: offColor.clone(), emissiveIntensity: 0, roughness: 0.4, metalness: 0.1 });
+    m.userData.animated = true;
     const cube = new THREE.Mesh(boxGeo(1.5, cellH * 0.86, 1.5), m);
     const tt = i / 24;
     cube.position.set(lightX - tt * 1.0, cy, lightZ - tt * 1.0);

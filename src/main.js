@@ -2,6 +2,7 @@
 // each module, and runs the interaction -> UI loop.
 import * as THREE from 'three';
 import { createEngine } from './core/engine.js';
+import { bakeStatic } from './core/bake.js';
 import * as voxel from './voxel/voxel.js';
 import { palette, layout, css, config } from './core/constants.js';
 import * as resume from './data/resume.js';
@@ -45,6 +46,7 @@ const ctx = {
   hemi: engine.hemi,
   envMap: engine.envMap,
   bloom: engine.bloom,
+  invalidateShadows: engine.invalidateShadows,
 };
 
 // --- world ------------------------------------------------------------------
@@ -271,9 +273,13 @@ touch.onInteract(triggerInteract);
 window.PW = { engine, player, ctx, THREE, interaction, panel, hud, pet, cinematic, tour, touch, landing, nudge };
 
 // --- go ---------------------------------------------------------------------
+// Merge everything that never moves into a few big meshes (see core/bake.js).
+bakeStatic(engine.scene);
 engine.start();
 document.getElementById('loading')?.remove();
 
 // Projects district loads asynchronously (live GitHub fetch); the rest of the
-// world is already interactive while it populates.
-buildProjectsDistrict(ctx).catch((err) => console.warn('[projects] failed to build:', err));
+// world is already interactive while it populates. Bake it in once it lands.
+buildProjectsDistrict(ctx)
+  .then(() => { bakeStatic(engine.scene); engine.invalidateShadows(); })
+  .catch((err) => console.warn('[projects] failed to build:', err));

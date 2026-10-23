@@ -7,6 +7,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { palette } from './constants.js';
+import { createShadowCache } from './shadowCache.js';
 
 // A clear blue-white vertical sky gradient, baked once into a canvas texture.
 function makeSkyTexture() {
@@ -80,6 +81,8 @@ export function createEngine(mount) {
   sun.shadow.bias = -0.0004;
   scene.add(sun);
   scene.add(sun.target);
+  // Static casters are cached; only moving ones redraw into the map each frame.
+  const shadows = createShadowCache(renderer, scene, camera, sun);
 
   // --- post-processing: bloom so emissive things (trophy, blockchain, the Skills
   // constellation, lanterns, fireflies, gold LeaseLink) actually glow, then an
@@ -148,8 +151,12 @@ export function createEngine(mount) {
     const dt = Math.min(rawDt, 0.05);
     const t = clock.elapsedTime;
     for (const fn of updates) fn(dt, t);
-    if (lowQuality) renderer.render(scene, camera); else composer.render();
+    renderFrame();
     sampleFrame(rawDt);
+  }
+  function renderFrame() {
+    shadows.update();
+    if (lowQuality) renderer.render(scene, camera); else composer.render();
   }
   function start() { if (running) return; running = true; clock.start(); loop(); }
   function stop() { running = false; }
@@ -161,5 +168,5 @@ export function createEngine(mount) {
     composer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  return { THREE, scene, camera, renderer, composer, bloom, onUpdate, start, stop, clock, sun, hemi, envMap, setLowQuality, get lowQuality() { return lowQuality; } };
+  return { THREE, scene, camera, renderer, composer, bloom, onUpdate, start, stop, clock, sun, hemi, envMap, setLowQuality, renderFrame, invalidateShadows: shadows.invalidate, get lowQuality() { return lowQuality; } };
 }

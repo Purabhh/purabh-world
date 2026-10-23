@@ -14,6 +14,7 @@ export function createPlayer(ctx) {
 
   // --- avatar: jointed limbs that pivot at the hip / shoulder -----------------
   const root = new THREE.Group();
+  root.userData.dynamic = true; // moves; keep it out of the static bake
   const C = { skin: 0xc88e5a, shirt: 0x4f86f2, pants: 0x394150, hair: 0x2a1c12, shoe: 0x2b2f3a };
   const mat = (c) => new THREE.MeshStandardMaterial({ color: c, flatShading: true, roughness: 0.8 });
   const meshAt = (w, h, d, color, x, y, z) => {

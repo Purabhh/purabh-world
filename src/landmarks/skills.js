@@ -111,6 +111,7 @@ export function buildSkills(ctx) {
         transparent: true, depthWrite: false, side: THREE.DoubleSide, roughness: 1, metalness: 0,
       }),
     );
+    mesh.userData.dynamic = true; // orbits
     scene.add(mesh);
     nodes.push({ mesh, base: (i / order.length) * Math.PI * 2, y0: 6.2 + (i % 3) * 0.9, bob: i * 1.7 });
   });
@@ -130,6 +131,7 @@ export function buildSkills(ctx) {
     new THREE.MeshStandardMaterial({ color: palette.skills, emissive: palette.skills, emissiveIntensity: 0.9, flatShading: true, roughness: 0.4, metalness: 0.2 }),
   );
   core.position.set(cx, coreY, cz);
+  core.userData.dynamic = true;
   scene.add(core);
 
   addFloatingLogo(ctx, {
