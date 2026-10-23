@@ -6,6 +6,7 @@
 // as paint on the grass rather than geometry the player can trip on. Nothing here
 // casts shadows (patches/slabs disable it) which keeps the look clean + flat.
 import * as THREE from 'three';
+import { PLAZA, PATH_W, BEACH_INSET, BEACH_W } from './groundMask.js';
 
 // Blend two hex color numbers. t=0 -> a, t=1 -> b. Used to tint district plazas
 // toward stone so each accent stays soft instead of a screaming solid color.
@@ -30,7 +31,6 @@ export function buildTerrain(ctx) {
   //    "Rounded" is faked by layering a big square + chamfer squares + corner
   //    nibs so the silhouette reads octagonal-ish without any non-box geometry.
   // ---------------------------------------------------------------------------
-  const PLAZA = 24;              // overall plaza footprint
   const ringColor = palette.gold; // warm accent border that matches the sunny palette
 
   // Accent border ring: a slightly larger square just under the plaza, so its
@@ -54,7 +54,6 @@ export function buildTerrain(ctx) {
   //    look chunky-voxel rather than a thin rotated ribbon. A darker edge patch
   //    sits just under each step to give the walkway a border.
   // ---------------------------------------------------------------------------
-  const PATH_W = 4;
   for (const key in layout.DISTRICTS) {
     const d = layout.DISTRICTS[key];
     const [cx, cz] = d.center;
@@ -96,8 +95,8 @@ export function buildTerrain(ctx) {
   //    from 4 long thin strips (one per side), so it stays cheap. The island
   //    now floats in open sky with no water around it.
   // ---------------------------------------------------------------------------
-  const beachInset = 8;            // how far the beach band sits in from the rim
-  const beachW = 12;               // width of the sandy band
+  const beachInset = BEACH_INSET;
+  const beachW = BEACH_W;
   const beachCenter = half - beachInset - beachW / 2;
   const beachSpan = beachCenter * 2 + beachW; // outer length of each side strip
 

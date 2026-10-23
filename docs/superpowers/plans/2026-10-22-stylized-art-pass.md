@@ -149,6 +149,8 @@ Expected: exactly the comments above.
   - CAMERA `[[18,10,22],[0,1,0]]` and `[[30,4,10],[40,0,0]]` (low, inside a field), in dusk and day. The grass should be dense, gradient, moving, and absent from paths and plazas.
   - Player bend: `PW.player` walks into grass and the blades around the feet lean away. A screenshot is enough.
   - Low quality: load `http://localhost:5174/?quality=low`. The console shows `[grass]` ≤ 25000 and no errors.
+> **As built (2026-10-22):** the blades don't cover the whole island. 80k blades (25k low) sit in a 92 m square patch that is re-centered each frame on where the camera looks, wrapping in world space, with the mask baked into a 256² texture. `buildGrass(ctx, player, engine)` is called after `createPlayer`. The ground slab stays `palette.grass` (the mid tone), because a far field painted the root color looked like dirt.
+
 - [ ] **Step 6: Commit and ship.**
 ```bash
 git add src/world/groundMask.js src/world/grass.js src/world/terrain.js src/world/atmosphere.js src/main.js

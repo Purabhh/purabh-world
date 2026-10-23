@@ -2,7 +2,7 @@
 // Everything here is motion + light, nothing structural:
 //   1) drifting clouds      — slow lateral drift with wrap-around
 //   2) sun-ray dust motes    — one cheap Points field lazily floating up the light
-//   3) grass tufts + sway    — a shared, gentle wind on tufts and every tree
+//   3) tree sway             — a shared, gentle wind on every tree
 //   4) footstep / land puffs — a pooled dust system, exposed as ctx.spawnDust(...)
 //   5) day <-> golden hour    — a smooth toggle (button + "N" key) over sky/fog/lights
 //
@@ -179,44 +179,11 @@ export function buildAtmosphere(ctx) {
   });
 
   // ===========================================================================
-  // 3) GRASS TUFTS + WIND — scatter little blade clusters on open grass, then
-  //    sway both the tufts and every tree (tagged via swayables) on one breeze.
+  // 3) TREE SWAY — every tree (tagged via swayables) leans on one gentle breeze.
+  //    The grass field has its own wind in its shader (world/grass.js).
   // ===========================================================================
-  const districts = Object.values(layout.DISTRICTS);
-  const plantLimit = half - 16;
-  const isOpen = (x, z) => {
-    if (Math.hypot(x, z) < 13) return false;
-    if (Math.abs(x) > plantLimit || Math.abs(z) > plantLimit) return false;
-    for (const d of districts) {
-      if (Math.hypot(x - d.center[0], z - d.center[1]) < d.radius + 3) return false;
-    }
-    return true;
-  };
-  const bladeTones = [palette.grass, palette.leaf, palette.grassDark];
-  const tufts = [];
-  let placed = 0, tries = 0;
-  while (placed < 90 && tries < 900) {
-    tries++;
-    const x = (rng() * 2 - 1) * plantLimit;
-    const z = (rng() * 2 - 1) * plantLimit;
-    if (!isOpen(x, z)) continue;
-    placed++;
-    const blades = [];
-    const n = 3 + ((rng() * 2) | 0);
-    for (let b = 0; b < n; b++) {
-      const h = 0.7 + rng() * 0.7;
-      const col = bladeTones[(rng() * bladeTones.length) | 0];
-      blades.push(box({ size: [0.12, h, 0.12], color: col, pos: [(rng() * 2 - 1) * 0.45, h / 2, (rng() * 2 - 1) * 0.45], shadow: false }));
-    }
-    const g = group(blades);
-    g.position.set(x, 0, z);
-    g.userData.sway = true;
-    add(g);
-    tufts.push({ g, phase: x * 0.6 + z * 0.4 });
-  }
   onUpdate((dt, t) => {
-    // grass: lively; trees: a slow, smaller lean (they pivot at their base now).
-    for (const tf of tufts) tf.g.rotation.z = Math.sin(t * 1.6 + tf.phase) * 0.18;
+    // a slow, small lean (trees pivot at their base).
     for (const tr of swayables) {
       const ph = tr.position.x * 0.5 + tr.position.z * 0.5;
       tr.rotation.z = Math.sin(t * 1.05 + ph) * 0.05;
