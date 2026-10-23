@@ -134,7 +134,7 @@ export const projectDetails = {
   },
   Mochee: {
     lines: [
-      '3D AI study buddy built at HackRU Fall 2026. Upload your lecture notes and an animated 3D tutor teaches them back to you: he walks, points at the notes and whiteboard, narrates in a real voice, and runs a quick check at the end.',
+      '3D AI study buddy. Upload your lecture notes and an animated 3D tutor teaches them back to you: he walks, points at the notes and whiteboard, narrates in a real voice, and runs a quick check at the end.',
       'Document Q&A with Gemini where every answer cites the exact page it came from, and says so when the notes do not cover the question.',
       'React 19 + TypeScript with react-three-fiber, Rapier physics, and a zustand-driven state machine controlling a Blender-rigged character with 58 animations.',
       'ElevenLabs voice that starts playing as audio streams in, with server-side caching and a daily cost cap.',
