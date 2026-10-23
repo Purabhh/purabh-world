@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { makeWordmarkTexture, addFloatingLogo } from './floatingLogo.js';
 import { addCircle } from '../core/colliders.js';
+import { tileTexture, worldTileUVs } from '../voxel/voxel.js';
 
 // soft radial sprite (lamp glow)
 function makeRadial(rgb, soft) {
@@ -124,8 +125,9 @@ export function buildEssex(ctx) {
 
   // Stone plaza disc, raised a hair above the terrain paint with a polygon offset
   // so the near-coplanar surfaces don't z-fight.
-  const plazaMat = new THREE.MeshStandardMaterial({ color: 0xa7adb5, roughness: 0.82, metalness: 0.08, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
-  const plaza = new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 0.5, 64), plazaMat);
+  // Paved with the shared stone texture (world-space, so it lines up with the paths).
+  const plazaMat = new THREE.MeshStandardMaterial({ color: 0xa7adb5, map: tileTexture(), roughness: 0.82, metalness: 0.08, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const plaza = new THREE.Mesh(worldTileUVs(new THREE.CylinderGeometry(14, 14, 0.5, 64), [cx, cz], 5), plazaMat);
   plaza.position.set(cx, -0.03, cz); // top face ~0.22
   plaza.receiveShadow = true; scene.add(plaza);
 

@@ -7,6 +7,7 @@
 import * as THREE from 'three';
 import { addFloatingLogo } from './floatingLogo.js';
 import { addBox } from '../core/colliders.js';
+import { tileTexture, worldTileUVs } from '../voxel/voxel.js';
 
 // The BNY wordmark (teal arrowhead + navy "BNY") drawn to a canvas, used as a
 // transparent sign texture on the tower's front face.
@@ -60,8 +61,8 @@ export function buildBny(ctx) {
   //     terrain's plaza paint, with a polygon offset so the near-coplanar
   //     surfaces don't z-fight (that coplanar fight was the flicker at the base). ---
   const padSlab = (size, color, top, off) => {
-    const m = new THREE.MeshStandardMaterial({ color, roughness: 1, metalness: 0, polygonOffset: true, polygonOffsetFactor: off, polygonOffsetUnits: off });
-    const s = new THREE.Mesh(new THREE.BoxGeometry(size, 0.5, size), m);
+    const m = new THREE.MeshStandardMaterial({ color, map: tileTexture(), roughness: 1, metalness: 0, polygonOffset: true, polygonOffsetFactor: off, polygonOffsetUnits: off });
+    const s = new THREE.Mesh(worldTileUVs(new THREE.BoxGeometry(size, 0.5, size), [cx, cz], 5), m);
     s.position.set(cx, top - 0.25, cz); // 0.5-tall slab -> its top face sits at `top`
     s.castShadow = false; s.receiveShadow = true;
     scene.add(s);

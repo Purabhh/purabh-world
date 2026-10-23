@@ -95,7 +95,7 @@ export function buildSkills(ctx) {
   const [cx, cz] = layout.DISTRICTS.skills.center; // [-54, -28]
 
   // A small glowing pad anchoring the constellation to the plaza.
-  scene.add(patch({ size: [9, 9], color: palette.skillsDark, pos: [cx, cz], y: 0.12 }));
+  scene.add(patch({ size: [9, 9], color: palette.skillsDark, pos: [cx, cz], y: 0.12, tiles: 3 }));
   scene.add(patch({ size: [3.4, 3.4], color: palette.skills, pos: [cx, cz], y: 0.14 }));
 
   // --- the orbiting ring of skill nodes --------------------------------------

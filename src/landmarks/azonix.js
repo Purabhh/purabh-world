@@ -42,8 +42,8 @@ export function buildAzonix(ctx) {
   // ---------- BASE (kept): plaza pad under the building ----------
   // Inner dark pad widened so the now-larger plinth seats cleanly on it.
   scene.add(group([
-    patch({ size: [18, 18], color: palette.stone, pos: [cx, cz], y: 0.08 }),
-    patch({ size: [14, 14], color: palette.azonixDark, pos: [cx, cz], y: 0.1 }),
+    patch({ size: [18, 18], color: palette.stone, pos: [cx, cz], y: 0.08, tiles: 4 }),
+    patch({ size: [14, 14], color: palette.azonixDark, pos: [cx, cz], y: 0.1, tiles: 4 }),
   ]));
 
   // ---------- BUILDING ----------

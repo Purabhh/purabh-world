@@ -99,7 +99,7 @@ export function groundSlab({ size = 200, thickness = 2, color = 0x8fce6b, pos = 
 const TILE_STONES = 4;
 const FLAT_UV = [0.5 / TILE_STONES, 1 - 0.5 / TILE_STONES];
 let _tileTex = null;
-function tileTexture() {
+export function tileTexture() {
   if (_tileTex) return _tileTex;
   const S = 512, cell = S / TILE_STONES, grout = 5;
   const c = document.createElement('canvas');
@@ -139,6 +139,15 @@ function tileTexture() {
   return _tileTex;
 }
 
+// Projects the paving texture straight down onto a flat ground mesh: UVs come from
+// world x/z, so its stones line up with every other tiled surface. center is the
+// mesh's [x, z] world position; tiles is meters per texture repeat.
+export function worldTileUVs(geo, center, tiles) {
+  const p = geo.attributes.position, uv = geo.attributes.uv;
+  for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) + center[0]) / tiles, -(p.getZ(i) + center[1]) / tiles);
+  return geo;
+}
+
 // A thin colored floor patch (plazas, paths) laid just above the ground.
 // tiles: meters per texture repeat (4 = 1 m stones), or false for a flat color.
 export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.06, tiles = false } = {}) {
@@ -153,11 +162,8 @@ export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.0
   // Own geometry (not the shared box cache): its UVs are in world space, so stones
   // line up across every overlapping patch.
   const geo = new THREE.BoxGeometry(size[0], 0.2, size[1]);
-  const p = geo.attributes.position, uv = geo.attributes.uv;
-  for (let i = 0; i < p.count; i++) {
-    if (tiles) uv.setXY(i, (p.getX(i) + pos[0]) / tiles, -(p.getZ(i) + pos[1]) / tiles);
-    else uv.setXY(i, FLAT_UV[0], FLAT_UV[1]);
-  }
+  if (tiles) worldTileUVs(geo, pos, tiles);
+  else { const uv = geo.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, FLAT_UV[0], FLAT_UV[1]); }
   mesh.geometry = geo;
   mesh.material.map = tileTexture();
   mesh.castShadow = false;

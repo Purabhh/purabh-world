@@ -52,7 +52,7 @@ export async function buildProjectsDistrict(ctx) {
 
   // --- Plaza pad -------------------------------------------------------------
   parts.push(patch({ size: [districtR * 2 - 4, districtR * 2 - 4], color: palette.grassLight, pos: [cx, cz], y: 0.05 }));
-  parts.push(patch({ size: [22, 22], color: palette.path, pos: [cx, cz - districtR + 8], y: 0.08 }));
+  parts.push(patch({ size: [22, 22], color: palette.path, pos: [cx, cz - districtR + 8], y: 0.08, tiles: 3 }));
 
   // --- Green archway / gate, facing the player (toward -Z) --------------------
   // Two posts straddling x=0 with a lintel across the top, planted at the north

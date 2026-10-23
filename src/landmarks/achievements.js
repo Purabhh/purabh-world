@@ -24,7 +24,7 @@ export function buildAchievements(ctx) {
   addCircle(cx, cz, 4.8, { top: 10.5 });
 
   // Gold accent pads marking the centerpiece, widened to sit under the base.
-  scene.add(patch({ size: [13, 13], color: palette.achievement, pos: [cx, cz], y: 0.12 }));
+  scene.add(patch({ size: [13, 13], color: palette.achievement, pos: [cx, cz], y: 0.12, tiles: 3 }));
   scene.add(patch({ size: [10, 10], color: palette.gold, pos: [cx, cz], y: 0.14 }));
 
   // --- materials: reflective gold (env-mapped) + a dark marble plinth ----------
