@@ -10,6 +10,7 @@ import * as interaction from './core/interaction.js';
 import { createPlayer } from './player/player.js';
 
 import { buildTerrain } from './world/terrain.js';
+import { paintGround } from './world/ground.js';
 import { buildEnvironment } from './world/environment.js';
 import { buildLanterns } from './world/lanterns.js';
 import { buildAtmosphere } from './world/atmosphere.js';
@@ -53,9 +54,12 @@ const ctx = {
 };
 
 // --- world ------------------------------------------------------------------
-engine.scene.add(voxel.groundSlab({ size: layout.groundSize, thickness: layout.groundHeight, color: palette.grass }));
+const ground = voxel.groundSlab({ size: layout.groundSize, thickness: layout.groundHeight, color: palette.grass });
+engine.scene.add(ground);
 buildTerrain(ctx);
 buildEnvironment(ctx);
+// Paint the turf, worn edges, tree soil, beach and cliff sides (after the trees exist).
+paintGround(ground, { size: layout.groundSize, palette, trees: voxel.swayables });
 buildLanterns(ctx);
 buildLandmarks(ctx);
 // Atmosphere (clouds, motes, wind, day/dusk, ctx.spawnDust) goes

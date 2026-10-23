@@ -6,7 +6,7 @@
 // as paint on the grass rather than geometry the player can trip on. Nothing here
 // casts shadows (patches/slabs disable it) which keeps the look clean + flat.
 import * as THREE from 'three';
-import { PLAZA, PATH_W, BEACH_INSET, BEACH_W } from './groundMask.js';
+import { PLAZA, PATH_W } from './groundMask.js';
 
 // Blend two hex color numbers. t=0 -> a, t=1 -> b. Used to tint district plazas
 // toward stone so each accent stays soft instead of a screaming solid color.
@@ -22,7 +22,6 @@ function mix(a, b, t) {
 export function buildTerrain(ctx) {
   const { scene, voxel, palette, layout } = ctx;
   const { patch } = voxel;
-  const half = layout.groundSize / 2; // island spans -half..half on X and Z
 
   const add = (m) => { if (m) scene.add(m); };
 
@@ -90,19 +89,6 @@ export function buildTerrain(ctx) {
     add(patch({ size: [s * 0.55, s * 0.55], color: mix(palette.stone, d.accent, 0.12), pos: [cx, cz], y: 0.09, tiles: 4 }));
   }
 
-  // ---------------------------------------------------------------------------
-  // 4) "Floating island" edge: a sandy beach ring just inside the rim, built
-  //    from 4 long thin strips (one per side), so it stays cheap. The island
-  //    now floats in open sky with no water around it.
-  // ---------------------------------------------------------------------------
-  const beachInset = BEACH_INSET;
-  const beachW = BEACH_W;
-  const beachCenter = half - beachInset - beachW / 2;
-  const beachSpan = beachCenter * 2 + beachW; // outer length of each side strip
-
-  // sand band (4 sides)
-  add(patch({ size: [beachSpan, beachW], color: palette.sand, pos: [0, beachCenter], y: 0.04 }));   // +Z (north)
-  add(patch({ size: [beachSpan, beachW], color: palette.sand, pos: [0, -beachCenter], y: 0.04 }));  // -Z
-  add(patch({ size: [beachW, beachSpan], color: palette.sand, pos: [beachCenter, 0], y: 0.04 }));   // +X
-  add(patch({ size: [beachW, beachSpan], color: palette.sand, pos: [-beachCenter, 0], y: 0.04 }));  // -X
+  // 4) The sandy beach ring at the island's edge is painted into the ground
+  //    itself (world/ground.js), with ripples and a wet outer edge.
 }
