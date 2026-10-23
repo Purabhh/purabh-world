@@ -21,6 +21,7 @@ import { buildProjectsDistrict } from './projects/projectsDistrict.js';
 import { createHUD } from './ui/hud.js';
 import { createPanel } from './ui/panel.js';
 import { createLanding } from './ui/landing.js';
+import { coachFirstVisit } from './ui/firstVisit.js';
 import { createTutorial } from './ui/tutorial.js';
 import { createCinematic } from './ui/cinematic.js';
 import { createTour } from './ui/tour.js';
@@ -125,6 +126,7 @@ const landing = createLanding({
   onEnter: () => { suspendPlayer(); cinematic.play(); },   // free roam (after the quick intro)
   onTour: () => { suspendPlayer(); tour.play(); },         // guided recruiter tour
 });
+coachFirstVisit(landing); // first visit only: point new people at the tour
 
 // Behind the landing screen the real world slowly orbits the plaza at dusk:
 // a dolly-in on load, then an endless slow circle.
