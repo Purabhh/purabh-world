@@ -38,13 +38,13 @@ export function buildTerrain(ctx) {
   add(patch({ size: [PLAZA + 2.4, PLAZA + 2.4], color: ringColor, pos: [0, 0], y: 0.05 }));
 
   // Plaza body (stone), plus chamfer strips to round the corners.
-  add(patch({ size: [PLAZA, PLAZA], color: palette.stone, pos: [0, 0], y: 0.08 }));
-  add(patch({ size: [PLAZA - 6, PLAZA + 4], color: palette.stone, pos: [0, 0], y: 0.08 }));
-  add(patch({ size: [PLAZA + 4, PLAZA - 6], color: palette.stone, pos: [0, 0], y: 0.08 }));
+  add(patch({ size: [PLAZA, PLAZA], color: palette.stone, pos: [0, 0], y: 0.08, tiles: 4 }));
+  add(patch({ size: [PLAZA - 6, PLAZA + 4], color: palette.stone, pos: [0, 0], y: 0.08, tiles: 4 }));
+  add(patch({ size: [PLAZA + 4, PLAZA - 6], color: palette.stone, pos: [0, 0], y: 0.08, tiles: 4 }));
 
   // Inner medallion: a lighter sand inlay + tiny center stud, gives the plaza a
   // focal point right where the player spawns.
-  add(patch({ size: [9, 9], color: palette.sand, pos: [0, 0], y: 0.1 }));
+  add(patch({ size: [9, 9], color: palette.sand, pos: [0, 0], y: 0.1, tiles: 2 }));
   add(patch({ size: [3.4, 3.4], color: palette.stoneDark, pos: [0, 0], y: 0.12 }));
 
   // ---------------------------------------------------------------------------
@@ -65,12 +65,12 @@ export function buildTerrain(ctx) {
     const start = PLAZA / 2 - 1;
     const end = dist - d.radius * 0.55;
     const step = PATH_W * 0.7;           // overlap so there are no gaps
-    for (let t = start; t <= end; t += step) {
-      const px = ux * t, pz = uz * t;
-      // edge (slightly larger, lower) then the walkway surface on top
-      add(patch({ size: [PATH_W + 1.2, PATH_W + 1.2], color: palette.pathEdge, pos: [px, pz], y: 0.06 }));
-      add(patch({ size: [PATH_W, PATH_W], color: palette.path, pos: [px, pz], y: 0.08 }));
-    }
+    const steps = [];
+    for (let t = start; t <= end; t += step) steps.push([ux * t, uz * t]);
+    // Every edge (slightly larger) first, then every paving step, so no step's
+    // edge paints over the end of the step before it.
+    for (const pos of steps) add(patch({ size: [PATH_W + 1.2, PATH_W + 1.2], color: palette.pathEdge, pos, y: 0.06 }));
+    for (const pos of steps) add(patch({ size: [PATH_W, PATH_W], color: palette.path, pos, y: 0.08, tiles: 3 }));
   }
 
   // ---------------------------------------------------------------------------
@@ -85,9 +85,9 @@ export function buildTerrain(ctx) {
     const s = d.radius * 1.8;
     const floorColor = mix(palette.stone, d.accent, 0.25);
     add(patch({ size: [s + 2.2, s + 2.2], color: d.accent, pos: [cx, cz], y: 0.05 }));
-    add(patch({ size: [s, s], color: floorColor, pos: [cx, cz], y: 0.07 }));
+    add(patch({ size: [s, s], color: floorColor, pos: [cx, cz], y: 0.07, tiles: 6 }));
     // soft inner inlay
-    add(patch({ size: [s * 0.55, s * 0.55], color: mix(palette.stone, d.accent, 0.12), pos: [cx, cz], y: 0.09 }));
+    add(patch({ size: [s * 0.55, s * 0.55], color: mix(palette.stone, d.accent, 0.12), pos: [cx, cz], y: 0.09, tiles: 4 }));
   }
 
   // ---------------------------------------------------------------------------

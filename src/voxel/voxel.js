@@ -91,8 +91,57 @@ export function groundSlab({ size = 200, thickness = 2, color = 0x8fce6b, pos = 
   return mesh;
 }
 
+// Paving stones for ground patches: a grayscale 4x4 grid of stones (running bond,
+// thin grout, a little speckle) that each patch's color tints. Every patch shares
+// this one texture, so the static bake still merges all of them into one mesh in
+// creation order. Stone 0 (top-left) is plain white, so an untiled patch samples
+// just that spot and keeps its flat color.
+const TILE_STONES = 4;
+const FLAT_UV = [0.5 / TILE_STONES, 1 - 0.5 / TILE_STONES];
+let _tileTex = null;
+function tileTexture() {
+  if (_tileTex) return _tileTex;
+  const S = 512, cell = S / TILE_STONES, grout = 5;
+  const c = document.createElement('canvas');
+  c.width = c.height = S;
+  const g = c.getContext('2d');
+  g.fillStyle = '#b4b0aa';
+  g.fillRect(0, 0, S, S);
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const stone = (x, y, w, h, v) => {
+    g.fillStyle = `rgb(${v},${v},${v})`;
+    g.beginPath(); g.roundRect(x + grout, y + grout, w - grout * 2, h - grout * 2, 9); g.fill();
+    // soft lit top edge so each stone reads as raised a touch
+    g.fillStyle = 'rgba(255,255,255,0.35)';
+    g.fillRect(x + grout + 6, y + grout + 2, w - grout * 2 - 12, 3);
+  };
+  for (let r = 0; r < TILE_STONES; r++) {
+    const off = r % 2 ? cell / 2 : 0;   // running bond: odd rows shift half a stone
+    for (let i = -1; i < TILE_STONES; i++) {
+      const x = i * cell + off;
+      const v = r === 0 && i === 0 ? 255 : Math.round(224 + rnd() * 31);
+      stone(x, r * cell, cell, cell, v);
+      if (x + cell > S) stone(x - S, r * cell, cell, cell, v); // wrap the half stone
+    }
+  }
+  // speckle, kept off the middle of stone 0 so flat patches stay clean
+  for (let k = 0; k < 2600; k++) {
+    const x = rnd() * S, y = rnd() * S;
+    if (x > 16 && x < cell - 16 && y > 16 && y < cell - 16) continue;
+    g.fillStyle = rnd() < 0.5 ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.08)';
+    g.fillRect(x, y, 2 + rnd() * 3, 2 + rnd() * 3);
+  }
+  _tileTex = new THREE.CanvasTexture(c);
+  _tileTex.colorSpace = THREE.SRGBColorSpace;
+  _tileTex.wrapS = _tileTex.wrapT = THREE.RepeatWrapping;
+  _tileTex.anisotropy = 8;
+  return _tileTex;
+}
+
 // A thin colored floor patch (plazas, paths) laid just above the ground.
-export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.06 } = {}) {
+// tiles: meters per texture repeat (4 = 1 m stones), or false for a flat color.
+export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.06, tiles = false } = {}) {
   // Ground decals don't write depth (and are nudged toward the camera) so that
   // overlapping coplanar patches — paths merging into the plaza, plaza edges,
   // district pads sitting on grass — never z-fight. The stable opaque paint order
@@ -101,6 +150,16 @@ export function patch({ size = [10, 10], color = 0xead9a8, pos = [0, 0], y = 0.0
     size: [size[0], 0.2, size[1]], color, pos: [pos[0], y, pos[1]], roughness: 1, bevel: false,
     depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
   });
+  // Own geometry (not the shared box cache): its UVs are in world space, so stones
+  // line up across every overlapping patch.
+  const geo = new THREE.BoxGeometry(size[0], 0.2, size[1]);
+  const p = geo.attributes.position, uv = geo.attributes.uv;
+  for (let i = 0; i < p.count; i++) {
+    if (tiles) uv.setXY(i, (p.getX(i) + pos[0]) / tiles, -(p.getZ(i) + pos[1]) / tiles);
+    else uv.setXY(i, FLAT_UV[0], FLAT_UV[1]);
+  }
+  mesh.geometry = geo;
+  mesh.material.map = tileTexture();
   mesh.castShadow = false;
   return mesh;
 }
