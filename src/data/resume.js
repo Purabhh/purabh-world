@@ -25,14 +25,14 @@ export const education = {
   honors: ["Dean's List", 'Coursework: Data Structures, Algorithms, Computer Architecture, Discrete Structures I & II, Intro to AI, Systems Engineering, Data Management for Data Science'],
 };
 
-// Each entry maps to one landmark in the world. Bullets mirror the Oct 2026
+// Each entry maps to one landmark in the world. Bullets mirror the Nov 2026
 // resume (Resume.pdf in the project root) one-to-one; edit both together.
 export const experience = [
   {
     id: 'bny', org: 'BNY', role: 'Software Engineering Intern',
     dates: 'June 2026 – Aug 2026', location: 'Pittsburgh, PA', accent: 'bny',
     bullets: [
-      "Built an immutable fintech payments audit trail on a private Hyperledger Besu blockchain (Solidity, Web3j), validating and recording $2B+ in cleared debits and credits for real-time reconciliation across 3 fragmented systems with zero payment-latency impact, tested end-to-end using Apache ActiveMQ Artemis to simulate live message-queue traffic, fronted by an Angular/ethers.js UI that reads directly from Besu for live ledger visibility during backend downtime.",
+      "Built an immutable payments audit trail on a private Hyperledger Besu blockchain (Solidity, Web3j), recording $2B+ in cleared debits and credits as an independent ledger reconciled against the payments engine's Oracle database with zero payment-latency impact, tested end-to-end using Apache ActiveMQ Artemis to simulate live message-queue traffic, fronted by an Angular/ethers.js UI that reads directly from Besu and flags mismatches for review.",
       "Developed a real-time SWIFT MT/MX \"blotter\" dashboard for an Agile payments team, tracing every message as it moved through the platform's Java/Spring Boot systems, delivering first-ever end-to-end visibility into message flow across 15M+ daily messages.",
       "Built an Angular observability and troubleshooting dashboard for cross-functional ops teams, pulling from Splunk logs to monitor the health and security posture of all 11 payment-platform systems, surfacing per-system vulnerability counts and month-over-month trends and auto-generating Jira tickets from flagged issues to cut manual triage time by 60%.",
     ],
