@@ -196,7 +196,10 @@ export function createPanel() {
     root.style.top = Math.max(m, Math.min(top, vh - h - m)) + 'px';
   }
 
-  closeBtn.addEventListener('click', hide);
+  // × also tells listeners (the tour) the visitor chose to close it.
+  const closeListeners = [];
+  const onClose = (fn) => closeListeners.push(fn);
+  closeBtn.addEventListener('click', () => { hide(); closeListeners.forEach((fn) => fn()); });
 
   // Esc closes. Capture so it wins even while a link is focused.
   document.addEventListener('keydown', (e) => {
@@ -210,5 +213,5 @@ export function createPanel() {
     if (open && !root.contains(e.target)) hide();
   });
 
-  return { show, hide, isOpen, setAnchor, el: root };
+  return { show, hide, isOpen, setAnchor, onClose, el: root };
 }

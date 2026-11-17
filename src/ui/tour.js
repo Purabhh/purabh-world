@@ -118,6 +118,8 @@ export function createTour(ctx, { panel, onComplete } = {}) {
   root.querySelector('[data-next]').addEventListener('click', () => jump(idx + 1));
   elPlay.addEventListener('click', () => setPaused(!paused));
   elExit.addEventListener('click', () => finish());
+  // The card's × ends the tour (at any stop) and drops you into free roam.
+  if (panel && panel.onClose) panel.onClose(() => { if (playing && !done) finish(); });
   // Clicks on the bar must not reach the panel's outside-click dismiss handler.
   root.addEventListener('pointerdown', (e) => e.stopPropagation());
 
